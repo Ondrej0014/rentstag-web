@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rentstag | Property Management As It Was Meant To Be</title>
+    
+    <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@100,200,300,400,500,700,800,900&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- 2. DESIGN SETTINGS (THEMING) --- */
+        :root {
+            --primary-color: #C86B3D;
+            --copper-gradient: linear-gradient(135deg, #A0552D 0%, #E69B6A 50%, #A0552D 100%);
+            
+            /* LIGHT MODE (DEFAULT) */
+            --bg-body: #F7F7F5;
+            --bg-card: #FFFFFF;
+            --bg-header: rgba(255, 255, 255, 0.95);
+            --text-main: #121212;
+            --text-muted: #666666;
+            --border-color: rgba(0,0,0,0.06);
+            --shadow-color: rgba(0,0,0,0.08);
+            --logo-filter: grayscale(100%); 
+            
+            --radius-small: 6px;
+            --radius-large: 20px;
+            
+            --font-family: 'Cabinet Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            --container-width: 1240px;
+        }
+
+        /* --- DARK MODE OVERRIDES --- */
+        body.dark-mode {
+            --bg-body: #050505;
+            --bg-card: #111111;
+            --bg-header: rgba(5, 5, 5, 0.9);
+            --text-main: #FFFFFF;
+            --text-muted: #999999;
+            --border-color: rgba(255,255,255,0.1);
+            --shadow-color: rgba(0,0,0,0.5);
+            --logo-filter: grayscale(100%) invert(1) brightness(2);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        a { text-decoration: none; color: inherit; transition: 0.2s; }
+        ul { list-style: none; }
+
+        .container {
+            max-width: var(--container-width);
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* --- BUTTONS --- */
+        .btn {
+            display: inline-block; padding: 14px 28px; border-radius: var(--radius-small);
+            font-weight: 700; cursor: pointer; transition: all 0.3s ease;
+            font-size: 15px; border: none; position: relative; overflow: hidden; text-align: center;
+        }
+        .btn-primary {
+            background: var(--copper-gradient); background-size: 200% auto;
+            color: #fff; box-shadow: 0 4px 15px rgba(160, 85, 45, 0.3);
+        }
+        .btn-primary:hover { 
+            background-position: right center; box-shadow: 0 6px 20px rgba(160, 85, 45, 0.4); transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background-color: transparent; border: 1px solid var(--text-muted); color: var(--text-main);
+        }
+        .btn-secondary:hover { border-color: #A0552D; color: #A0552D; }
+
+        /* THEME TOGGLE BUTTON */
+        .theme-toggle {
+            background: transparent; border: 1px solid var(--border-color);
+            width: 40px; height: 40px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; color: var(--text-main); margin-right: 10px;
+            transition: all 0.3s ease;
+        }
+        .theme-toggle:hover { background: var(--bg-card); border-color: var(--primary-color); color: var(--primary-color); }
+        .theme-toggle svg { width: 20px; height: 20px; stroke: currentColor; fill: none; }
+
+        /* --- HEADER & NAVIGATION --- */
+        header {
+            height: 80px; position: sticky; top: 0;
+            background: var(--bg-header); backdrop-filter: blur(10px);
+            z-index: 1000; border-bottom: 1px solid var(--border-color);
+            transition: background 0.3s ease;
+        }
+        .nav-container {
+            max-width: var(--container-width); margin: 0 auto; padding: 0 24px; height: 100%;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        
+        .logo { display: flex; align-items: center; z-index: 1001; }
+        .logo img { height: 28px; width: auto; vertical-align: middle; object-fit: contain; }
+        body.dark-mode .logo img { filter: invert(1); }
+
+        .nav-links { display: flex; gap: 0; height: 100%; }
+        .nav-item {
+            height: 100%; display: flex; align-items: center; padding: 0 12px; cursor: pointer; position: static;
+        }
+        .nav-link {
+            font-weight: 600; font-size: 15px; color: var(--text-muted);
+            display: flex; align-items: center; gap: 6px; padding: 8px 12px;
+            border-radius: var(--radius-small); transition: all 0.2s;
+        }
+        .nav-link::after {
+            content: ''; border: solid var(--text-muted); border-width: 0 1.5px 1.5px 0;
+            display: inline-block; padding: 2.5px; transform: rotate(45deg) translateY(-2px); transition: transform 0.2s;
+        }
+        .nav-item:hover .nav-link { background: var(--bg-card); color: var(--text-main); }
+        .nav-item:hover .nav-link::after { transform: rotate(-135deg) translateY(-1px); border-color: var(--text-main); }
+        .nav-link.simple::after { display: none; }
+
+        /* Mega Menu */
+        .mega-menu {
+            position: absolute; top: 80px; left: 0; width: 100%;
+            background: var(--bg-card); border-top: 1px solid var(--border-color);
+            box-shadow: 0 20px 40px var(--shadow-color); padding: 40px 0;
+            opacity: 0; visibility: hidden; transform: translateY(10px);
+            transition: all 0.2s ease; cursor: default;
+        }
+        .nav-item:hover .mega-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+        .mega-content {
+            max-width: var(--container-width); margin: 0 auto; padding: 0 24px;
+            display: grid; gap: 60px;
+        }
+        .mega-column h4 {
+            font-size: 12px; text-transform: uppercase; color: var(--text-muted);
+            margin-bottom: 20px; letter-spacing: 1px; font-weight: 700;
+        }
+        .menu-item-group { display: flex; flex-direction: column; gap: 10px; }
+        .menu-link {
+            display: flex; align-items: flex-start; gap: 16px; padding: 12px;
+            border-radius: var(--radius-small); transition: background 0.2s;
+        }
+        .menu-link:hover { background: rgba(200, 107, 61, 0.05); }
+        .menu-icon {
+            width: 40px; height: 40px; background: var(--bg-body); border: 1px solid var(--border-color);
+            border-radius: 8px; display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; color: #A0552D;
+        }
+        .menu-text h5 { font-size: 16px; font-weight: 700; color: var(--text-main); margin-bottom: 4px; }
+        .menu-text p { font-size: 14px; color: var(--text-muted); line-height: 1.4; }
+        
+        .menu-featured {
+            background: #1a1a1a; border-radius: var(--radius-large); padding: 30px;
+            color: #fff; display: flex; flex-direction: column; justify-content: flex-end;
+            min-height: 300px; position: relative; overflow: hidden; text-align: left;
+            border: 1px solid var(--border-color);
+        }
+        .menu-featured h5 { font-size: 24px; margin-bottom: 10px; z-index: 2; position: relative; color: #fff; }
+        .menu-featured p { font-size: 14px; color: #ccc; margin-bottom: 20px; z-index: 2; position: relative; }
+        .menu-featured-link { font-size: 14px; font-weight: 600; color: #fff; text-decoration: underline; z-index: 2; position: relative; }
+        .menu-featured::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(160, 85, 45, 0.6) 100%); z-index: 1;
+        }
+        .menu-featured-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.6; }
+        .nav-buttons { display: flex; gap: 10px; align-items: center; }
+        @media (max-width: 900px) { .nav-links, .mega-menu { display: none; } }
+
+        /* --- HERO SECTION --- */
+        .hero { 
+            padding: 100px 0 60px; overflow: hidden; text-align: center; 
+        }
+        .hero-container { 
+            display: flex; flex-direction: column; align-items: center; gap: 50px; 
+        }
+        .hero-content { 
+            width: 100%; max-width: 900px; margin: 0 auto;
+        }
+        
+        .hero-eyebrow { 
+            font-size: 13px; text-transform: uppercase; letter-spacing: 2px; 
+            font-weight: 800; margin-bottom: 24px; display: inline-block; 
+            background: var(--copper-gradient); -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; background-clip: text; 
+        }
+        .hero h1 { 
+            font-size: 72px; line-height: 1; font-weight: 800; 
+            letter-spacing: -2px; margin-bottom: 24px; color: var(--text-main); 
+        }
+        .hero p { 
+            font-size: 22px; color: var(--text-muted); margin-bottom: 40px; 
+            max-width: 600px; line-height: 1.6; margin-left: auto; margin-right: auto;
+        }
+        .hero-buttons { display: flex; gap: 15px; justify-content: center; }
+        
+        /* Visual Container (10% smaller) */
+        .hero-visual-wrapper { 
+            width: 100%; max-width: 990px; 
+            position: relative; margin-top: 20px;
+        }
+        .hero-visual { 
+            width: 100%; 
+            border-radius: var(--radius-large); 
+            display: flex; align-items: center; justify-content: center; 
+            position: relative; overflow: hidden; 
+        }
+
+        /* --- PARTNERS --- */
+        .clients { padding: 40px 0; text-align: center; border-bottom: 1px solid var(--border-color); background: var(--bg-card); transition: background 0.3s; }
+        .clients p { font-size: 12px; color: var(--text-muted); margin-bottom: 30px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; opacity: 0.7; }
+        .logo-grid { display: flex; justify-content: center; align-items: center; gap: 50px; flex-wrap: wrap; opacity: 0.7; }
+        
+        .logo-img { 
+            max-height: 35px; width: auto; 
+            filter: var(--logo-filter); 
+            transition: all 0.3s ease; 
+        }
+        .logo-img:hover { filter: grayscale(0%); transform: scale(1.05); }
+        body.dark-mode .logo-img:hover { filter: grayscale(0%) invert(0) brightness(1); }
+
+        /* --- FEATURES (BENTO GRID) --- */
+        .features { padding: 100px 0; }
+        .section-header { margin-bottom: 70px; max-width: 800px; }
+        .section-header h2 { font-size: 48px; font-weight: 800; letter-spacing: -1.5px; margin-bottom: 20px; line-height: 1; color: var(--text-main); }
+        .section-header p { font-size: 20px; color: var(--text-muted); line-height: 1.5; }
+        
+        .bento-grid { display: grid; grid-template-columns: 1fr; gap: 24px; }
+        @media (min-width: 768px) { 
+            .bento-grid { grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 400px); } 
+            .card-large { grid-column: span 2; } 
+        }
+        
+        .card { 
+            background: var(--bg-card); 
+            border-radius: var(--radius-large); 
+            padding: 0;
+            display: flex; flex-direction: column; justify-content: space-between; 
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
+            border: 1px solid var(--border-color); overflow: hidden; position: relative; 
+        }
+        .card:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 25px 50px var(--shadow-color); 
+            border-color: rgba(160, 85, 45, 0.2); 
+        }
+        
+        .card-content {
+            padding: 40px 40px 20px 40px;
+            flex-grow: 1;
+        }
+
+        .card h3 { font-size: 26px; margin-bottom: 12px; font-weight: 700; letter-spacing: -0.5px; color: var(--text-main); }
+        .card p { color: var(--text-muted); font-size: 16px; line-height: 1.5; }
+        
+        .card-visual { 
+            width: 100%; height: 220px; 
+            object-fit: cover; display: block; margin: 0;
+            border-top: 1px solid var(--border-color);
+        }
+        .card-large .card-visual { height: 220px; }
+
+        /* --- SUCCESSION SECTION --- */
+        .succession-section {
+            padding: 120px 0;
+            background-color: var(--bg-card);
+            border-top: 1px solid var(--border-color);
+        }
+        .succession-container {
+            display: flex;
+            align-items: center;
+            gap: 80px;
+        }
+        .succession-content {
+            flex: 1;
+        }
+        .succession-content h2 {
+            font-size: 48px; font-weight: 800; line-height: 1.1; margin-bottom: 24px; color: var(--text-main); letter-spacing: -1.5px;
+        }
+        .succession-content p {
+            font-size: 18px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.6;
+        }
+        .succession-visual {
+            flex: 1; height: 500px; border-radius: var(--radius-large);
+            overflow: hidden; position: relative;
+        }
+        .succession-visual img {
+            width: 100%; height: 100%; object-fit: cover; filter: grayscale(20%);
+        }
+        .founder-quote {
+            margin-top: 40px; padding-top: 30px; border-top: 1px solid var(--border-color);
+        }
+        .signature-img {
+            height: 60px; width: auto; display: block; margin-bottom: 15px; margin-top: 15px;
+        }
+        body.dark-mode .signature-img { filter: invert(1); }
+
+        .quote-text {
+            font-style: italic; font-size: 16px !important; color: var(--text-main) !important;
+        }
+        .founder-name {
+            display: block; font-weight: 700; font-size: 14px; color: var(--text-main);
+        }
+        .founder-role {
+            display: block; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;
+        }
+
+        /* --- STICKY HORIZONTAL SCROLL (TESTIMONIALS) --- */
+        
+        /* The container that defines the HEIGHT of the scroll (how long we scroll vertically) */
+        .horizontal-scroll-wrapper {
+            height: 400vh; /* 4x viewport height = creates scroll space */
+            position: relative;
+            background-color: var(--bg-body);
+        }
+
+        /* The actual section that sticks to the screen */
+        .testimonials-section {
+            position: sticky;
+            top: 0;
+            height: 100vh; /* Takes full viewport */
+            width: 100%;
+            overflow: hidden; /* Hide anything outside */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background-color: var(--bg-body);
+        }
+
+        .testimonials-container {
+            max-width: var(--container-width);
+            margin: 0 auto;
+            width: 100%;
+            padding: 0 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 60px;
+        }
+
+        /* The track that moves left/right */
+        .testimonial-track {
+            display: flex;
+            gap: 40px;
+            width: max-content; /* Ensure it takes full width of cards */
+            will-change: transform; /* Performance optimization */
+        }
+
+        .testimonial-card {
+            flex: 0 0 450px; /* Wider cards */
+            height: 550px;
+            position: relative; 
+            border-radius: var(--radius-large);
+            overflow: hidden; 
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-card); 
+            transition: transform 0.3s ease;
+        }
+        .testimonial-card:hover { transform: translateY(-5px); border-color: var(--primary-color); }
+        .test-bg { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+        .testimonial-card:hover .test-bg { transform: scale(1.05); }
+        .test-overlay {
+            position: absolute; bottom: 0; left: 0; width: 100%; padding: 40px;
+            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.6) 60%, rgba(0,0,0,0) 100%);
+            color: white; display: flex; flex-direction: column; justify-content: flex-end; height: 100%;
+        }
+        .test-quote { font-size: 22px; font-weight: 500; line-height: 1.4; margin-bottom: 25px; font-style: italic; opacity: 0.95; }
+        .test-author h5 { font-size: 18px; font-weight: 700; margin-bottom: 4px; color: var(--primary-color); }
+        .test-author span { font-size: 14px; color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 0.5px; }
+        @media (max-width: 900px) {
+            .horizontal-scroll-wrapper { height: auto; } /* Disable sticky on mobile */
+            .testimonials-section { position: relative; height: auto; padding: 80px 0; }
+            .testimonial-track { overflow-x: auto; padding-bottom: 20px; width: 100%; gap: 20px; }
+            .testimonial-card { flex: 0 0 300px; height: 450px; }
+        }
+
+        /* --- PROCESS SECTION --- */
+        .process-section {
+            padding: 100px 0; background-color: var(--bg-body); border-top: 1px solid var(--border-color);
+        }
+        .why-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; margin-bottom: 120px;
+        }
+        .why-card {
+            background: var(--bg-card); padding: 30px; border-radius: var(--radius-large);
+            border: 1px solid var(--border-color); transition: transform 0.3s ease;
+        }
+        .why-card:hover { transform: translateY(-5px); border-color: var(--primary-color); }
+        .why-icon {
+            font-size: 24px; font-weight: 800; color: var(--primary-color); margin-bottom: 20px; opacity: 0.8;
+        }
+        .why-card h4 { font-size: 20px; font-weight: 700; margin-bottom: 10px; color: var(--text-main); }
+        .why-card p { font-size: 15px; color: var(--text-muted); line-height: 1.5; }
+
+        /* Timeline */
+        .timeline-wrapper { max-width: 800px; margin: 0 auto; }
+        .timeline { position: relative; padding-left: 40px; }
+        .timeline::before {
+            content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--border-color);
+        }
+        .timeline-item { 
+            position: relative; margin-bottom: 60px; opacity: 0.3; transform: translateX(-10px);
+            filter: grayscale(100%); transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .timeline-item:last-child { margin-bottom: 0; }
+        .timeline-item.active { opacity: 1; transform: translateX(0); filter: grayscale(0%); }
+        .timeline-marker {
+            position: absolute; left: -45px; top: 5px; width: 12px; height: 12px;
+            background: #ccc; border-radius: 50%; box-shadow: 0 0 0 6px var(--bg-body);
+            transition: all 0.4s ease; z-index: 2;
+        }
+        .timeline-item.active .timeline-marker {
+            background: var(--primary-color); transform: scale(1.4); box-shadow: 0 0 0 4px rgba(200, 107, 61, 0.3);
+        }
+        .time-tag {
+            display: inline-block; font-size: 13px; font-weight: 800; text-transform: uppercase;
+            color: var(--text-muted); letter-spacing: 1px; margin-bottom: 8px; transition: color 0.3s;
+        }
+        .timeline-item.active .time-tag { color: var(--primary-color); }
+        .timeline-content h4 { 
+            font-size: 24px; font-weight: 700; margin-bottom: 10px; color: var(--text-main); transition: color 0.3s;
+        }
+        .timeline-item.active .timeline-content h4 { color: #A0552D; }
+        .timeline-content p { 
+            font-size: 16px; color: var(--text-muted); line-height: 1.6; transition: color 0.3s;
+        }
+        .timeline-item.active .timeline-content p { color: var(--text-main); }
+
+        @media (max-width: 900px) {
+            .succession-container { flex-direction: column; }
+            .succession-visual { width: 100%; height: 300px; }
+            .why-grid { grid-template-columns: 1fr; }
+        }
+
+        /* --- CTA (BENTO STYLE) --- */
+        .cta-section { 
+            background-color: #1A1A1A; color: #fff; padding: 0; text-align: center; 
+            border-radius: var(--radius-large); margin-bottom: 60px; position: relative; 
+            overflow: hidden; margin-top: 60px; display: flex; flex-direction: column;
+        }
+        .cta-section::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--copper-gradient); }
+        .cta-content { padding: 100px 24px; }
+        .cta-section h2 { font-size: 48px; margin-bottom: 24px; font-weight: 700; letter-spacing: -1px; }
+        .cta-visual { width: 100%; height: 350px; object-fit: cover; display: block; border-top: 1px solid rgba(255,255,255,0.1); }
+
+        /* --- FOOTER --- */
+        footer { background-color: #050505; color: #999; padding: 100px 0 40px; font-size: 14px; border-top: 1px solid #111; }
+        .footer-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 40px; margin-bottom: 80px; }
+        .footer-col h4 { color: #fff; margin-bottom: 25px; font-weight: 600; font-size: 16px; }
+        .footer-col ul { list-style: none; }
+        .footer-col li { margin-bottom: 14px; }
+        .footer-col a:hover { color: var(--primary-color); text-decoration: underline; }
+        .footer-bottom { border-top: 1px solid #222; padding-top: 40px; display: flex; justify-content: space-between; align-items: center; color: #555; }
+        
+        .footer-center { display: flex; align-items: center; gap: 20px; }
+        .footer-right { display: flex; gap: 20px; align-items: center; }
+        .social-icon svg { width: 18px; height: 18px; fill: #999; transition: fill 0.2s; }
+        .social-icon:hover svg { fill: var(--primary-color); }
+        .lang-switch { display: flex; gap: 10px; align-items: center; border-left: 1px solid #333; padding-left: 20px; }
+        .lang-btn { background: none; border: none; color: #666; font-size: 13px; font-weight: 600; cursor: pointer; padding: 0; transition: color 0.2s; }
+        .lang-btn:hover, .lang-btn.active { color: var(--primary-color); }
+    </style>
+</head>
+<body class="">
+
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <img src="Rentstaglogo.png" alt="Rentstag">
+            </a>
+            
+            <ul class="nav-links">
+                <li class="nav-item">
+                    <div class="nav-link" data-i18n="nav-management">Management</div>
+                    <div class="mega-menu">
+                        <div class="mega-content" style="grid-template-columns: 1fr 1fr 300px;">
+                            <div class="mega-column">
+                                <h4 data-i18n="menu-core">Core Services</h4>
+                                <div class="menu-item-group">
+                                    <a href="residential.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l8-4 8 4v14M8 21v-4h8v4"></path></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-res">Residential Management</h5><p data-i18n="menu-res-desc">Full-service care for apartments.</p></div>
+                                    </a>
+                                    <a href="association.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-assoc">Association Management</h5><p data-i18n="menu-assoc-desc">Modern administration for HOAs.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="mega-column">
+                                <h4 data-i18n="menu-leasing">Leasing</h4>
+                                <div class="menu-item-group">
+                                    <a href="leasing.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="22" y1="12" x2="18" y2="12"></line><line x1="6" y1="12" x2="2" y2="12"></line><line x1="12" y1="6" x2="12" y2="2"></line><line x1="12" y1="22" x2="12" y2="18"></line></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-smart">Smart Leasing</h5><p data-i18n="menu-smart-desc">Data-driven tenant placement.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="menu-featured">
+                                <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop" class="menu-featured-bg" alt="Feature">
+                                <h5 data-i18n="menu-integrity">Radical Integrity</h5>
+                                <p data-i18n="menu-integrity-desc">We provide a "glass-box" view of every transaction. No hidden fees.</p>
+                                <a href="#" class="menu-featured-link" data-i18n="menu-learn">Learn about our standards &rarr;</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="nav-item"><div class="nav-link" data-i18n="nav-experience">Experience</div><div class="mega-menu"><div class="mega-content" style="grid-template-columns: 1fr 1fr 1fr;"><div class="mega-column"><h4 data-i18n="menu-tech">Technology</h4><div class="menu-item-group"><a href="#" class="menu-link"><div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg></div><div class="menu-text"><h5 data-i18n="menu-portal">Owner Portal</h5><p data-i18n="menu-portal-desc">Real-time visibility.</p></div></a></div></div><div class="mega-column"><h4 data-i18n="menu-services">Services</h4><div class="menu-item-group"><a href="#" class="menu-link"><div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg></div><div class="menu-text"><h5 data-i18n="menu-maint">Maintenance Network</h5><p data-i18n="menu-maint-desc">Vetted high-quality contractors.</p></div></a></div></div><div class="mega-column"><h4 data-i18n="menu-trust">Trust</h4><div class="menu-item-group"><a href="#" class="menu-link"><div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></div><div class="menu-text"><h5 data-i18n="menu-transparency">Transparency Standards</h5><p data-i18n="menu-transparency-desc">Zero black boxes.</p></div></a></div></div></div></div></li>
+                <li class="nav-item"><div class="nav-link" data-i18n="nav-clients">Clients</div><div class="mega-menu"><div class="mega-content" style="grid-template-columns: 1fr 1fr 1fr;"><div class="mega-column"><h4 data-i18n="menu-who">Who we serve</h4><div class="menu-item-group"><a href="#" class="menu-link"><div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></div><div class="menu-text"><h5 data-i18n="menu-private">Private Owners</h5><p data-i18n="menu-private-desc">Protecting wealth.</p></div></a></div></div><div class="mega-column"><h4>&nbsp;</h4><div class="menu-item-group"><a href="#" class="menu-link"><div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg></div><div class="menu-text"><h5 data-i18n="menu-inst">Institutional Investors</h5><p data-i18n="menu-inst-desc">P&L & NAV tracking.</p></div></a></div></div><div class="mega-column"><h4>&nbsp;</h4><div class="menu-item-group"><a href="#" class="menu-link"><div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 22h20"></path><path d="M4 22V7l7-3 7 3v15"></path><path d="M14 14h-4v8"></path></svg></div><div class="menu-text"><h5 data-i18n="menu-dev">Developers</h5><p data-i18n="menu-dev-desc">From build to occupancy.</p></div></a></div></div></div></div></li>
+                <li class="nav-item"><a href="pricing.html" class="nav-link simple" data-i18n="nav-pricing">Pricing</a></li>
+            </ul>
+
+            <div class="nav-buttons">
+                <button class="theme-toggle" id="theme-toggle" aria-label="Switch Theme">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                </button>
+                <a href="#" class="btn btn-secondary" data-i18n="btn-login">Log in</a>
+                <a href="#" class="btn btn-primary" data-i18n="btn-start">Start for free</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container hero-container">
+            <div class="hero-content">
+                <span class="hero-eyebrow" data-i18n="hero-eyebrow">RESIDENTIAL & ASSOCIATION MANAGEMENT</span>
+                <h1 data-i18n="hero-title">For Owners Who Are<br>Done With Mediocrity.</h1>
+                <p data-i18n="hero-desc">You have your property managed by others—yet emails go unanswered, statements arrive late, and tenants remain frustrated. 90% of managers don't manage. They simply react.</p>
+                <div class="hero-buttons">
+                    <a href="#" class="btn btn-primary" data-i18n="btn-proposal">Request Proposal</a>
+                    <a href="#" class="btn btn-secondary" data-i18n="btn-learn">Learn More</a>
+                </div>
+            </div>
+            <div class="hero-visual-wrapper">
+                <div class="hero-visual">
+                    <img id="heroImage" src="praha_ready for video_day morning.jpg" alt="Prague City View" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="clients">
+        <div class="container">
+            <p data-i18n="trusted-by">Trusted by industry leaders</p>
+            <div class="logo-grid">
+                <img src="logo_cbre.png" class="logo-img" alt="CBRE">
+                <img src="logo_microsoft.png" class="logo-img" alt="Microsoft">
+                <img src="logo_trigema.png" class="logo-img" alt="Trigema">
+                <img src="logo_sap.png" class="logo-img" alt="SAP">
+                <img src="logo_jll.png" class="logo-img" alt="JLL">
+                <img src="logo_bp.png" class="logo-img" alt="BP">
+            </div>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2 data-i18n="features-title">Management as it should be.</h2>
+                <p data-i18n="features-desc">We take the burden of managing property off your shoulders. With zero "nasty surprises".</p>
+            </div>
+            <div class="bento-grid">
+                <div class="card card-large">
+                    <div class="card-content">
+                        <h3 data-i18n="card-dedicated">Dedicated Relationship Manager</h3>
+                        <p data-i18n="card-dedicated-desc">Forget call centers. You get a direct line to a personal expert who knows your property inside and out.</p>
+                    </div>
+                    <img src="feature_manager.jpg" class="card-visual" alt="Dedicated Manager">
+                </div>
+                <div class="card">
+                    <div class="card-content">
+                        <h3 data-i18n="card-portal">Digital Owner Portal</h3>
+                        <p data-i18n="card-portal-desc">Stay ahead with real-time financial tracking. Every rent payment and utility cost is logged.</p>
+                    </div>
+                    <img src="feature_portal.jpg" class="card-visual" alt="Owner Portal">
+                </div>
+                <div class="card">
+                    <div class="card-content">
+                        <h3 data-i18n="card-leasing">Smart Leasing</h3>
+                        <p data-i18n="card-leasing-desc">From listing to contract. Rigorous tenant screening and legally airtight lease agreements.</p>
+                    </div>
+                    <img src="feature_leasing.jpg" class="card-visual" alt="Smart Leasing">
+                </div>
+                <div class="card">
+                    <div class="card-content">
+                        <h3 data-i18n="card-maint">Maintenance Excellence</h3>
+                        <p data-i18n="card-maint-desc">We don’t search for contractors. We know them. Rentstag works only with vetted partners.</p>
+                    </div>
+                    <img src="feature_maintenance.jpg" class="card-visual" alt="Maintenance">
+                </div>
+                <div class="card">
+                    <div class="card-content">
+                        <h3 data-i18n="card-integrity">Radical Integrity</h3>
+                        <p data-i18n="card-integrity-desc">A "glass-box" view of every transaction. No hidden fees, no black boxes.</p>
+                    </div>
+                    <img src="feature_integrity.jpg" class="card-visual" alt="Integrity">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="succession-section">
+        <div class="container succession-container">
+            <div class="succession-content">
+                <span class="hero-eyebrow" style="margin-bottom: 15px;" data-i18n="succ-eyebrow">SUCCESSION & ACQUISITION</span>
+                <h2 data-i18n="succ-title">Your life's work in safe hands.</h2>
+                <p data-i18n="succ-text-1">You have spent decades building your reputation. You know every client by name and every building by heart. Now, as you consider the next chapter, you need more than a buyer. You need a successor who understands the craft.</p>
+                <p data-i18n="succ-text-2">The industry is changing—digitalization, regulation, and labor shortages are harder than ever to navigate alone. Rentstag is the partner that honors your legacy while future-proofing your business. We don't just take over assets; we take care of relationships.</p>
+                <div class="founder-quote">
+                    <div>
+                        <p class="quote-text" data-i18n="succ-quote">"We ensure your employees thrive and your clients continue to receive the excellence they expect. Let's discuss your legacy personally."</p>
+                        <img src="podpis signature Dr Karasek_for public.png" alt="Signature Dr. Karasek" class="signature-img">
+                        <span class="founder-name">Dr. Ondrej Karasek</span>
+                        <span class="founder-role">Founder & CEO, Rentstag</span>
+                        <a href="https://cal.com/ondrej-karasek-qv4u8c/secret" class="btn btn-secondary" style="margin-top: 25px;" data-i18n="btn-discuss">Discuss Succession</a>
+                    </div>
+                </div>
+            </div>
+            <div class="succession-visual">
+                <img src="feature_obrazek_nachfolge_office.jpg" alt="Succession">
+            </div>
+        </div>
+    </section>
+
+    <div class="horizontal-scroll-wrapper">
+        <section class="testimonials-section">
+            <div class="testimonials-container">
+                <div class="section-header">
+                    <span class="hero-eyebrow" data-i18n="test-eyebrow">SUCCESS STORIES</span>
+                    <h2 data-i18n="test-title">Partners who trusted us.</h2>
+                </div>
+                <div class="testimonial-track">
+                    <div class="testimonial-card">
+                        <img src="horizont_scroll_1.jpg" class="test-bg" alt="Jan Novák">
+                        <div class="test-overlay">
+                            <div class="test-quote" data-i18n="test-1">"Commitments were always kept. Selling to them was absolutely the right decision."</div>
+                            <div class="test-author"><h5>Jan Novák</h5><span>Czech Republic • May 2024</span></div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <img src="horizont_scroll_2.jpg" class="test-bg" alt="Peter Varga">
+                        <div class="test-overlay">
+                            <div class="test-quote" data-i18n="test-2">"From the first call to the notary, the process ran transparently and smoothly."</div>
+                            <div class="test-author"><h5>Peter Varga</h5><span>Slovakia • August 2024</span></div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <img src="horizont_scroll_3.jpg" class="test-bg" alt="Petra Dvořáková">
+                        <div class="test-overlay">
+                            <div class="test-quote" data-i18n="test-3">"Structured and secure sales process – I didn't expect it to be this simple."</div>
+                            <div class="test-author"><h5>Petra Dvořáková</h5><span>Czech Republic • October 2024</span></div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <img src="horizont_scroll_4.jpg" class="test-bg" alt="Michał Wiśniewski">
+                        <div class="test-overlay">
+                            <div class="test-quote" data-i18n="test-4">"Negotiated at eye level and then handled perfectly – professional and stress-free."</div>
+                            <div class="test-author"><h5>Michał Wiśniewski</h5><span>Poland • March 2025</span></div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <img src="horizont_scroll_5.jpg" class="test-bg" alt="Martin Svoboda">
+                        <div class="test-overlay">
+                            <div class="test-quote" data-i18n="test-5">"Every agreement was respected precisely, giving me complete peace of mind."</div>
+                            <div class="test-author"><h5>Martin Svoboda</h5><span>Czech Republic • April 2025</span></div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <img src="horizont_scroll_6.jpg" class="test-bg" alt="Zuzana Kováčová">
+                        <div class="test-overlay">
+                            <div class="test-quote" data-i18n="test-6">"The transition was handled with incredible efficiency and respect for my team."</div>
+                            <div class="test-author"><h5>Zuzana Kováčová</h5><span>Slovakia • November 2025</span></div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <img src="horizont_scroll_7.jpg" class="test-bg" alt="Lucie Králová">
+                        <div class="test-overlay">
+                            <div class="test-quote" data-i18n="test-7">"Reliability is rare, but they delivered on every single assurance from day one."</div>
+                            <div class="test-author"><h5>Lucie Králová</h5><span>Czech Republic • January 2026</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <section class="process-section">
+        <div class="container">
+            <div class="section-header" style="margin-bottom: 60px;">
+                <span class="hero-eyebrow" data-i18n="proc-eyebrow">THE ACQUISITION STANDARD</span>
+                <h2 data-i18n="proc-title">Why sell to Rentstag?</h2>
+            </div>
+            <div class="why-grid">
+                <div class="why-card">
+                    <div class="why-icon">01</div>
+                    <h4 data-i18n="why-1-title">Direct Founder Access</h4>
+                    <p data-i18n="why-1-desc">No brokers, no juniors. Dr. Ondrej Karasek and our M&A team guide you personally. Stress-free and discreet.</p>
+                </div>
+                <div class="why-card">
+                    <div class="why-icon">02</div>
+                    <h4 data-i18n="why-2-title">Proven Track Record</h4>
+                    <p data-i18n="why-2-desc">With over 25 successful integrations, we know exactly how to preserve your legacy while modernizing operations.</p>
+                </div>
+                <div class="why-card">
+                    <div class="why-icon">03</div>
+                    <h4 data-i18n="why-3-title">Smart Due Diligence</h4>
+                    <p data-i18n="why-3-desc">We focus only on the metrics that matter for sustainable success. No endless paperwork, just key operational data.</p>
+                </div>
+                <div class="why-card">
+                    <div class="why-icon">04</div>
+                    <h4 data-i18n="why-4-title">Tech-Enabled Future</h4>
+                    <p data-i18n="why-4-desc">We don't just buy; we upgrade. Your portfolio gets immediate access to our AI stack, making management 5x more efficient.</p>
+                </div>
+            </div>
+            <div class="timeline-wrapper">
+                <h3 style="text-align: center; margin-bottom: 80px; font-size: 32px;" data-i18n="timeline-header">From Hello to Handshake in 4 Weeks.</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content"><span class="time-tag" data-i18n="time-1">Day 1</span><h4 data-i18n="step-1-title">Discovery Session</h4><p data-i18n="step-1-desc">Personal contact is the foundation. We discuss your goals, your portfolio structure, and answer every question transparently.</p></div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content"><span class="time-tag" data-i18n="time-2">Week 1</span><h4 data-i18n="step-2-title">Indicative Offer</h4><p data-i18n="step-2-desc">Based on initial data, we present a clear valuation and term sheet. Fast, fair, and binding.</p></div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content"><span class="time-tag" data-i18n="time-3">Week 2-3</span><h4 data-i18n="step-3-title">Operational Audit</h4><p data-i18n="step-3-desc">We verify the numbers and tech stack. We look for potential, not just risks. This is non-intrusive to your daily operations.</p></div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content"><span class="time-tag" data-i18n="time-4">Week 4</span><h4 data-i18n="step-4-title">Contract Execution</h4><p data-i18n="step-4-desc">We finalize the purchase agreement. We discuss every detail until everything is right, then proceed to sign.</p></div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content"><span class="time-tag" data-i18n="time-5">Week 4+</span><h4 data-i18n="step-5-title">Welcome to Rentstag</h4><p data-i18n="step-5-desc">Joint communication to clients and staff. We deploy our migration team to integrate your portfolio into our OS seamlessly.</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="container">
+        <div class="cta-section">
+            <div class="cta-content">
+                <h2 data-i18n="cta-title">Your legacy deserves a personal conversation.</h2>
+                <p style="margin-bottom: 30px; color: #ccc;" data-i18n="cta-desc">Skip the intermediaries. Let’s discuss a valuation and transition plan that respects your timeline and finds the right home for what you’ve built.</p>
+                <div class="cta-buttons-wrapper" style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                    <a href="https://cal.com/ondrej-karasek-qv4u8c/secret" class="btn btn-primary" data-i18n="btn-schedule">Schedule a Call with Dr. Karasek</a>
+                    <span style="font-size: 12px; color: rgba(255,255,255,0.5); letter-spacing: 0.5px;" data-i18n="cta-confidential">100% Confidential</span>
+                </div>
+            </div>
+            <img src="feature_Rentstag_office.jpg" class="cta-visual" alt="Rentstag Office">
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4 data-i18n="nav-management">Management</h4>
+                    <ul>
+                        <li><a href="residential.html" data-i18n="menu-res">Residential</a></li>
+                        <li><a href="association.html" data-i18n="menu-assoc">Association</a></li>
+                        <li><a href="leasing.html" data-i18n="menu-smart">Smart Leasing</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 data-i18n="nav-experience">Experience</h4>
+                    <ul>
+                        <li><a href="#" data-i18n="menu-portal">Owner Portal</a></li>
+                        <li><a href="#" data-i18n="menu-maint">Maintenance Network</a></li>
+                        <li><a href="#" data-i18n="menu-transparency">Transparency Standards</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 data-i18n="nav-clients">Clients</h4>
+                    <ul>
+                        <li><a href="#" data-i18n="menu-private">Private Owners</a></li>
+                        <li><a href="#" data-i18n="menu-inst">Institutional Investors</a></li>
+                        <li><a href="#" data-i18n="menu-dev">Developers</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 data-i18n="footer-company">Company</h4>
+                    <ul>
+                        <li><a href="#" data-i18n="footer-about">About Us</a></li>
+                        <li><a href="#" data-i18n="footer-careers">Careers</a></li>
+                        <li><a href="#" data-i18n="footer-contact">Contact</a></li>
+                        <li><a href="pricing.html" style="color: #fff;" data-i18n="nav-pricing">Pricing</a></li>
+                    </ul>
+                </div>
+                 <div class="footer-col">
+                    <h4 data-i18n="footer-resources">Resources</h4>
+                    <ul>
+                        <li><a href="#" data-i18n="footer-help">Help Center</a></li>
+                        <li><a href="#" data-i18n="footer-privacy">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="footer-copy">
+                    &copy; 2025 Rentstag SE. All rights reserved.
+                </div>
+                
+                <div class="footer-center">
+                    <a href="https://www.linkedin.com/company/rentstag-official/" target="_blank" class="social-icon" aria-label="LinkedIn">
+                        <svg viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                    </a>
+                </div>
+
+                <div class="footer-right">
+                    <div class="footer-links" style="display: flex; gap: 20px; font-size: 13px;">
+                        <a href="#" data-i18n="footer-privacy">Privacy Policy</a>
+                        <a href="#" data-i18n="footer-terms">Terms of Service</a>
+                    </div>
+                    <div class="lang-switch">
+                        <button class="lang-btn" onclick="setLanguage('en')">EN</button>
+                        <span style="color:#444">|</span>
+                        <button class="lang-btn" onclick="setLanguage('de')">DE</button>
+                        <span style="color:#444">|</span>
+                        <button class="lang-btn" onclick="setLanguage('cs')">CZ</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 1. TIME-BASED IMAGE SWITCHER
+        document.addEventListener('DOMContentLoaded', () => {
+            const imageElement = document.getElementById('heroImage');
+            if (imageElement) {
+                const currentHour = new Date().getHours();
+                const isNight = currentHour >= 18 || currentHour < 6;
+                if (isNight) {
+                    imageElement.src = 'praha_ready for video_night.jpg';
+                } else {
+                    imageElement.src = 'praha_ready for video_day morning.jpg';
+                }
+            }
+        });
+
+        // 2. DARK MODE TOGGLE
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleBtn = document.getElementById('theme-toggle');
+            const body = document.body;
+            if (localStorage.getItem('theme') === 'dark') { body.classList.add('dark-mode'); }
+            toggleBtn.addEventListener('click', () => {
+                body.classList.toggle('dark-mode');
+                localStorage.setItem('theme', body.classList.contains('dark-mode') ? 'dark' : 'light');
+            });
+        });
+
+        // 3. CLICK SOUND
+        document.addEventListener('DOMContentLoaded', () => {
+            const clickSound = new Audio('Rentstag_mouse-click.mp3');
+            clickSound.volume = 0.4; 
+            const buttons = document.querySelectorAll('.btn, .nav-link, .menu-link, .theme-toggle, .lang-btn, .social-icon');
+            buttons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    clickSound.currentTime = 0;
+                    const playPromise = clickSound.play();
+                    if (playPromise !== undefined) { playPromise.catch(error => {}); }
+                });
+            });
+        });
+
+        // 4. TIMELINE SCROLL ACTIVATION
+        document.addEventListener('DOMContentLoaded', () => {
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) entry.target.classList.add('active');
+                    else entry.target.classList.remove('active');
+                });
+            }, { rootMargin: '-40% 0px -40% 0px', threshold: 0 });
+            timelineItems.forEach(item => observer.observe(item));
+        });
+
+        // 5. STICKY HORIZONTAL SCROLL LOGIC
+        document.addEventListener('DOMContentLoaded', () => {
+            // Only run if we are on desktop to avoid mobile scroll hijacking
+            if (window.innerWidth > 900) {
+                const scrollContainer = document.querySelector('.horizontal-scroll-wrapper');
+                const stickySection = document.querySelector('.testimonials-section');
+                const scrollTrack = document.querySelector('.testimonial-track');
+
+                if(scrollContainer && stickySection && scrollTrack) {
+                    window.addEventListener('scroll', () => {
+                        const offsetTop = scrollContainer.offsetTop;
+                        const scrollY = window.scrollY;
+                        const containerHeight = scrollContainer.offsetHeight;
+                        const windowHeight = window.innerHeight;
+
+                        // Check if we are within the scroll range
+                        if (scrollY >= offsetTop && scrollY <= (offsetTop + containerHeight - windowHeight)) {
+                            // Calculate percentage of scroll within the container
+                            const percentage = (scrollY - offsetTop) / (containerHeight - windowHeight);
+                            
+                            // Calculate how much to move left (track width - viewport width)
+                            // We add some buffer padding
+                            const moveAmount = scrollTrack.scrollWidth - window.innerWidth + 100; 
+                            
+                            // Apply transformation
+                            scrollTrack.style.transform = `translateX(-${percentage * moveAmount}px)`;
+                        }
+                    });
+                }
+            }
+        });
+
+        // 6. LANGUAGE TRANSLATOR (Manual Switch)
+        const translations = {
+            'cs': {
+                'nav-management': 'Správa', 'nav-experience': 'Zkušenost', 'nav-clients': 'Klienti', 'nav-pricing': 'Ceník',
+                'btn-login': 'Přihlásit', 'btn-start': 'Začít zdarma', 'menu-core': 'Hlavní služby', 'menu-res': 'Správa bytových domů', 'menu-res-desc': 'Kompletní péče o nájemní domy.',
+                'menu-assoc': 'Správa SVJ', 'menu-assoc-desc': 'Moderní administrativa pro společenství.', 'menu-leasing': 'Pronájem', 'menu-smart': 'Chytrý pronájem',
+                'menu-smart-desc': 'Prověření nájemníci a data.', 'menu-integrity': 'Radikální Integrita', 'menu-integrity-desc': 'Vidíte každou transakci. Žádné skryté poplatky.',
+                'menu-learn': 'Více o našich standardech &rarr;', 'menu-tech': 'Technologie', 'menu-portal': 'Portál vlastníka', 'menu-portal-desc': 'Přehled v reálném čase.',
+                'menu-services': 'Služby', 'menu-maint': 'Síť údržby', 'menu-maint-desc': 'Prověření řemeslníci a kvalita.', 'menu-trust': 'Důvěra', 'menu-transparency': 'Standardy transparentnosti',
+                'menu-transparency-desc': 'Žádné černé skříňky.', 'menu-who': 'Komu sloužíme', 'menu-private': 'Soukromí vlastníci', 'menu-private-desc': 'Ochrana a růst majetku.',
+                'menu-inst': 'Investiční fondy', 'menu-inst-desc': 'P&L a sledování NAV.', 'menu-dev': 'Developeři', 'menu-dev-desc': 'Od výstavby po obsazenost.',
+                'hero-eyebrow': 'SPRÁVA NEMOVITOSTÍ & SVJ', 'hero-title': 'Pro majitele, kteří mají<br>dost průměrnosti.', 'hero-desc': 'Vaši nemovitost spravují jiní – přesto maily zůstávají bez odpovědi a vyúčtování chodí pozdě. 90 % správců nespravuje. Pouze reagují.',
+                'btn-proposal': 'Poptat nabídku', 'btn-learn': 'Zjistit více', 'trusted-by': 'Důvěřují nám lídři v oboru', 'features-title': 'Správa, jak má být.',
+                'features-desc': 'Zbavíme vás břemene správy nemovitosti. Bez nepříjemných překvapení.', 'card-dedicated': 'Osobní správce', 'card-dedicated-desc': 'Zapomeňte na call centra. Máte přímou linku na experta, který zná vaši nemovitost do posledního detailu.',
+                'card-portal': 'Digitální portál', 'card-portal-desc': 'Buďte v obraze s finančním přehledem v reálném čase. Každá platba nájmu i náklad je zaznamenána.', 'card-leasing': 'Chytrý pronájem',
+                'card-leasing-desc': 'Od inzerce po podpis. Důkladné prověření nájemníků a právně neprůstřelné nájemní smlouvy.', 'card-maint': 'Špičková údržba', 'card-maint-desc': 'Nehledáme řemeslníky na Googlu. Známe je. Rentstag spolupracuje pouze s prověřenými partnery.',
+                'card-integrity': 'Radikální integrita', 'card-integrity-desc': 'Pohled do "skleněné skříňky" na každou transakci. Žádné skryté poplatky, žádné tajemství.', 'cta-title': 'Váš odkaz si zaslouží osobní rozhovor.',
+                'cta-desc': 'Přeskočte zprostředkovatele. Pojďme probrat ocenění a plán přechodu, který respektuje váš časový harmonogram a najde ten správný domov pro to, co jste vybudovali.', 'btn-schedule': 'Sjednat hovor s Dr. Karáskem', 'cta-confidential': '100% Diskrétní',
+                'succ-eyebrow': 'NÁSTUPNICTVÍ & AKVIZICE', 'succ-title': 'Vaše životní dílo v bezpečných rukou.', 'succ-text-1': 'Budování dobrého jména trvá desetiletí. Znáte každého klienta jménem a každou budovu nazpaměť. Nyní, když zvažujete další kapitolu, potřebujete víc než jen kupce. Potřebujete nástupce, který rozumí řemeslu.',
+                'succ-text-2': 'Odvětví se mění – digitalizace, regulace a nedostatek pracovních sil jsou výzvy, kterým se těžko čelí o samotě. Rentstag je partner, který ctí váš odkaz a zároveň připraví vaši firmu na budoucnost. Nepřebíráme jen aktiva, pečujeme o vztahy.',
+                'succ-quote': '"Zajistíme, aby vaši zaměstnanci prosperovali a klienti i nadále dostávali excelentní služby, na které jsou zvyklí. Pojďme probrat váš odkaz osobně."', 'btn-discuss': 'Projednat nástupnictví',
+                'proc-eyebrow': 'STANDARD AKVIZICE', 'proc-title': 'Proč prodat Rentstagu?', 'why-1-title': 'Přímý kontakt', 'why-1-desc': 'Žádní makléři, žádní junioři. Dr. Ondrej Karasek a náš M&A tým vás procesem provedou osobně. Bez stresu a diskrétně.',
+                'why-2-title': 'Prokázané výsledky', 'why-2-desc': 'S více než 25 úspěšnými integracemi přesně víme, jak zachovat váš odkaz a zároveň modernizovat provoz.', 'why-3-title': 'Chytrá Due Diligence',
+                'why-3-desc': 'Zaměřujeme se jen na metriky, které jsou klíčové pro udržitelný úspěch. Žádné zbytečné papírování.', 'why-4-title': 'Budoucnost s technologiemi', 'why-4-desc': 'Nekupujeme jen aktiva, upgradujeme je. Vaše portfolio získá okamžitý přístup k našemu AI stacku.',
+                'timeline-header': 'Od pozdravu k podpisu za 4 týdny.', 'time-1': 'Den 1', 'step-1-title': 'Úvodní setkání', 'step-1-desc': 'Osobní kontakt je základ. Probereme vaše cíle, strukturu portfolia a zodpovíme transparentně všechny otázky.',
+                'time-2': 'Týden 1', 'step-2-title': 'Indikativní nabídka', 'step-2-desc': 'Na základě úvodních dat předložíme jasné ocenění a term sheet. Rychle, férově a závazně.', 'time-3': 'Týden 2-3',
+                'step-3-title': 'Provozní audit', 'step-3-desc': 'Ověříme čísla a technologický stack. Hledáme potenciál, ne jen rizika. Nezatěžujeme váš denní provoz.', 'time-4': 'Týden 4',
+                'step-4-title': 'Uzavření dohody', 'step-4-desc': 'Finalizujeme kupní smlouvu. Prodiskutujeme každý detail, dokud nebude vše správně, a přistoupíme k podpisu.', 'time-5': 'Týden 4+',
+                'step-5-title': 'Vítejte v Rentstag', 'step-5-desc': 'Společná komunikace klientům a týmu. Nasazujeme migrační tým pro hladkou integraci do našeho OS.', 'footer-company': 'Společnost',
+                'footer-about': 'O nás', 'footer-careers': 'Kariéra', 'footer-contact': 'Kontakt', 'footer-resources': 'Zdroje', 'footer-help': 'Centrum nápovědy', 'footer-privacy': 'Ochrana soukromí',
+                'footer-terms': 'Podmínky služby', 'footer-cookies': 'Nastavení cookies', 'test-eyebrow': 'PŘÍBĚHY ÚSPĚCHU', 'test-title': 'Partneři, kteří nám důvěřovali.',
+                'test-1': '"Závazky byly vždy dodrženy. Prodej byl naprosto správným rozhodnutím."', 'test-2': '"Od prvního hovoru až po notáře probíhal proces transparentně a hladce."',
+                'test-3': '"Strukturovaný a bezpečný proces prodeje – nečekala jsem, že to bude tak jednoduché."', 'test-4': '"Vyjednáváno jako rovný s rovným a poté perfektně zvládnuto – profesionální a bez stresu."',
+                'test-5': '"Každá dohoda byla přesně dodržena, což mi dodalo naprostý klid."', 'test-6': '"Přechod byl zvládnut s neuvěřitelnou efektivitou a respektem k mému týmu."',
+                'test-7': '"Spolehlivost je vzácná, ale oni dodrželi každé jednotlivé ujištění od prvního dne."'
+            },
+            'de': {
+                'nav-management': 'Verwaltung', 'nav-experience': 'Erfahrung', 'nav-clients': 'Kunden', 'nav-pricing': 'Preise',
+                'btn-login': 'Anmelden', 'btn-start': 'Kostenlos starten', 'menu-core': 'Kernleistungen', 'menu-res': 'Mietverwaltung', 'menu-res-desc': 'Rundum-Service für Mietshäuser.',
+                'menu-assoc': 'WEG-Verwaltung', 'menu-assoc-desc': 'Moderne Verwaltung für Eigentümer.', 'menu-leasing': 'Vermietung', 'menu-smart': 'Smart Leasing',
+                'menu-smart-desc': 'Datengetriebene Vermietung.', 'menu-integrity': 'Radikale Integrität', 'menu-integrity-desc': 'Transparenz bei jeder Transaktion.',
+                'menu-learn': 'Mehr über unsere Standards &rarr;', 'menu-tech': 'Technologie', 'menu-portal': 'Eigentümer-Portal', 'menu-portal-desc': 'Echtzeit-Überblick.',
+                'menu-services': 'Dienstleistungen', 'menu-maint': 'Handwerker-Netzwerk', 'menu-maint-desc': 'Geprüfte Qualität.', 'menu-trust': 'Vertrauen', 'menu-transparency': 'Transparenz-Standards',
+                'menu-transparency-desc': 'Keine Blackboxen.', 'menu-who': 'Für wen wir arbeiten', 'menu-private': 'Privateigentümer', 'menu-private-desc': 'Vermögensschutz.',
+                'menu-inst': 'Institutionelle Investoren', 'menu-inst-desc': 'P&L und NAV Tracking.', 'menu-dev': 'Bauträger', 'menu-dev-desc': 'Vom Bau bis zur Vermietung.',
+                'hero-eyebrow': 'IMMOBILIEN & WEG VERWALTUNG', 'hero-title': 'Für Eigentümer, die genug<br>vom Durchschnitt haben.', 'hero-desc': 'Andere verwalten Ihr Eigentum – doch E-Mails bleiben unbeantwortet und Abrechnungen kommen zu spät. 90% verwalten nicht. Sie reagieren nur.',
+                'btn-proposal': 'Angebot anfordern', 'btn-learn': 'Mehr erfahren', 'trusted-by': 'Vertraut von Branchenführern', 'features-title': 'Verwaltung, wie sie sein sollte.',
+                'features-desc': 'Wir nehmen Ihnen die Last der Verwaltung ab. Ohne böse Überraschungen.', 'card-dedicated': 'Persönlicher Ansprechpartner', 'card-dedicated-desc': 'Vergessen Sie Callcenter. Sie erhalten einen direkten Draht zu einem Experten.',
+                'card-portal': 'Digitales Portal', 'card-portal-desc': 'Behalten Sie den Überblick mit Echtzeit-Finanzdaten.', 'card-leasing': 'Smart Leasing',
+                'card-leasing-desc': 'Von der Listung bis zum Vertrag. Strenge Mieterprüfung.', 'card-maint': 'Exzellente Instandhaltung', 'card-maint-desc': 'Wir suchen keine Handwerker bei Google. Wir kennen sie.',
+                'card-integrity': 'Radikale Integrität', 'card-integrity-desc': 'Einblick in jede Transaktion. Keine versteckten Gebühren.', 'cta-title': 'Ihr Vermächtnis verdient ein persönliches Gespräch.',
+                'cta-desc': 'Überspringen Sie die Vermittler. Lassen Sie uns über eine Bewertung und einen Übergabeplan sprechen.', 'btn-schedule': 'Gespräch mit Dr. Karasek vereinbaren', 'cta-confidential': '100% Vertraulich',
+                'succ-eyebrow': 'NACHFOLGE & AKQUISE', 'succ-title': 'Ihr Lebenswerk in sicheren Händen.', 'succ-text-1': 'Sie haben Jahrzehnte damit verbracht, Ihren Ruf aufzubauen. Jetzt brauchen Sie einen Nachfolger, der das Handwerk versteht.',
+                'succ-text-2': 'Die Branche verändert sich. Rentstag ist der Partner, der Ihr Erbe ehrt und Ihr Unternehmen zukunftssicher macht.',
+                'succ-quote': '"Wir sorgen dafür, dass Ihre Mitarbeiter aufblühen und Ihre Kunden weiterhin exzellenten Service erhalten."', 'btn-discuss': 'Nachfolge besprechen',
+                'proc-eyebrow': 'AKQUISITIONS-STANDARD', 'proc-title': 'Warum an Rentstag verkaufen?', 'why-1-title': 'Direkter Kontakt', 'why-1-desc': 'Keine Makler. Dr. Ondrej Karasek und unser M&A-Team begleiten Sie persönlich.',
+                'why-2-title': 'Bewährte Erfolgsbilanz', 'why-2-desc': 'Mit über 25 erfolgreichen Integrationen wissen wir genau, wie man Ihr Erbe bewahrt.', 'why-3-title': 'Smarte Due Diligence',
+                'why-3-desc': 'Wir konzentrieren uns nur auf die Kennzahlen, die für den nachhaltigen Erfolg entscheidend sind.', 'why-4-title': 'Zukunft mit Technologie', 'why-4-desc': 'Wir kaufen nicht nur; wir upgraden. Ihr Portfolio erhält sofortigen Zugang zu unserem AI-Stack.',
+                'timeline-header': 'Vom Hallo zum Handschlag in 4 Wochen.', 'time-1': 'Tag 1', 'step-1-title': 'Erstgespräch', 'step-1-desc': 'Persönlicher Kontakt ist die Basis. Wir besprechen Ihre Ziele.',
+                'time-2': 'Woche 1', 'step-2-title': 'Indikatives Angebot', 'step-2-desc': 'Basierend auf ersten Daten präsentieren wir eine klare Bewertung.', 'time-3': 'Woche 2-3',
+                'step-3-title': 'Betriebsprüfung', 'step-3-desc': 'Wir prüfen Zahlen und Technik. Wir suchen Potenzial, nicht nur Risiken.', 'time-4': 'Woche 4',
+                'step-4-title': 'Vertragsabschluss', 'step-4-desc': 'Wir finalisieren den Kaufvertrag und gehen zur Unterschrift.', 'time-5': 'Woche 4+',
+                'step-5-title': 'Willkommen bei Rentstag', 'step-5-desc': 'Gemeinsame Kommunikation an Kunden und Mitarbeiter.', 'footer-company': 'Unternehmen',
+                'footer-about': 'Über uns', 'footer-careers': 'Karriere', 'footer-contact': 'Kontakt', 'footer-resources': 'Ressourcen', 'footer-help': 'Hilfe-Center', 'footer-privacy': 'Datenschutz',
+                'footer-terms': 'AGB', 'footer-cookies': 'Cookie-Einstellungen', 'test-eyebrow': 'ERFOLGSGESCHICHTEN', 'test-title': 'Partner, die uns vertraut haben.',
+                'test-1': '"Verpflichtungen wurden immer eingehalten. Der Verkauf an sie war absolut die richtige Entscheidung."', 'test-2': '"Vom ersten Anruf bis zum Notar verlief der Prozess transparent und reibungslos."',
+                'test-3': '"Strukturierter und sicherer Verkaufsprozess – ich hätte nicht erwartet, dass es so einfach ist."', 'test-4': '"Auf Augenhöhe verhandelt und dann perfekt abgewickelt – professionell und stressfrei."',
+                'test-5': '"Jede Vereinbarung wurde präzise eingehalten, was mir völlige Ruhe gab."', 'test-6': '"Der Übergang wurde mit unglaublicher Effizienz und Respekt für mein Team bewältigt."',
+                'test-7': '"Zuverlässigkeit ist selten, aber sie haben jedes einzelne Versprechen vom ersten Tag an gehalten."'
+            },
+            'en': {
+                'nav-management': 'Management', 'nav-experience': 'Experience', 'nav-clients': 'Clients', 'nav-pricing': 'Pricing',
+                'btn-login': 'Log in', 'btn-start': 'Start for free', 'menu-core': 'Core Services', 'menu-res': 'Residential Management', 'menu-res-desc': 'Full-service care for apartments.',
+                'menu-assoc': 'Association Management', 'menu-assoc-desc': 'Modern administration for HOAs.', 'menu-leasing': 'Leasing', 'menu-smart': 'Smart Leasing',
+                'menu-smart-desc': 'Data-driven tenant placement.', 'menu-integrity': 'Radical Integrity', 'menu-integrity-desc': 'We provide a "glass-box" view of every transaction. No hidden fees.',
+                'menu-learn': 'Learn about our standards &rarr;', 'menu-tech': 'Technology', 'menu-portal': 'Owner Portal', 'menu-portal-desc': 'Real-time visibility.',
+                'menu-services': 'Services', 'menu-maint': 'Maintenance Network', 'menu-maint-desc': 'Vetted high-quality contractors.', 'menu-trust': 'Trust', 'menu-transparency': 'Transparency Standards',
+                'menu-transparency-desc': 'Zero black boxes.', 'menu-who': 'Who we serve', 'menu-private': 'Private Owners', 'menu-private-desc': 'Protecting wealth.',
+                'menu-inst': 'Institutional Investors', 'menu-inst-desc': 'P&L & NAV tracking.', 'menu-dev': 'Developers', 'menu-dev-desc': 'From build to occupancy.',
+                'hero-eyebrow': 'RESIDENTIAL & ASSOCIATION MANAGEMENT', 'hero-title': 'For Owners Who Are<br>Done With Mediocrity.', 'hero-desc': 'You have your property managed by others—yet emails go unanswered, statements arrive late, and tenants remain frustrated. 90% of managers don\'t manage. They simply react.',
+                'btn-proposal': 'Request Proposal', 'btn-learn': 'Learn More', 'trusted-by': 'Trusted by industry leaders', 'features-title': 'Management as it should be.',
+                'features-desc': 'We take the burden of managing property off your shoulders. With zero "nasty surprises".', 'card-dedicated': 'Dedicated Relationship Manager', 'card-dedicated-desc': 'Forget call centers. You get a direct line to a personal expert who knows your property inside and out.',
+                'card-portal': 'Digital Owner Portal', 'card-portal-desc': 'Stay ahead with real-time financial tracking. Every rent payment and utility cost is logged.', 'card-leasing': 'Smart Leasing',
+                'card-leasing-desc': 'From listing to contract. Rigorous tenant screening and legally airtight lease agreements.', 'card-maint': 'Maintenance Excellence', 'card-maint-desc': 'We don’t search for contractors. We know them. Rentstag works only with vetted partners.',
+                'card-integrity': 'Radical Integrity', 'card-integrity-desc': 'A "glass-box" view of every transaction. No hidden fees, no black boxes.', 'cta-title': 'Your legacy deserves a personal conversation.',
+                'cta-desc': 'Skip the intermediaries. Let’s discuss a valuation and transition plan that respects your timeline and finds the right home for what you’ve built.', 'btn-schedule': 'Schedule a Call with Dr. Karasek', 'cta-confidential': '100% Confidential',
+                'succ-eyebrow': 'SUCCESSION & ACQUISITION', 'succ-title': 'Your life\'s work in safe hands.', 'succ-text-1': 'You have spent decades building your reputation. You know every client by name and every building by heart. Now, as you consider the next chapter, you need more than a buyer. You need a successor who understands the craft.',
+                'succ-text-2': 'The industry is changing—digitalization, regulation, and labor shortages are harder than ever to navigate alone. Rentstag is the partner that honors your legacy while future-proofing your business. We don\'t just take over assets; we take care of relationships.',
+                'succ-quote': '"We ensure your employees thrive and your clients continue to receive the excellence they expect. Let\'s discuss your legacy personally."', 'btn-discuss': 'Discuss Succession',
+                'proc-eyebrow': 'THE ACQUISITION STANDARD', 'proc-title': 'Why sell to Rentstag?', 'why-1-title': 'Direct Founder Access', 'why-1-desc': 'No brokers, no juniors. Dr. Ondrej Karasek and our M&A team guide you personally. Stress-free and discreet.',
+                'why-2-title': 'Proven Track Record', 'why-2-desc': 'With over 25 successful integrations, we know exactly how to preserve your legacy while modernizing operations.', 'why-3-title': 'Smart Due Diligence',
+                'why-3-desc': 'We focus only on the metrics that matter for sustainable success. No endless paperwork, just key operational data.', 'why-4-title': 'Tech-Enabled Future', 'why-4-desc': 'We don\'t just buy; we upgrade. Your portfolio gets immediate access to our AI stack, making management 5x more efficient.',
+                'timeline-header': 'From Hello to Handshake in 4 Weeks.', 'time-1': 'Day 1', 'step-1-title': 'Discovery Session', 'step-1-desc': 'Personal contact is the foundation. We discuss your goals, your portfolio structure, and answer every question transparently.',
+                'time-2': 'Week 1', 'step-2-title': 'Indicative Offer', 'step-2-desc': 'Based on initial data, we present a clear valuation and term sheet. Fast, fair, and binding.', 'time-3': 'Week 2-3',
+                'step-3-title': 'Operational Audit', 'step-3-desc': 'We verify the numbers and tech stack. We look for potential, not just risks. This is non-intrusive to your daily operations.', 'time-4': 'Week 4',
+                'step-4-title': 'Contract Execution', 'step-4-desc': 'We finalize the purchase agreement. We discuss every detail until everything is right, then proceed to sign.', 'time-5': 'Week 4+',
+                'step-5-title': 'Welcome to Rentstag', 'step-5-desc': 'Joint communication to clients and staff. We deploy our migration team to integrate your portfolio into our OS seamlessly.', 'footer-company': 'Company',
+                'footer-about': 'About Us', 'footer-careers': 'Careers', 'footer-contact': 'Contact', 'footer-resources': 'Resources', 'footer-help': 'Help Center', 'footer-privacy': 'Privacy Policy',
+                'footer-terms': 'Terms of Service', 'footer-cookies': 'Cookie Settings', 'test-eyebrow': 'SUCCESS STORIES', 'test-title': 'Partners who trusted us.',
+                'test-1': '"Commitments were always kept. Selling to them was absolutely the right decision."', 'test-2': '"From the first call to the notary, the process ran transparently and smoothly."',
+                'test-3': '"Structured and secure sales process – I didn\'t expect it to be this simple."', 'test-4': '"Negotiated at eye level and then handled perfectly – professional and stress-free."',
+                'test-5': '"Every agreement was respected precisely, giving me complete peace of mind."', 'test-6': '"The transition was handled with incredible efficiency and respect for my team."',
+                'test-7': '"Reliability is rare, but they delivered on every single assurance from day one."'
+            }
+        };
+
+        function setLanguage(lang) {
+            const elements = document.querySelectorAll('[data-i18n]');
+            
+            // Set active class on buttons
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            // Find button by text content (approximate) or just styling
+            const btns = document.querySelectorAll('.lang-btn');
+            if(lang === 'en') btns[0].classList.add('active');
+            if(lang === 'de') btns[1].classList.add('active');
+            if(lang === 'cs') btns[2].classList.add('active');
+
+            if(translations[lang]) {
+                elements.forEach(element => {
+                    const key = element.getAttribute('data-i18n');
+                    if (translations[lang][key]) {
+                        element.innerHTML = translations[lang][key];
+                    }
+                });
+                localStorage.setItem('lang', lang);
+            }
+        }
+
+        // Auto-detect or load saved
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedLang = localStorage.getItem('lang');
+            const userLang = navigator.language || navigator.userLanguage; 
+            
+            if (savedLang) {
+                setLanguage(savedLang);
+            } else if (userLang.startsWith('cs')) {
+                setLanguage('cs');
+            } else if (userLang.startsWith('de')) {
+                setLanguage('de');
+            }
+            // Default is EN (HTML is already EN)
+        });
+    </script>
+
+</body>
+</html>

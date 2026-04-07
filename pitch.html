@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rentstag | Investment Deck 2026</title>
+    <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@100,200,300,400,500,700,800,900&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- 1. CORE BRANDING --- */
+        :root {
+            --primary-color: #C86B3D;
+            --copper-gradient: linear-gradient(135deg, #A0552D 0%, #E69B6A 50%, #A0552D 100%);
+            --bg-body: #F7F7F5;
+            --bg-card: #FFFFFF;
+            --text-main: #121212;
+            --text-muted: #555555;
+            --font-family: 'Cabinet Grotesk', sans-serif;
+            --slide-width: 1123px; 
+            --slide-height: 632px; 
+            
+            /* Chart Colors */
+            --chart-red: #d64545;
+            --chart-green: #2ecc71;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: var(--font-family);
+            background-color: #222; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 40px 0;
+        }
+
+        /* --- 2. SLIDE ARCHITECTURE --- */
+        .slide {
+            width: var(--slide-width);
+            height: var(--slide-height);
+            background: var(--bg-body);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+        }
+
+        .slide-header {
+            padding: 40px 60px 0 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 90px;
+            z-index: 10;
+        }
+        
+        .logo-img { height: 60px; width: auto; display: block; }
+        .logo-white { filter: brightness(0) invert(1); }
+        .slide-number { font-size: 14px; color: var(--text-muted); font-weight: 700; opacity: 0.5; }
+
+        .slide-content {
+            padding: 10px 60px 50px 60px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        /* TYPOGRAPHY */
+        h1 { font-size: 56px; line-height: 0.95; letter-spacing: -2px; margin-bottom: 25px; color: var(--text-main); font-weight: 800; }
+        h2 { font-size: 44px; line-height: 1.05; letter-spacing: -1.5px; margin-bottom: 20px; color: var(--text-main); font-weight: 700; }
+        h3 { font-size: 20px; font-weight: 800; margin-bottom: 8px; color: var(--text-main); text-transform: uppercase; letter-spacing: 0.5px; }
+        p { font-size: 18px; line-height: 1.5; color: var(--text-muted); max-width: 850px; }
+        
+        .eyebrow {
+            font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-weight: 800; 
+            color: var(--primary-color); margin-bottom: 20px; display: block;
+        }
+
+        .highlight { color: var(--primary-color); }
+
+        /* --- 3. LAYOUTS --- */
+        .hero-bg {
+            position: absolute; top: 50%; transform: translateY(-50%); right: 5%; width: 40%; height: 70%; object-fit: contain; z-index: 1; 
+        }
+
+        .col-2 { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 60px; height: 100%; align-items: center; }
+        .col-2-fin { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 50px; height: 100%; align-items: flex-start; margin-top: 20px; }
+        .col-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 30px; margin-top: 40px; }
+        .col-3-feasibility { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 40px; margin-top: 30px; height: 350px; }
+
+        .stat-card { background: var(--bg-card); padding: 30px; border: 1px solid rgba(0,0,0,0.08); border-radius: 8px; height: 100%; display: flex; flex-direction: column; }
+        .trust-bar { margin-top: 50px; border-top: 1px solid rgba(0,0,0,0.1); padding-top: 25px; display: flex; gap: 40px; align-items: center; }
+        .partner-logo { max-height: 28px; width: auto; filter: grayscale(100%); opacity: 0.6; }
+
+        /* Tables */
+        .fin-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .fin-table th { text-align: left; padding: 10px; border-bottom: 2px solid #eee; color: var(--text-muted); font-size: 11px; text-transform: uppercase; }
+        .fin-table td { padding: 12px 10px; border-bottom: 1px solid #eee; font-size: 16px; font-weight: 600; vertical-align: top; }
+        .fin-table .row-highlight { background: rgba(200, 107, 61, 0.08); }
+        .curr-sub { display: block; font-size: 11px; color: #999; font-weight: 400; margin-top: 3px; }
+
+        /* ASK Slide Components */
+        .ask-card {
+            background: white; border: 1px solid #eee; padding: 30px; border-radius: 12px; border-top: 4px solid var(--primary-color);
+        }
+        .ask-title { font-size: 18px; font-weight: 800; margin-bottom: 15px; color: var(--text-main); }
+        .ask-list { list-style: none; padding: 0; }
+        .ask-list li { margin-bottom: 10px; font-size: 14px; color: #666; padding-left: 20px; position: relative; }
+        .ask-list li::before { content: '→'; position: absolute; left: 0; color: var(--primary-color); font-weight: bold; }
+
+        /* Team Grid */
+        .team-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 5px; }
+        .team-member { background: white; border-radius: 8px; padding: 15px; border: 1px solid #eee; display: flex; flex-direction: column; }
+        .team-bio { font-size: 11px; color: #666; line-height: 1.4; }
+        .bio-point { display: block; margin-bottom: 3px; position: relative; padding-left: 8px; }
+        .bio-point::before { content: '•'; position: absolute; left: 0; color: var(--primary-color); }
+
+        .btn-primary {
+            display: inline-flex; align-items: center; justify-content: center;
+            background: var(--copper-gradient); color: white;
+            padding: 16px 32px; border-radius: 6px;
+            font-weight: 700; text-decoration: none; font-size: 16px;
+            box-shadow: 0 4px 15px rgba(160, 85, 45, 0.4);
+            margin-top: 30px;
+        }
+
+        /* --- 4. PRINT SETTINGS --- */
+        @media print {
+            body { background: none; display: block; padding: 0; margin: 0; }
+            .slide {
+                width: 100%; height: 100vh;
+                box-shadow: none; border: none; margin: 0;
+                page-break-after: always; break-after: page;
+            }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <section class="slide">
+        <img src="praha_ready for video_day morning.jpg" class="hero-bg" alt="Prague Background">
+        <div class="slide-header">
+            <img src="logo_for_presi_rentstag.png" class="logo-img" alt="Rentstag Logo">
+            <div class="slide-number">01 / 11</div>
+        </div>
+        <div class="slide-content" style="max-width: 60%;">
+            <span class="eyebrow">Investment Teaser</span>
+            <h1>The Operating System for<br>Real Estate Consolidation.</h1>
+            <p>Rentstag acquires fragmented property management firms and modernizes them with a proprietary AI stack. Swiss reliability meeting algorithmic efficiency.</p>
+            <div style="margin-top: 60px; display: flex; gap: 40px;">
+                <div>
+                    <div style="font-size: 32px; font-weight: 800; color: var(--primary-color);">120+ Units</div>
+                    <div style="font-size: 11px; text-transform: uppercase; font-weight: 700; opacity: 0.6;">In Management (Year 1)</div>
+                </div>
+                <div style="border-left: 1px solid #ddd; padding-left: 40px;">
+                    <div style="font-size: 18px; font-weight: 800; color: var(--text-main); margin-bottom: 5px;">Strategic Pilots</div>
+                    <div style="font-size: 11px; font-weight: 600; opacity: 0.8; line-height: 1.4;">Liechtenstein Fund & <br>Czech Finance Group</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="slide">
+        <div class="slide-header">
+            <img src="logo_for_presi_rentstag.png" class="logo-img">
+            <div class="slide-number">02 / 11</div>
+        </div>
+        <div class="slide-content">
+            <div class="col-2">
+                <div>
+                    <span class="eyebrow">THE PROBLEM</span>
+                    <h2>The Property Management Market is <span class="highlight">Broken</span>.</h2>
+                    <p>The CEE market is dominated by small, analog legacy players. They suffer from labor shortages, rising ESG regulations, and zero scalability.</p>
+                    <div style="margin-top: 40px; padding: 20px; background: rgba(200, 107, 61, 0.1); border-radius: 8px; border-left: 4px solid var(--primary-color);">
+                        <p style="font-size: 16px; color: var(--primary-color); font-weight: 600; margin: 0;">90% of managers don't manage assets. They simply react to disasters.</p>
+                    </div>
+                </div>
+                <div style="background: #f4f4f4; height: 100%; border-radius: 12px; overflow: hidden; position: relative;">
+                    <img src="feature_manager.jpg" style="width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%);">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="slide">
+        <div class="slide-header">
+            <img src="logo_for_presi_rentstag.png" class="logo-img">
+            <div class="slide-number">03 / 11</div>
+        </div>
+        <div class="slide-content">
+            <span class="eyebrow">THE MARGIN EXPANSION THESIS</span>
+            <h2>How Tech Transforms a Service<br>into a High-Yield Asset.</h2>
+            <div class="col-2-fin">
+                <div>
+                    <table class="fin-table">
+                        <thead><tr><th>Metric (Per Unit)</th><th>Legacy</th><th>Rentstag Target</th></tr></thead>
+                        <tbody>
+                            <tr><td>Revenue</td><td>310 CZK<span class="curr-sub">12.5€ / 53zł</span></td><td><strong>350 CZK</strong><span class="curr-sub">14.0€ / 60zł</span></td></tr>
+                            <tr><td>Labor Cost</td><td style="color:#c00;">-150 CZK<span class="curr-sub">-6.0€ / -26zł</span></td><td style="color:#c00;"><strong>-80 CZK</strong><span class="curr-sub">-3.2€ / -14zł</span></td></tr>
+                            <tr class="row-highlight"><td><strong>GROSS PROFIT</strong></td><td>60 CZK<span class="curr-sub">2.4€ / 10zł</span></td><td style="color:var(--primary-color); font-size:20px;">220 CZK 🚀<span class="curr-sub">8.8€ / 38zł</span></td></tr>
+                        </tbody>
+                    </table>
+                    <p style="font-size: 11px; margin-top: 20px; opacity: 0.6;">Unit Economics foreseen for 2026 based on 13-month R&D, pilot period and development.</p>
+                </div>
+                <div style="text-align: center;">
+                    <div style="height: 300px; display: flex; align-items: flex-end; gap: 40px; padding: 20px; background: white; border-radius: 12px; border: 1px solid #eee;">
+                        <div style="flex:1; height: 19%; background: #ddd; position: relative;"><span style="position: absolute; top: -25px; left: 0; right: 0; font-size: 12px; font-weight: 800;">19%</span></div>
+                        <div style="flex:1; height: 63%; background: var(--copper-gradient); position: relative;"><span style="position: absolute; top: -25px; left: 0; right: 0; font-size: 12px; font-weight: 800; color: var(--primary-color);">63% Margin</span></div>
+                    </div>
+                    <p style="font-size: 12px; margin-top: 15px; font-weight: 700;">Legacy vs. Rentstag Gross Margin</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="slide">
+        <div class="slide-header">
+            <img src="logo_for_presi_rentstag.png" class="logo-img">
+            <div class="slide-number">04 / 11</div>
+        </div>
+        <div class="slide-content">
+            <span class="eyebrow">OPERATIONAL ALPHA</span>
+            <h2>Key Metrics: The Magic Ratios.</h2>
+            <div style="display: grid; gap: 15px;">
+                <div style="background: white; padding: 20px; border-left: 4px solid var(--primary-color); border-radius: 4px;">
+                    <h3 style="font-size: 14px; margin-bottom: 10px;">Staff-to-Unit Efficiency</h3>
+                    <div style="display: flex; gap: 40px;">
+                        <div><small>LEGACY</small><div style="font-size: 20px; font-weight: 800; color: #999;">1 : 400</div></div>
+                        <div><small style="color: var(--primary-color);">RENTSTAG</small><div style="font-size: 20px; font-weight: 800; color: var(--primary-color);">1 : 800+</div></div>
+                    </div>
+                </div>
+                <div style="background: white; padding: 20px; border-left: 4px solid var(--primary-color); border-radius: 4px;">
+                    <h3 style="font-size: 14px; margin-bottom: 10px;">Share of Wallet</h3>
+                    <div style="display: flex; gap: 40px;">
+                        <div><small>LEGACY</small><div style="font-size: 20px; font-weight: 800; color: #999;">Only Mgmt Fee</div></div>
+                        <div><small style="color: var(--primary-color);">RENTSTAG</small><div style="font-size: 20px; font-weight: 800; color: var(--primary-color);">+15 % Revenue</div></div>
+                    </div>
+                </div>
+                <div style="background: white; padding: 20px; border-left: 4px solid var(--primary-color); border-radius: 4px;">
+                    <h3 style="font-size: 14px; margin-bottom: 10px;">The Roll-Up Effect</h3>
+                    <div style="display: flex; gap: 40px;">
+                        <div><small>LEGACY</small><div style="font-size: 20px; font-weight: 800; color: #999;">Price Taker</div></div>
+                        <div><small style="color: var(--primary-color);">RENTSTAG</small><div style="font-size: 20px; font-weight: 800; color: var(--primary-color);">Pricing Power</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="slide">
+        <div class="slide-header">
+            <img src="logo_for_presi_rentstag.png" class="logo-img">
+            <div class="slide-number">05 / 11</div>
+        </div>
+        <div class="slide-content">
+            <span class="eyebrow">OPERATIONAL FEASIBILITY</span>
+            <h2>Why 1:800 is a structural opportunity.</h2>
+            <div class="col-3-feasibility">
+                <div class="stat-card"><h3>Global Benchmark</h3><p style="font-size: 14px;">In the US and UK, 1:800 is a standard for tech-enabled managers. CEE is merely catching up with the tools.</p></div>
+                <div class="stat-card"><h3>Time-Motion Logic</h3><p style="font-size: 14px;">65% of current manager time is "noise" (calls, manual invoices). AI eliminates this, effectively doubling capacity.</p></div>
+                <div class="stat-card"><h3>Downside Safety</h3><p style="font-size: 14px;">The model breaks even at 1:550. 1:800 is our target for high yield, not a survival requirement.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="slide"><div class="slide-header"><img src="logo_for_presi_rentstag.png" class="logo-img"></div><div class="slide-content"><h2>Slide 6: Our Strategy</h2><p>Acquire -> Migrate -> Optimize.</p></div></section>
+    <section class="slide"><div class="slide-header"><img src="logo_for_presi_rentstag.png" class="logo-img"></div><div class="slide-content"><h2>Slide 7: Proven Traction</h2><p>25+ Integrations successfully completed.</p></div></section>
+    <section class="slide"><div class="slide-header"><img src="logo_for_presi_rentstag.png" class="logo-img"></div><div class="slide-content"><h2>Slide 8: Execution Speed</h2><p>Handshake in 4 weeks.</p></div></section>
+
+    <section class="slide">
+        <div class="slide-header"><img src="logo_for_presi_rentstag.png" class="logo-img"></div>
+        <div class="slide-content">
+            <span class="eyebrow">LEADERSHIP</span>
+            <h2>Asset Owners with Enterprise DNA.</h2>
+            <div class="team-grid">
+                <div class="team-member">
+                    <div class="team-header"><div class="team-avatar">OK</div><div><div class="team-role">Founder & CEO</div><div class="team-name">Dr. Ondrej Karasek</div></div></div>
+                    <div class="team-bio">
+                        <span class="bio-point">PhD/DBA & MBA (CH) – M&A specialist.</span>
+                        <span class="bio-point">Private landlord (CEE & Western Germany).</span>
+                        <span class="bio-point">German-Czech-American heritage; bridges East & West.</span>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="team-header"><div class="team-avatar">MS</div><div><div class="team-role">Co-Founder & CPO</div><div class="team-name">Michal Ševčík</div></div></div>
+                    <div class="team-bio"><span class="bio-point">Ex-ALICE Tech (Silicon Valley).</span><span class="bio-point">Property Owner (CZ & UAE).</span><span class="bio-point">10+ yrs Banking & Fintech Design.</span></div>
+                </div>
+                <div class="team-member">
+                    <div class="team-header"><div class="team-avatar">TL</div><div><div class="team-role">Co-Founder & CTO</div><div class="team-name">Tomáš Ludvík</div></div></div>
+                    <div class="team-bio"><span class="bio-point">Ex-CETIN & Aures Holdings.</span><span class="bio-point">Enterprise Data Warehouse & Blockchain expert.</span><span class="bio-point">Property Owner (Thailand/CZ).</span></div>
+                </div>
+                <div class="team-member">
+                    <div class="team-header"><div class="team-avatar">TG</div><div><div class="team-role">Head of PM & IoT</div><div class="team-name">Tomáš Györy</div></div></div>
+                    <div class="team-bio"><span class="bio-point">Governance & Compliance (VOZP).</span><span class="bio-point">Infrastructure & Real Estate Project Manager.</span><span class="bio-point">Hardware specialist (EV / IoT).</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="slide">
+        <div class="slide-header"><img src="logo_for_presi_rentstag.png" class="logo-img"></div>
+        <div class="slide-content">
+            <span class="eyebrow">OPEX DEEP-DIVE</span>
+            <h2>Transparency in Modern Logistics.</h2>
+            <p>How we decompose the 130 CZK OPEX target to maintain SaaS-like margins.</p>
+            <div class="col-2-fin" style="margin-top: 30px;">
+                <div class="stat-card">
+                    <table class="fin-table" style="font-size: 13px;">
+                        <thead><tr><th>Cost Center</th><th>Amount / Unit</th><th>logic</th></tr></thead>
+                        <tbody>
+                            <tr><td>FTE Salary Pool</td><td>80 CZK</td><td>1 Manager per 800 Units</td></tr>
+                            <tr><td>IT & AWS Stack</td><td>20 CZK</td><td>Proprietary Rentstag OS</td></tr>
+                            <tr><td>Office & Support</td><td>15 CZK</td><td>Hybrid Operations Center</td></tr>
+                            <tr><td>Trust & Insurance</td><td>15 CZK</td><td>Compliance & Legal reserve</td></tr>
+                            <tr class="row-highlight"><td><strong>TOTAL OPEX</strong></td><td><strong>130 CZK</strong></td><td><strong>Target State</strong></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div style="background: rgba(0,0,0,0.02); padding: 30px; border-radius: 12px; border: 1px dashed #ccc;">
+                    <h3 style="font-size: 14px;">The Efficiency Reserve</h3>
+                    <p style="font-size: 14px; color: #666;">Even if labor costs rise by 25%, our Gross Margin remains above 55%. This buffer is built into our "worst-case" scenario in the Data Room.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="slide" style="background: #111; color: white;">
+        <div class="slide-header"><img src="logo_for_presi_rentstag.png" class="logo-img logo-white"></div>
+        <div class="slide-content">
+            <span class="eyebrow">PARTNERSHIP OPPORTUNITY</span>
+            <h2 style="color: white;">Join the Consolidation.</h2>
+            <div class="col-2" style="margin-top: 20px;">
+                <div style="display: grid; gap: 20px;">
+                    <div class="ask-card" style="color: #333;">
+                        <div class="ask-title">Structured Opportunities</div>
+                        <ul class="ask-list">
+                            <li><strong>Direct Investment:</strong> Scaling the Rentstag OS & Platform development.</li>
+                            <li><strong>M&A Financing:</strong> Asset-backed capital for strategic acquisitions in CEE.</li>
+                            <li><strong>Strategic Partnership:</strong> Search Fund structures for specific sub-markets.</li>
+                        </ul>
+                    </div>
+                    <a href="https://cal.com/dr-karasek-ndf4cm/rentstag-screening-call" target="_blank" class="btn-primary">Arrange a Call with us &rarr;</a>
+                </div>
+                <div style="text-align: right;">
+                    <div style="font-size: 13px; color: #888; font-family: monospace;">ondrej@rentstag.com</div>
+                    <div style="margin-top: 40px;">
+                        <img src="feature_Rentstag_office.jpg" style="width: 250px; border-radius: 8px; opacity: 0.8;">
+                        <div style="font-size: 11px; color: #666; margin-top: 10px;">
+                            Shaped in Switzerland 🇨🇭<br>Headquartered in Prague
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="position: absolute; bottom: 20px; left: 60px; font-size: 9px; color: #444;">
+            Rentstag Proprietary. For Information Purposes Only.
+        </div>
+    </section>
+
+</body>
+</html>

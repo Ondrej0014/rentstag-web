@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy | Rentstag</title>
+    
+    <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@100,200,300,400,500,700,800,900&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- DESIGN SETTINGS (MATCHING MAIN PAGE) --- */
+        :root {
+            --primary-color: #C86B3D;
+            --copper-gradient: linear-gradient(135deg, #A0552D 0%, #E69B6A 50%, #A0552D 100%);
+            
+            /* LIGHT MODE */
+            --bg-body: #F7F7F5;
+            --bg-card: #FFFFFF;
+            --bg-header: rgba(255, 255, 255, 0.95);
+            --text-main: #121212;
+            --text-muted: #666666;
+            --border-color: rgba(0,0,0,0.06);
+            --shadow-color: rgba(0,0,0,0.08);
+            --logo-filter: grayscale(100%); 
+            
+            --radius-small: 6px;
+            --radius-large: 20px;
+            
+            --font-family: 'Cabinet Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            --container-width: 1240px;
+        }
+
+        /* --- DARK MODE OVERRIDES --- */
+        body.dark-mode {
+            --bg-body: #050505;
+            --bg-card: #111111;
+            --bg-header: rgba(5, 5, 5, 0.9);
+            --text-main: #FFFFFF;
+            --text-muted: #999999;
+            --border-color: rgba(255,255,255,0.1);
+            --shadow-color: rgba(0,0,0,0.5);
+            --logo-filter: grayscale(100%) invert(1) brightness(2);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            width: 100%;
+        }
+
+        a { text-decoration: none; color: inherit; transition: 0.2s; }
+        ul { list-style: none; }
+
+        .container {
+            max-width: var(--container-width);
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* --- BUTTONS --- */
+        .btn {
+            display: inline-block; padding: 14px 28px; border-radius: var(--radius-small);
+            font-weight: 700; cursor: pointer; transition: all 0.3s ease;
+            font-size: 15px; border: none; position: relative; overflow: hidden; text-align: center;
+        }
+        .btn-primary {
+            background: var(--copper-gradient); background-size: 200% auto;
+            color: #fff; box-shadow: 0 4px 15px rgba(160, 85, 45, 0.3);
+        }
+        .btn-primary:hover { 
+            background-position: right center; box-shadow: 0 6px 20px rgba(160, 85, 45, 0.4); transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background-color: transparent; border: 1px solid var(--text-muted); color: var(--text-main);
+        }
+        .btn-secondary:hover { border-color: #A0552D; color: #A0552D; }
+
+        /* THEME TOGGLE */
+        .theme-toggle {
+            background: transparent; border: 1px solid var(--border-color);
+            width: 40px; height: 40px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; color: var(--text-main); margin-right: 10px;
+            transition: all 0.3s ease;
+        }
+        .theme-toggle:hover { background: var(--bg-card); border-color: var(--primary-color); color: var(--primary-color); }
+        .theme-toggle svg { width: 20px; height: 20px; stroke: currentColor; fill: none; }
+
+        /* --- HEADER & NAVIGATION --- */
+        header {
+            height: 80px; position: sticky; top: 0;
+            background: var(--bg-header); backdrop-filter: blur(10px);
+            z-index: 1000; border-bottom: 1px solid var(--border-color);
+            transition: background 0.3s ease;
+        }
+        .nav-container {
+            max-width: var(--container-width); margin: 0 auto; padding: 0 24px; height: 100%;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        
+        .logo { display: flex; align-items: center; z-index: 1001; }
+        .logo img { height: 28px; width: auto; vertical-align: middle; object-fit: contain; }
+        body.dark-mode .logo img { filter: invert(1); }
+
+        .nav-links { display: flex; gap: 0; height: 100%; }
+        .nav-item {
+            height: 100%; display: flex; align-items: center; padding: 0 12px; cursor: pointer; position: static;
+        }
+        .nav-link {
+            font-weight: 600; font-size: 15px; color: var(--text-muted);
+            display: flex; align-items: center; gap: 6px; padding: 8px 12px;
+            border-radius: var(--radius-small); transition: all 0.2s;
+        }
+        .nav-link::after {
+            content: ''; border: solid var(--text-muted); border-width: 0 1.5px 1.5px 0;
+            display: inline-block; padding: 2.5px; transform: rotate(45deg) translateY(-2px); transition: transform 0.2s;
+        }
+        .nav-item:hover .nav-link { background: var(--bg-card); color: var(--text-main); }
+        .nav-item:hover .nav-link::after { transform: rotate(-135deg) translateY(-1px); border-color: var(--text-main); }
+        .nav-link.simple::after { display: none; }
+
+        /* Mega Menu */
+        .mega-menu {
+            position: absolute; top: 80px; left: 0; width: 100%;
+            background: var(--bg-card); border-top: 1px solid var(--border-color);
+            box-shadow: 0 20px 40px var(--shadow-color); padding: 40px 0;
+            opacity: 0; visibility: hidden; transform: translateY(10px);
+            transition: all 0.2s ease; cursor: default;
+        }
+        .nav-item:hover .mega-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+        .mega-content {
+            max-width: var(--container-width); margin: 0 auto; padding: 0 24px;
+            display: grid; gap: 60px;
+        }
+        .mega-column h4 {
+            font-size: 12px; text-transform: uppercase; color: var(--text-muted);
+            margin-bottom: 20px; letter-spacing: 1px; font-weight: 700;
+        }
+        .menu-item-group { display: flex; flex-direction: column; gap: 10px; }
+        .menu-link {
+            display: flex; align-items: flex-start; gap: 16px; padding: 12px;
+            border-radius: var(--radius-small); transition: background 0.2s;
+        }
+        .menu-link:hover { background: rgba(200, 107, 61, 0.05); }
+        .menu-icon {
+            width: 40px; height: 40px; background: var(--bg-body); border: 1px solid var(--border-color);
+            border-radius: 8px; display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; color: #A0552D;
+        }
+        .menu-text h5 { font-size: 16px; font-weight: 700; color: var(--text-main); margin-bottom: 4px; }
+        .menu-text p { font-size: 14px; color: var(--text-muted); line-height: 1.4; }
+        
+        .menu-featured {
+            background: #1a1a1a; border-radius: var(--radius-large); padding: 30px;
+            color: #fff; display: flex; flex-direction: column; justify-content: flex-end;
+            min-height: 300px; position: relative; overflow: hidden; text-align: left;
+            border: 1px solid var(--border-color);
+        }
+        .menu-featured h5 { font-size: 24px; margin-bottom: 10px; z-index: 2; position: relative; color: #fff; }
+        .menu-featured p { font-size: 14px; color: #ccc; margin-bottom: 20px; z-index: 2; position: relative; }
+        .menu-featured-link { font-size: 14px; font-weight: 600; color: #fff; text-decoration: underline; z-index: 2; position: relative; }
+        .menu-featured::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(160, 85, 45, 0.6) 100%); z-index: 1;
+        }
+        .menu-featured-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.6; }
+        .nav-buttons { display: flex; gap: 10px; align-items: center; }
+        @media (max-width: 900px) { .nav-links, .mega-menu { display: none; } }
+
+        /* --- PRIVACY POLICY SPECIFIC STYLES --- */
+        .legal-page-header {
+            padding: 100px 0 60px;
+            text-align: center;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+        }
+        .legal-page-header h1 {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: var(--text-main);
+            letter-spacing: -1px;
+        }
+        .legal-content {
+            max-width: 800px;
+            margin: 60px auto;
+            padding: 0 24px;
+        }
+        .legal-block {
+            margin-bottom: 50px;
+        }
+        .legal-block h2 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--text-main);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .legal-block h3 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        .legal-text {
+            font-size: 15px;
+            line-height: 1.7;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        .meta-info {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 10px;
+            font-family: monospace;
+            opacity: 0.8;
+        }
+        .list-item {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 15px;
+            color: var(--text-muted);
+        }
+        .list-item strong {
+            color: var(--text-main);
+            min-width: 150px;
+        }
+        .callout-box {
+            background: rgba(200, 107, 61, 0.05);
+            border: 1px solid rgba(200, 107, 61, 0.2);
+            border-radius: var(--radius-small);
+            padding: 25px;
+            margin: 30px 0;
+        }
+        .callout-box h3 { margin-top: 0; color: var(--primary-color); }
+
+        /* --- FOOTER --- */
+        footer { background-color: #050505; color: #999; padding: 100px 0 40px; font-size: 14px; border-top: 1px solid #111; }
+        .footer-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 40px; margin-bottom: 80px; }
+        .footer-col h4 { color: #fff; margin-bottom: 25px; font-weight: 600; font-size: 16px; }
+        .footer-col ul { list-style: none; }
+        .footer-col li { margin-bottom: 14px; }
+        .footer-col a:hover { color: var(--primary-color); text-decoration: underline; }
+        .footer-bottom { border-top: 1px solid #222; padding-top: 40px; display: flex; justify-content: space-between; align-items: center; color: #555; }
+        
+        .footer-center { display: flex; align-items: center; gap: 20px; }
+        .footer-right { display: flex; gap: 20px; align-items: center; }
+        .social-icon svg { width: 18px; height: 18px; fill: #999; transition: fill 0.2s; }
+        .social-icon:hover svg { fill: var(--primary-color); }
+        .lang-switch { display: flex; gap: 10px; align-items: center; border-left: 1px solid #333; padding-left: 20px; }
+        .lang-btn { background: none; border: none; color: #666; font-size: 13px; font-weight: 600; cursor: pointer; padding: 0; transition: color 0.2s; }
+        .lang-btn:hover, .lang-btn.active { color: var(--primary-color); }
+
+        .footer-legal {
+            margin-top: 20px;
+            font-size: 11px;
+            line-height: 1.6;
+            color: #555;
+            opacity: 0.7;
+            max-width: 800px;
+        }
+    </style>
+</head>
+<body class="">
+
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <img src="Rentstaglogo.png" alt="Rentstag">
+            </a>
+            
+            <ul class="nav-links">
+                <li class="nav-item">
+                    <div class="nav-link" data-i18n="nav-management">Management</div>
+                    <div class="mega-menu">
+                        <div class="mega-content" style="grid-template-columns: 1fr 1fr 300px;">
+                            <div class="mega-column">
+                                <h4 data-i18n="menu-core">Core Services</h4>
+                                <div class="menu-item-group">
+                                    <a href="residential.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l8-4 8 4v14M8 21v-4h8v4"></path></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-res">Residential Management</h5><p data-i18n="menu-res-desc">Full-service care for apartments.</p></div>
+                                    </a>
+                                    <a href="association.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-assoc">Association Management</h5><p data-i18n="menu-assoc-desc">Modern administration for HOAs.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="mega-column">
+                                <h4 data-i18n="menu-leasing">Leasing</h4>
+                                <div class="menu-item-group">
+                                    <a href="leasing.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="22" y1="12" x2="18" y2="12"></line><line x1="6" y1="12" x2="2" y2="12"></line><line x1="12" y1="6" x2="12" y2="2"></line><line x1="12" y1="22" x2="12" y2="18"></line></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-smart">Smart Leasing</h5><p data-i18n="menu-smart-desc">Data-driven tenant placement.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="menu-featured">
+                                <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop" class="menu-featured-bg" alt="Feature">
+                                <h5 data-i18n="menu-integrity">Radical Integrity</h5>
+                                <p data-i18n="menu-integrity-desc">We provide a "glass-box" view of every transaction. No hidden fees.</p>
+                                <a href="integrity.html" class="menu-featured-link" data-i18n="menu-learn">Learn about our standards &rarr;</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="nav-item">
+                    <div class="nav-link" data-i18n="nav-experience">Experience</div>
+                    <div class="mega-menu">
+                        <div class="mega-content" style="grid-template-columns: 1fr 1fr 1fr;">
+                            <div class="mega-column">
+                                <h4 data-i18n="menu-tech">Technology</h4>
+                                <div class="menu-item-group">
+                                    <a href="owner-portal.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-portal">Owner Portal</h5><p data-i18n="menu-portal-desc">Real-time visibility.</p></div>
+                                    </a>
+                                    <a href="tenant-portal.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-tenant-portal">Tenant Portal</h5><p data-i18n="menu-tenant-portal-desc">Payments & requests.</p></div>
+                                    </a>
+                                    <a href="asset-portal.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-asset-portal">Asset Manager / Property Manager Portal</h5><p data-i18n="menu-asset-portal-desc">Granular control.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="mega-column">
+                                <h4 data-i18n="menu-services">Services</h4>
+                                <div class="menu-item-group">
+                                    <a href="maintenance.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-maint">Maintenance Network</h5><p data-i18n="menu-maint-desc">Vetted high-quality contractors.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="mega-column">
+                                <h4 data-i18n="menu-trust">Trust</h4>
+                                <div class="menu-item-group">
+                                    <a href="transparency.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-transparency">Transparency Standards</h5><p data-i18n="menu-transparency-desc">Zero black boxes.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <div class="nav-link" data-i18n="nav-clients">Clients</div>
+                    <div class="mega-menu">
+                        <div class="mega-content" style="grid-template-columns: 1fr 1fr 1fr;">
+                            <div class="mega-column">
+                                <h4 data-i18n="menu-who">Who we serve</h4>
+                                <div class="menu-item-group">
+                                    <a href="private.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-private">Private Owners</h5><p data-i18n="menu-private-desc">Protecting wealth.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="mega-column">
+                                <h4>&nbsp;</h4>
+                                <div class="menu-item-group">
+                                    <a href="investors.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-inst">Institutional Investors</h5><p data-i18n="menu-inst-desc">P&L & NAV tracking.</p></div>
+                                    </a>
+                                    <a href="managers.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h18v18H3zM8 12h8"></path></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-pm">Property Managers</h5><p data-i18n="menu-pm-desc">Outsourced operations.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="mega-column">
+                                <h4>&nbsp;</h4>
+                                <div class="menu-item-group">
+                                    <a href="developers.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 22h20"></path><path d="M4 22V7l7-3 7 3v15"></path><path d="M14 14h-4v8"></path></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-dev">Developers</h5><p data-i18n="menu-dev-desc">From build to occupancy.</p></div>
+                                    </a>
+                                    <a href="brokers.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-brokers">Rental Real Estate Brokers</h5><p data-i18n="menu-brokers-desc">Streamlined handovers.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+
+            <div class="nav-buttons">
+                <button class="theme-toggle" id="theme-toggle" aria-label="Switch Theme">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                </button>
+                <a href="owner-portal.html" class="btn btn-secondary" data-i18n="btn-login">Log in</a>
+                <a href="contact.html" class="btn btn-primary" data-i18n="btn-start">Start for free</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="legal-page-header">
+        <div class="container">
+            <h1 data-i18n="privacy-title">PRIVACY & DATA PROTECTION PROTOCOL</h1>
+            <div class="meta-info" data-i18n="eff-date">Effective Date: January 3, 2026</div>
+            <div class="meta-info" data-i18n="controller">Data Controller: RENTSTAG AG & CO S.R.O. (Prague, Czech Republic)</div>
+        </div>
+    </div>
+
+    <div class="legal-content">
+        <div class="legal-block">
+            <h2 data-i18n="priv-1-title">1. IDENTITY & SCOPE</h2>
+            <div class="legal-text" data-i18n="priv-1-text">This Privacy Policy (the "Protocol") governs the processing of personal data by RENTSTAG AG & CO S.R.O., with its registered office in Prague, Czech Republic, and all its affiliated companies, subsidiaries, and operating partners (collectively, the "Group" or "Rentstag"). We operate under a strict Data-First architecture. We treat data privacy not merely as a compliance requirement, but as a core component of our operational integrity. This Protocol applies to all digital interactions, investor relations, and acquisition processes facilitated through our ecosystem.</div>
+        </div>
+
+        <div class="legal-block">
+            <h2 data-i18n="priv-2-title">2. DATA COLLECTION ARCHITECTURE</h2>
+            <div class="legal-text" data-i18n="priv-2-intro">We collect and process data strictly necessary for our operational mandates:</div>
+            <div class="list-item"><strong data-i18n="priv-2-l1-title">Professional Identity Data:</strong> <span data-i18n="priv-2-l1-desc">Names, corporate affiliations, professional contact details, and verification documents required for due diligence (KYC/AML).</span></div>
+            <div class="list-item"><strong data-i18n="priv-2-l2-title">Technical Logs:</strong> <span data-i18n="priv-2-l2-desc">Server-side interaction metrics, IP addresses, and timestamp data necessary to ensure system security and computational stability.</span></div>
+            <div class="list-item"><strong data-i18n="priv-2-l3-title">Strategic Correspondence:</strong> <span data-i18n="priv-2-l3-desc">Data contained in communications regarding potential acquisitions, partnerships, or asset optimization strategies.</span></div>
+        </div>
+
+        <div class="legal-block">
+            <h2 data-i18n="priv-3-title">3. PURPOSE OF PROCESSING (LEGAL BASIS)</h2>
+            <div class="legal-text" data-i18n="priv-3-intro">Pursuant to the General Data Protection Regulation (EU) 2016/679 ("GDPR"), we process data based on:</div>
+            <div class="list-item"><strong data-i18n="priv-3-l1-title">Contractual Necessity:</strong> <span data-i18n="priv-3-l1-desc">For the execution of NDAs, LOIs, and management agreements.</span></div>
+            <div class="list-item"><strong data-i18n="priv-3-l2-title">Legitimate Interest:</strong> <span data-i18n="priv-3-l2-desc">To maintain the security of our infrastructure, prevent fraud, and conduct internal algorithmic benchmarking.</span></div>
+            <div class="list-item"><strong data-i18n="priv-3-l3-title">Legal Obligation:</strong> <span data-i18n="priv-3-l3-desc">Compliance with Czech and EU reporting standards, tax laws, and anti-money laundering directives.</span></div>
+        </div>
+
+        <div class="legal-block">
+            <h2 data-i18n="priv-4-title">4. DATA SOVEREIGNTY & SHARING</h2>
+            <div class="legal-text" data-i18n="priv-4-text">Rentstag operates as a unified roll-up entity. Data may be shared strictly within the Group and with:</div>
+            <div class="list-item"><strong data-i18n="priv-4-l1-title">Affiliated Entities:</strong> <span data-i18n="priv-4-l1-desc">For the purpose of centralized portfolio management and administrative efficiency.</span></div>
+            <div class="list-item"><strong data-i18n="priv-4-l2-title">Verified Service Providers:</strong> <span data-i18n="priv-4-l2-desc">Legal counsels, auditors, and IT infrastructure providers bound by strict Data Processing Agreements (DPA).</span></div>
+            <div class="legal-text" style="margin-top:15px; font-weight:700;" data-i18n="priv-4-end">We do not monetize personal data. We do not sell, lease, or trade data to third parties for marketing purposes.</div>
+        </div>
+
+        <div class="legal-block">
+            <h2 data-i18n="priv-5-title">5. COOKIE EXEMPTION & ZERO-TRACKING ARCHITECTURE</h2>
+            <div class="legal-text" data-i18n="priv-5-intro">Rentstag maintains a strict Zero-Tracking Policy. We do not utilize third-party analytics, behavioral profiling, advertising pixels (e.g., Google Ads, Meta Pixel), or commercial tracking scripts.</div>
+            
+            <div class="callout-box">
+                <h3 data-i18n="priv-5-callout-title">Exemption from Consent (No Banner Required)</h3>
+                <div class="legal-text" data-i18n="priv-5-callout-text">Our digital infrastructure utilizes strictly necessary technical storage (cookies/local storage) solely for the purpose of carrying out the transmission of a communication and ensuring the functional integrity of the interface. Pursuant to Article 5(3) of the ePrivacy Directive (2002/58/EC) and its implementation under Section 89(3) of the Electronic Communications Act (CZ), these technical operations are exempt from the requirement of user consent.</div>
+            </div>
+
+            <div class="legal-text" data-i18n="priv-5-scope-title">Scope of Technical Storage:</div>
+            <div class="list-item"><strong data-i18n="priv-5-l1-title">Security Tokens:</strong> <span data-i18n="priv-5-l1-desc">To prevent Cross-Site Request Forgery (CSRF).</span></div>
+            <div class="list-item"><strong data-i18n="priv-5-l2-title">Load Balancing:</strong> <span data-i18n="priv-5-l2-desc">To ensure computational stability across server nodes.</span></div>
+            <div class="list-item"><strong data-i18n="priv-5-l3-title">Session State:</strong> <span data-i18n="priv-5-l3-desc">To maintain user context during active navigation.</span></div>
+            <div class="legal-text" style="margin-top:15px;" data-i18n="priv-5-end">Consequently, no "Cookie Consent Banner" is deployed, as no non-essential data processing occurs.</div>
+        </div>
+
+        <div class="legal-block">
+            <h2 data-i18n="priv-6-title">6. DATA RETENTION & SECURITY</h2>
+            <div class="legal-text" data-i18n="priv-6-text">We employ enterprise-grade encryption and access control protocols. Data is retained only for the duration mandated by applicable commercial laws (e.g., archiving periods for tax documents) or for the limitation periods of potential legal claims.</div>
+        </div>
+
+        <div class="legal-block">
+            <h2 data-i18n="priv-7-title">7. RIGHTS OF THE DATA SUBJECT</h2>
+            <div class="legal-text" data-i18n="priv-7-intro">Under GDPR, you maintain the right to:</div>
+            <ul style="list-style-type: disc; padding-left: 20px; color: var(--text-muted);">
+                <li data-i18n="priv-7-l1">Request access to your personal data.</li>
+                <li data-i18n="priv-7-l2">Request correction or erasure of data ("Right to be Forgotten").</li>
+                <li data-i18n="priv-7-l3">Object to processing based on legitimate interest.</li>
+                <li data-i18n="priv-7-l4">Lodge a complaint with the Supervisory Authority (Úřad pro ochranu osobních údajů - ÚOOÚ).</li>
+            </ul>
+        </div>
+
+        <div class="legal-block">
+            <h2 data-i18n="priv-8-title">8. CONTACT & DATA COMPLIANCE OFFICE</h2>
+            <div class="legal-text" data-i18n="priv-8-intro">For all privacy-related inquiries, clarifications regarding our Zero-Tracking Architecture, or to exercise your rights under GDPR, contact:</div>
+            <div style="margin-top: 20px; font-weight: 700; color: var(--text-main);">
+                RENTSTAG AG & CO S.R.O.<br>
+                Compliance Department<br>
+                Prague, Czech Republic<br>
+                <a href="mailto:legal@rentstag.com" style="color: var(--primary-color);">Email: legal@rentstag.com</a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4 data-i18n="nav-management">Management</h4>
+                    <ul>
+                        <li><a href="residential.html" data-i18n="menu-res">Residential</a></li>
+                        <li><a href="association.html" data-i18n="menu-assoc">Association</a></li>
+                        <li><a href="leasing.html" data-i18n="menu-smart">Smart Leasing</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 data-i18n="nav-experience">Experience</h4>
+                    <ul>
+                        <li><a href="owner-portal.html" data-i18n="menu-portal">Owner Portal</a></li>
+                        <li><a href="tenant-portal.html" data-i18n="menu-tenant-portal">Tenant Portal</a></li>
+                        <li><a href="asset-portal.html" data-i18n="menu-asset-portal">Asset Manager / Property Manager Portal</a></li>
+                        <li><a href="maintenance.html" data-i18n="menu-maint">Maintenance Network</a></li>
+                        <li><a href="transparency.html" data-i18n="menu-transparency">Transparency Standards</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 data-i18n="nav-clients">Clients</h4>
+                    <ul>
+                        <li><a href="private.html" data-i18n="menu-private">Private Owners</a></li>
+                        <li><a href="investors.html" data-i18n="menu-inst">Institutional Investors</a></li>
+                        <li><a href="managers.html" data-i18n="menu-pm">Property Managers</a></li>
+                        <li><a href="developers.html" data-i18n="menu-dev">Developers</a></li>
+                        <li><a href="brokers.html" data-i18n="menu-brokers">Rental Real Estate Brokers</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 data-i18n="footer-company">Company</h4>
+                    <ul>
+                        <li><a href="about.html" data-i18n="footer-about">About Us</a></li>
+                        <li><a href="careers.html" data-i18n="footer-careers">Careers</a></li>
+                        <li><a href="contact.html" data-i18n="footer-contact">Contact</a></li>
+                    </ul>
+                </div>
+                 <div class="footer-col">
+                    <h4 data-i18n="footer-resources">Resources</h4>
+                    <ul>
+                        <li><a href="help.html" data-i18n="footer-help">Help Center</a></li>
+                        <li><a href="privacy.html" data-i18n="footer-privacy">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="footer-copy">
+                    &copy; 2026 Rentstag AG & Co s.r.o. All rights reserved.<br>
+                    <span style="font-size: 12px; opacity: 0.8; margin-top: 4px; display: inline-block;" data-i18n="footer-swiss">Shaped in Geneva, Switzerland 🇨🇭 (2022) — engineered for Central & Eastern Europe</span>
+                    <div class="footer-legal" data-i18n="footer-legal">
+                        Rentstag is a proprietary operating entity acting suo nomine, leveraging proprietary computational architecture for internal asset optimization. For the avoidance of doubt, “Rentstag AG & Co s.r.o.” is an internal designation (“Algorithmic Governance”) and does not imply any specific legal form or regulated status; see Legal/Disclosures. The Entity is not a licensed broker-dealer, bank, or collective investment scheme. Utilization of any software infrastructure is provided on an “as-is” basis without warranty of computational infallibility. All materials herein are provided pro notitia and do not constitute financial advice, a solicitation, or a binding offer to contract (invitatio ad offerendum). Any potential transaction is strictly contingent upon satisfactory due diligence and definitive legal execution.
+                    </div>
+                </div>
+               
+                <div class="footer-center">
+                    <a href="https://www.linkedin.com/company/rentstag-official/" target="_blank" class="social-icon" aria-label="LinkedIn">
+                        <svg viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                    </a>
+                </div>
+
+                <div class="footer-right">
+                    <div class="footer-links" style="display: flex; gap: 20px; font-size: 13px;">
+                        <a href="privacy.html" data-i18n="footer-privacy">Privacy Policy</a>
+                        <a href="terms.html" data-i18n="footer-terms">Terms of Service</a>
+                    </div>
+                    <div class="lang-switch">
+                        <button class="lang-btn" onclick="setLanguage('en')">EN</button>
+                        <span style="color:#444">|</span>
+                        <button class="lang-btn" onclick="setLanguage('de')">DE</button>
+                        <span style="color:#444">|</span>
+                        <button class="lang-btn" onclick="setLanguage('cs')">CZ</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 1. DARK MODE TOGGLE
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleBtn = document.getElementById('theme-toggle');
+            const body = document.body;
+            if (localStorage.getItem('theme') === 'dark') { body.classList.add('dark-mode'); }
+            toggleBtn.addEventListener('click', () => {
+                body.classList.toggle('dark-mode');
+                localStorage.setItem('theme', body.classList.contains('dark-mode') ? 'dark' : 'light');
+            });
+        });
+
+        // 2. CLICK SOUND
+        document.addEventListener('DOMContentLoaded', () => {
+            const clickSound = new Audio('Rentstag_mouse-click.mp3');
+            clickSound.volume = 0.4; 
+            const buttons = document.querySelectorAll('.btn, .nav-link, .menu-link, .theme-toggle, .lang-btn, .social-icon');
+            buttons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    clickSound.currentTime = 0;
+                    const playPromise = clickSound.play();
+                    if (playPromise !== undefined) { playPromise.catch(error => {}); }
+                });
+            });
+        });
+
+        // 3. TRANSLATIONS
+        const translations = {
+            'cs': {
+                'nav-management': 'Správa', 'nav-experience': 'Zkušenost', 'nav-clients': 'Klienti', 'nav-pricing': 'Ceník',
+                'btn-login': 'Přihlásit', 'btn-start': 'Začít zdarma', 'menu-core': 'Hlavní služby', 'menu-res': 'Správa bytových domů', 'menu-res-desc': 'Kompletní péče o nájemní domy.',
+                'menu-assoc': 'Správa SVJ', 'menu-assoc-desc': 'Moderní administrativa pro společenství.', 'menu-leasing': 'Pronájem', 'menu-smart': 'Chytrý pronájem',
+                'menu-smart-desc': 'Prověření nájemníci a data.', 'menu-integrity': 'Radikální Integrita', 'menu-integrity-desc': 'Vidíte každou transakci. Žádné skryté poplatky.',
+                'menu-learn': 'Více o našich standardech &rarr;', 'menu-tech': 'Technologie', 'menu-portal': 'Portál vlastníka', 'menu-portal-desc': 'Přehled v reálném čase.',
+                'menu-tenant-portal': 'Portál nájemníka', 'menu-tenant-portal-desc': 'Platby a požadavky.',
+                'menu-asset-portal': 'Portál pro asset manažery', 'menu-asset-portal-desc': 'Detailní kontrola.',
+                'menu-services': 'Služby', 'menu-maint': 'Síť údržby', 'menu-maint-desc': 'Prověření řemeslníci a kvalita.', 'menu-trust': 'Důvěra', 'menu-transparency': 'Standardy transparentnosti',
+                'menu-transparency-desc': 'Žádné černé skříňky.', 'menu-who': 'Komu sloužíme', 'menu-private': 'Soukromí vlastníci', 'menu-private-desc': 'Ochrana a růst majetku.',
+                'menu-inst': 'Investiční fondy', 'menu-inst-desc': 'P&L a sledování NAV.', 'menu-pm': 'Správci nemovitostí', 'menu-pm-desc': 'Outsourcing provozu.',
+                'menu-dev': 'Developeři', 'menu-dev-desc': 'Od výstavby po obsazenost.', 'menu-brokers': 'Realitní makléři', 'menu-brokers-desc': 'Hladké předání.',
+                'footer-company': 'Společnost',
+                'footer-about': 'O nás', 'footer-careers': 'Kariéra', 'footer-contact': 'Kontakt', 'footer-resources': 'Zdroje', 'footer-help': 'Centrum nápovědy', 'footer-privacy': 'Ochrana soukromí',
+                'footer-terms': 'Podmínky služby', 'footer-cookies': 'Nastavení cookies', 
+                'hero-origin': 'Původ: Ženeva, Švýcarsko 🇨🇭',
+                'footer-swiss': 'Formováno v Ženevě, Švýcarsku 🇨🇭 (2022) — vyvinuto pro střední a východní Evropu',
+                'footer-legal': 'Rentstag je proprietární provozní subjekt jednající suo nomine, využívající proprietární výpočetní architekturu pro optimalizaci interních aktiv. Pro vyloučení pochybností je „Rentstag AG & Co s.r.o.“ interním označením („Algorithmic Governance“) a neimplikuje žádnou konkrétní právní formu či regulovaný status; viz Právní/Zveřejnění. Subjekt není licencovaným obchodníkem s cennými papíry, bankou ani systémem kolektivního investování. Využití jakékoli softwarové infrastruktury je poskytováno na bázi „jak stojí a leží“ bez záruky výpočetní neomylnosti. Veškeré materiály zde uvedené jsou poskytovány pro notitia a nepředstavují finanční poradenství, výzvu ani závaznou nabídku k uzavření smlouvy (invitatio ad offerendum). Jakákoli potenciální transakce je přísně podmíněna uspokojivou due diligence a definitivním právním provedením.',
+                
+                // PRIVACY SPECIFIC
+                'privacy-title': 'PROTOKOL O OCHRANĚ SOUKROMÍ A DAT',
+                'eff-date': 'Účinnost od: 3. ledna 2026',
+                'controller': 'Správce údajů: RENTSTAG AG & CO S.R.O. (Praha, Česká republika)',
+                
+                'priv-1-title': '1. TOTOŽNOST A ROZSAH',
+                'priv-1-text': 'Tyto Zásady ochrany osobních údajů („Protokol“) upravují zpracování osobních údajů společností RENTSTAG AG & CO S.R.O. se sídlem v Praze, Česká republika, a všemi jejími přidruženými společnostmi, dceřinými společnostmi a provozními partnery (společně „Skupina“ nebo „Rentstag“). Fungujeme na základě striktní Data-First architektury. Ochrana osobních údajů pro nás není pouhým požadavkem na shodu, ale klíčovou součástí naší provozní integrity. Tento Protokol se vztahuje na veškeré digitální interakce, vztahy s investory a akviziční procesy zprostředkované naším ekosystémem.',
+                
+                'priv-2-title': '2. ARCHITEKTURA SBĚRU DAT',
+                'priv-2-intro': 'Shromažďujeme a zpracováváme údaje nezbytně nutné pro naše provozní mandáty:',
+                'priv-2-l1-title': 'Profesní identifikační údaje:',
+                'priv-2-l1-desc': 'Jména, firemní příslušnost, profesní kontaktní údaje a ověřovací dokumenty požadované pro due diligence (KYC/AML).',
+                'priv-2-l2-title': 'Technické logy:',
+                'priv-2-l2-desc': 'Metriky interakce na straně serveru, IP adresy a časová razítka nezbytná k zajištění bezpečnosti systému a výpočetní stability.',
+                'priv-2-l3-title': 'Strategická korespondence:',
+                'priv-2-l3-desc': 'Údaje obsažené v komunikaci týkající se potenciálních akvizic, partnerství nebo strategií optimalizace aktiv.',
+                
+                'priv-3-title': '3. ÚČEL ZPRACOVÁNÍ (PRÁVNÍ ZÁKLAD)',
+                'priv-3-intro': 'V souladu s Obecným nařízením o ochraně osobních údajů (EU) 2016/679 („GDPR“) zpracováváme údaje na základě:',
+                'priv-3-l1-title': 'Smluvní nezbytnosti:',
+                'priv-3-l1-desc': 'Pro plnění NDA, LOI a manažerských smluv.',
+                'priv-3-l2-title': 'Oprávněného zájmu:',
+                'priv-3-l2-desc': 'K udržení bezpečnosti naší infrastruktury, prevenci podvodů a provádění interního algoritmického benchmarkingu.',
+                'priv-3-l3-title': 'Právní povinnosti:',
+                'priv-3-l3-desc': 'Dodržování českých a unijních standardů výkaznictví, daňových zákonů a směrnic proti praní špinavých peněz.',
+                
+                'priv-4-title': '4. DATOVÁ SUVERENITA A SDÍLENÍ',
+                'priv-4-text': 'Rentstag funguje jako jednotná roll-up entita. Údaje mohou být sdíleny striktně v rámci Skupiny a s:',
+                'priv-4-l1-title': 'Přidruženými subjekty:',
+                'priv-4-l1-desc': 'Za účelem centralizované správy portfolia a administrativní efektivity.',
+                'priv-4-l2-title': 'Ověřenými poskytovateli služeb:',
+                'priv-4-l2-desc': 'Právními poradci, auditory a poskytovateli IT infrastruktury vázanými přísnými smlouvami o zpracování údajů (DPA).',
+                'priv-4-end': 'Osobní údaje nepeněžíme. Neprodáváme, nepronajímáme ani neobchodujeme s údaji třetím stranám pro marketingové účely.',
+                
+                'priv-5-title': '5. VÝJIMKA Z COOKIES A ARCHITEKTURA NULOVÉHO SLEDOVÁNÍ',
+                'priv-5-intro': 'Rentstag udržuje přísnou Politiku nulového sledování (Zero-Tracking). Nevyužíváme analytiku třetích stran, behaviorální profilování, reklamní pixely (např. Google Ads, Meta Pixel) ani komerční sledovací skripty.',
+                'priv-5-callout-title': 'Výjimka ze souhlasu (není vyžadován banner)',
+                'priv-5-callout-text': 'Naše digitální infrastruktura využívá striktně nezbytné technické úložiště (cookies/local storage) výhradně za účelem provedení přenosu sdělení a zajištění funkční integrity rozhraní. Podle článku 5 odst. 3 směrnice ePrivacy (2002/58/ES) a její implementace v § 89 odst. 3 zákona o elektronických komunikacích (ČR) jsou tyto technické operace osvobozeny od požadavku na souhlas uživatele.',
+                'priv-5-scope-title': 'Rozsah technického úložiště:',
+                'priv-5-l1-title': 'Bezpečnostní tokeny:',
+                'priv-5-l1-desc': 'K prevenci proti Cross-Site Request Forgery (CSRF).',
+                'priv-5-l2-title': 'Vyrovnávání zátěže (Load Balancing):',
+                'priv-5-l2-desc': 'K zajištění výpočetní stability napříč uzly serveru.',
+                'priv-5-l3-title': 'Stav relace (Session):',
+                'priv-5-l3-desc': 'K udržení kontextu uživatele během aktivní navigace.',
+                'priv-5-end': 'V důsledku toho není nasazen žádný „Cookie Banner“, jelikož nedochází k žádnému zbytnému zpracování dat.',
+                
+                'priv-6-title': '6. UCHOVÁVÁNÍ A ZABEZPEČENÍ DAT',
+                'priv-6-text': 'Používáme šifrování a protokoly kontroly přístupu na podnikové úrovni. Údaje jsou uchovávány pouze po dobu vyžadovanou platnými obchodními zákony (např. archivační lhůty daňových dokladů) nebo po dobu promlčecích lhůt potenciálních právních nároků.',
+                
+                'priv-7-title': '7. PRÁVA SUBJEKTU ÚDAJŮ',
+                'priv-7-intro': 'Podle GDPR máte právo:',
+                'priv-7-l1': 'Požadovat přístup ke svým osobním údajům.',
+                'priv-7-l2': 'Požadovat opravu nebo výmaz údajů („Právo být zapomenut“).',
+                'priv-7-l3': 'Vznést námitku proti zpracování na základě oprávněného zájmu.',
+                'priv-7-l4': 'Podat stížnost u dozorového úřadu (Úřad pro ochranu osobních údajů - ÚOOÚ).',
+                
+                'priv-8-title': '8. KONTAKT A ÚŘAD PRO SOULAD DAT',
+                'priv-8-intro': 'Pro veškeré dotazy týkající se ochrany soukromí, vysvětlení naší architektury nulového sledování nebo pro uplatnění vašich práv podle GDPR kontaktujte:'
+            },
+            'de': {
+                'nav-management': 'Verwaltung', 'nav-experience': 'Erfahrung', 'nav-clients': 'Kunden', 'nav-pricing': 'Preise',
+                'btn-login': 'Anmelden', 'btn-start': 'Kostenlos starten', 'menu-core': 'Kernleistungen', 'menu-res': 'Mietverwaltung', 'menu-res-desc': 'Rundum-Service für Mietshäuser.',
+                'menu-assoc': 'WEG-Verwaltung', 'menu-assoc-desc': 'Moderne Verwaltung für Eigentümer.', 'menu-leasing': 'Vermietung', 'menu-smart': 'Smart Leasing',
+                'menu-smart-desc': 'Datengetriebene Vermietung.', 'menu-integrity': 'Radikale Integrität', 'menu-integrity-desc': 'Transparenz bei jeder Transaktion.',
+                'menu-learn': 'Mehr über unsere Standards &rarr;', 'menu-tech': 'Technologie', 'menu-portal': 'Eigentümer-Portal', 'menu-portal-desc': 'Echtzeit-Überblick.',
+                'menu-tenant-portal': 'Mieterportal', 'menu-tenant-portal-desc': 'Zahlungen & Anfragen.',
+                'menu-asset-portal': 'Asset Manager Portal', 'menu-asset-portal-desc': 'Granulare Kontrolle.',
+                'menu-services': 'Dienstleistungen', 'menu-maint': 'Handwerker-Netzwerk', 'menu-maint-desc': 'Geprüfte Qualität.', 'menu-trust': 'Vertrauen', 'menu-transparency': 'Transparenz-Standards',
+                'menu-transparency-desc': 'Keine Blackboxen.', 'menu-who': 'Für wen wir arbeiten', 'menu-private': 'Privateigentümer', 'menu-private-desc': 'Vermögensschutz.',
+                'menu-inst': 'Institutionelle Investoren', 'menu-inst-desc': 'P&L und NAV Tracking.', 'menu-pm': 'Hausverwaltungen', 'menu-pm-desc': 'Ausgelagerter Betrieb.',
+                'menu-dev': 'Bauträger', 'menu-dev-desc': 'Vom Bau bis zur Vermietung.', 'menu-brokers': 'Immobilienmakler', 'menu-brokers-desc': 'Reibungslose Übergaben.',
+                'footer-company': 'Unternehmen',
+                'footer-about': 'Über uns', 'footer-careers': 'Karriere', 'footer-contact': 'Kontakt', 'footer-resources': 'Ressourcen', 'footer-help': 'Hilfe-Center', 'footer-privacy': 'Datenschutz',
+                'footer-terms': 'AGB', 'footer-cookies': 'Cookie-Einstellungen', 
+                'hero-origin': 'Ursprung: Genf, Schweiz 🇨🇭',
+                'footer-swiss': 'Geprägt in Genf, Schweiz 🇨🇭 (2022) — entwickelt für Mittel- und Osteuropa',
+                'footer-legal': 'Rentstag ist eine proprietäre operative Einheit, die suo nomine handelt und proprietäre Rechenarchitektur zur internen Vermögensoptimierung nutzt. Zur Vermeidung von Zweifeln ist „Rentstag AG & Co s.r.o.“ eine interne Bezeichnung („Algorithmic Governance“) und impliziert keine spezifische Rechtsform oder einen regulierten Status; siehe Rechtliches/Offenlegungen. Die Einheit ist kein lizenzierter Broker-Dealer, keine Bank und kein kollektives Anlagesystem. Die Nutzung jeglicher Softwareinfrastruktur erfolgt auf einer „Ist-Zustand“-Basis ohne Gewähr für rechnerische Unfehlbarkeit. Alle hierin enthaltenen Materialien werden pro notitia zur Verfügung gestellt und stellen keine Finanzberatung, Aufforderung oder ein verbindliches Vertragsangebot (invitatio ad offerendum) dar. Jede potenzielle Transaktion steht unter dem strengen Vorbehalt einer zufriedenstellenden Due Diligence und einer definitiven rechtlichen Ausführung.',
+                
+                // PRIVACY SPECIFIC
+                'privacy-title': 'DATENSCHUTZ- UND DATENSICHERHEITSPROTOKOLL',
+                'eff-date': 'Datum des Inkrafttretens: 3. Januar 2026',
+                'controller': 'Verantwortlicher: RENTSTAG AG & CO S.R.O. (Prag, Tschechische Republik)',
+                
+                'priv-1-title': '1. IDENTITÄT & GELTUNGSBEREICH',
+                'priv-1-text': 'Diese Datenschutzrichtlinie (das „Protokoll“) regelt die Verarbeitung personenbezogener Daten durch RENTSTAG AG & CO S.R.O. mit Sitz in Prag, Tschechische Republik, sowie alle verbundenen Unternehmen, Tochtergesellschaften und Betriebspartner (zusammen die „Gruppe“ oder „Rentstag“). Wir arbeiten unter einer strikten Data-First-Architektur. Wir behandeln den Datenschutz nicht nur als Compliance-Anforderung, sondern als Kernkomponente unserer operativen Integrität. Dieses Protokoll gilt für alle digitalen Interaktionen, Investor Relations und Akquisitionsprozesse, die über unser Ökosystem ermöglicht werden.',
+                
+                'priv-2-title': '2. DATENERFASSUNGSARCHITEKTUR',
+                'priv-2-intro': 'Wir erheben und verarbeiten Daten, die für unsere operativen Mandate strikt erforderlich sind:',
+                'priv-2-l1-title': 'Berufliche Identitätsdaten:',
+                'priv-2-l1-desc': 'Namen, Unternehmenszugehörigkeit, berufliche Kontaktdaten und Verifizierungsdokumente, die für die Due Diligence (KYC/AML) erforderlich sind.',
+                'priv-2-l2-title': 'Technische Protokolle:',
+                'priv-2-l2-desc': 'Serverseitige Interaktionsmetriken, IP-Adressen und Zeitstempeldaten, die zur Gewährleistung der Systemsicherheit und der rechnerischen Stabilität erforderlich sind.',
+                'priv-2-l3-title': 'Strategische Korrespondenz:',
+                'priv-2-l3-desc': 'Daten in Kommunikationen bezüglich potenzieller Akquisitionen, Partnerschaften oder Strategien zur Vermögensoptimierung.',
+                
+                'priv-3-title': '3. ZWECK DER VERARBEITUNG (RECHTSGRUNDLAGE)',
+                'priv-3-intro': 'Gemäß der Datenschutz-Grundverordnung (EU) 2016/679 („DSGVO“) verarbeiten wir Daten basierend auf:',
+                'priv-3-l1-title': 'Vertraglicher Notwendigkeit:',
+                'priv-3-l1-desc': 'Für die Ausführung von NDAs, LOIs und Managementverträgen.',
+                'priv-3-l2-title': 'Berechtigtem Interesse:',
+                'priv-3-l2-desc': 'Zur Aufrechterhaltung der Sicherheit unserer Infrastruktur, zur Betrugsprävention und zur Durchführung interner algorithmischer Benchmarks.',
+                'priv-3-l3-title': 'Rechtlicher Verpflichtung:',
+                'priv-3-l3-desc': 'Einhaltung tschechischer und EU-Berichtsstandards, Steuergesetze und Richtlinien zur Bekämpfung von Geldwäsche.',
+                
+                'priv-4-title': '4. DATENSOUVERÄNITÄT & WEITERGABE',
+                'priv-4-text': 'Rentstag operiert als einheitliche Roll-up-Einheit. Daten können strikt innerhalb der Gruppe und mit folgenden Parteien geteilt werden:',
+                'priv-4-l1-title': 'Verbundene Unternehmen:',
+                'priv-4-l1-desc': 'Zum Zwecke der zentralisierten Portfolioverwaltung und administrativen Effizienz.',
+                'priv-4-l2-title': 'Verifizierte Dienstleister:',
+                'priv-4-l2-desc': 'Rechtsberater, Wirtschaftsprüfer und IT-Infrastrukturanbieter, die an strenge Auftragsverarbeitungsverträge (AVV) gebunden sind.',
+                'priv-4-end': 'Wir monetarisieren keine personenbezogenen Daten. Wir verkaufen, vermieten oder handeln keine Daten an Dritte zu Marketingzwecken.',
+                
+                'priv-5-title': '5. COOKIE-BEFREIUNG & NULL-TRACKING-ARCHITEKTUR',
+                'priv-5-intro': 'Rentstag unterhält eine strikte Null-Tracking-Richtlinie. Wir verwenden keine Analysen Dritter, kein Verhaltensprofiling, keine Werbepixel (z. B. Google Ads, Meta Pixel) und keine kommerziellen Tracking-Skripte.',
+                'priv-5-callout-title': 'Befreiung von der Einwilligung (Kein Banner erforderlich)',
+                'priv-5-callout-text': 'Unsere digitale Infrastruktur nutzt ausschließlich technisch notwendige Speicherungen (Cookies/Local Storage) zum alleinigen Zweck der Durchführung der Übertragung einer Nachricht und zur Gewährleistung der funktionalen Integrität der Schnittstelle. Gemäß Artikel 5(3) der ePrivacy-Richtlinie (2002/58/EG) und deren Umsetzung unter § 89(3) des Gesetzes über elektronische Kommunikation (CZ) sind diese technischen Vorgänge von der Einwilligungspflicht des Nutzers befreit.',
+                'priv-5-scope-title': 'Umfang der technischen Speicherung:',
+                'priv-5-l1-title': 'Sicherheitstoken:',
+                'priv-5-l1-desc': 'Zur Verhinderung von Cross-Site Request Forgery (CSRF).',
+                'priv-5-l2-title': 'Lastverteilung (Load Balancing):',
+                'priv-5-l2-desc': 'Zur Gewährleistung der rechnerischen Stabilität über Serverknoten hinweg.',
+                'priv-5-l3-title': 'Sitzungsstatus:',
+                'priv-5-l3-desc': 'Zur Aufrechterhaltung des Nutzerkontexts während der aktiven Navigation.',
+                'priv-5-end': 'Folglich wird kein „Cookie-Consent-Banner“ eingesetzt, da keine nicht-essentielle Datenverarbeitung stattfindet.',
+                
+                'priv-6-title': '6. DATENSPEICHERUNG & SICHERHEIT',
+                'priv-6-text': 'Wir verwenden Verschlüsselungs- und Zugriffskontrollprotokolle auf Unternehmensniveau. Daten werden nur für die Dauer aufbewahrt, die durch geltende Handelsgesetze (z. B. Archivierungsfristen für Steuerunterlagen) vorgeschrieben ist, oder für die Verjährungsfristen potenzieller Rechtsansprüche.',
+                
+                'priv-7-title': '7. RECHTE DER BETROFFENEN PERSON',
+                'priv-7-intro': 'Unter der DSGVO haben Sie das Recht:',
+                'priv-7-l1': 'Auskunft über Ihre personenbezogenen Daten zu verlangen.',
+                'priv-7-l2': 'Berichtigung oder Löschung von Daten zu verlangen („Recht auf Vergessenwerden“).',
+                'priv-7-l3': 'Der Verarbeitung aufgrund berechtigten Interesses zu widersprechen.',
+                'priv-7-l4': 'Beschwerde bei der Aufsichtsbehörde (Úřad pro ochranu osobních údajů - ÚOOÚ) einzureichen.',
+                
+                'priv-8-title': '8. KONTAKT & DATENSCHUTZBEAUFTRAGTER',
+                'priv-8-intro': 'Für alle datenschutzbezogenen Anfragen, Klarstellungen zu unserer Null-Tracking-Architektur oder zur Ausübung Ihrer Rechte gemäß DSGVO wenden Sie sich bitte an:'
+            },
+            'en': {
+                'nav-management': 'Management', 'nav-experience': 'Experience', 'nav-clients': 'Clients', 'nav-pricing': 'Pricing',
+                'btn-login': 'Log in', 'btn-start': 'Start for free', 'menu-core': 'Core Services', 'menu-res': 'Residential Management', 'menu-res-desc': 'Full-service care for apartments.',
+                'menu-assoc': 'Association Management', 'menu-assoc-desc': 'Modern administration for HOAs.', 'menu-leasing': 'Leasing', 'menu-smart': 'Smart Leasing',
+                'menu-smart-desc': 'Data-driven tenant placement.', 'menu-integrity': 'Radical Integrity', 'menu-integrity-desc': 'We provide a "glass-box" view of every transaction. No hidden fees.',
+                'menu-learn': 'Learn about our standards &rarr;', 'menu-tech': 'Technology', 'menu-portal': 'Owner Portal', 'menu-portal-desc': 'Real-time visibility.',
+                'menu-tenant-portal': 'Tenant Portal', 'menu-tenant-portal-desc': 'Payments & requests.',
+                'menu-asset-portal': 'Asset Manager Portal', 'menu-asset-portal-desc': 'Granular control.',
+                'menu-services': 'Services', 'menu-maint': 'Maintenance Network', 'menu-maint-desc': 'Vetted high-quality contractors.', 'menu-trust': 'Trust', 'menu-transparency': 'Transparency Standards',
+                'menu-transparency-desc': 'Zero black boxes.', 'menu-who': 'Who we serve', 'menu-private': 'Private Owners', 'menu-private-desc': 'Protecting wealth.',
+                'menu-inst': 'Institutional Investors', 'menu-inst-desc': 'P&L & NAV tracking.', 'menu-pm': 'Property Managers', 'menu-pm-desc': 'Outsourced operations.',
+                'menu-dev': 'Developers', 'menu-dev-desc': 'From build to occupancy.', 'menu-brokers': 'Rental Real Estate Brokers', 'menu-brokers-desc': 'Streamlined handovers.',
+                'footer-company': 'Company',
+                'footer-about': 'About Us', 'footer-careers': 'Careers', 'footer-contact': 'Contact', 'footer-resources': 'Resources', 'footer-help': 'Help Center', 'footer-privacy': 'Privacy Policy',
+                'footer-terms': 'Terms of Service', 'footer-cookies': 'Cookie Settings', 
+                'hero-origin': 'Origin: Geneva, Switzerland 🇨🇭',
+                'footer-swiss': 'Shaped in Geneva, Switzerland 🇨🇭 (2022) — engineered for Central & Eastern Europe',
+                'footer-legal': 'Rentstag is a proprietary operating entity acting suo nomine, leveraging proprietary computational architecture for internal asset optimization. For the avoidance of doubt, “Rentstag AG & Co s.r.o.” is an internal designation (“Algorithmic Governance”) and does not imply any specific legal form or regulated status; see Legal/Disclosures. The Entity is not a licensed broker-dealer, bank, or collective investment scheme. Utilization of any software infrastructure is provided on an “as-is” basis without warranty of computational infallibility. All materials herein are provided pro notitia and do not constitute financial advice, a solicitation, or a binding offer to contract (invitatio ad offerendum). Any potential transaction is strictly contingent upon satisfactory due diligence and definitive legal execution.',
+                
+                // PRIVACY SPECIFIC
+                'privacy-title': 'PRIVACY & DATA PROTECTION PROTOCOL',
+                'eff-date': 'Effective Date: January 3, 2026',
+                'controller': 'Data Controller: RENTSTAG AG & CO S.R.O. (Prague, Czech Republic)',
+                
+                'priv-1-title': '1. IDENTITY & SCOPE',
+                'priv-1-text': 'This Privacy Policy (the "Protocol") governs the processing of personal data by RENTSTAG AG & CO S.R.O., with its registered office in Prague, Czech Republic, and all its affiliated companies, subsidiaries, and operating partners (collectively, the "Group" or "Rentstag"). We operate under a strict Data-First architecture. We treat data privacy not merely as a compliance requirement, but as a core component of our operational integrity. This Protocol applies to all digital interactions, investor relations, and acquisition processes facilitated through our ecosystem.',
+                
+                'priv-2-title': '2. DATA COLLECTION ARCHITECTURE',
+                'priv-2-intro': 'We collect and process data strictly necessary for our operational mandates:',
+                'priv-2-l1-title': 'Professional Identity Data:',
+                'priv-2-l1-desc': 'Names, corporate affiliations, professional contact details, and verification documents required for due diligence (KYC/AML).',
+                'priv-2-l2-title': 'Technical Logs:',
+                'priv-2-l2-desc': 'Server-side interaction metrics, IP addresses, and timestamp data necessary to ensure system security and computational stability.',
+                'priv-2-l3-title': 'Strategic Correspondence:',
+                'priv-2-l3-desc': 'Data contained in communications regarding potential acquisitions, partnerships, or asset optimization strategies.',
+                
+                'priv-3-title': '3. PURPOSE OF PROCESSING (LEGAL BASIS)',
+                'priv-3-intro': 'Pursuant to the General Data Protection Regulation (EU) 2016/679 ("GDPR"), we process data based on:',
+                'priv-3-l1-title': 'Contractual Necessity:',
+                'priv-3-l1-desc': 'For the execution of NDAs, LOIs, and management agreements.',
+                'priv-3-l2-title': 'Legitimate Interest:',
+                'priv-3-l2-desc': 'To maintain the security of our infrastructure, prevent fraud, and conduct internal algorithmic benchmarking.',
+                'priv-3-l3-title': 'Legal Obligation:',
+                'priv-3-l3-desc': 'Compliance with Czech and EU reporting standards, tax laws, and anti-money laundering directives.',
+                
+                'priv-4-title': '4. DATA SOVEREIGNTY & SHARING',
+                'priv-4-text': 'Rentstag operates as a unified roll-up entity. Data may be shared strictly within the Group and with:',
+                'priv-4-l1-title': 'Affiliated Entities:',
+                'priv-4-l1-desc': 'For the purpose of centralized portfolio management and administrative efficiency.',
+                'priv-4-l2-title': 'Verified Service Providers:',
+                'priv-4-l2-desc': 'Legal counsels, auditors, and IT infrastructure providers bound by strict Data Processing Agreements (DPA).',
+                'priv-4-end': 'We do not monetize personal data. We do not sell, lease, or trade data to third parties for marketing purposes.',
+                
+                'priv-5-title': '5. COOKIE EXEMPTION & ZERO-TRACKING ARCHITECTURE',
+                'priv-5-intro': 'Rentstag maintains a strict Zero-Tracking Policy. We do not utilize third-party analytics, behavioral profiling, advertising pixels (e.g., Google Ads, Meta Pixel), or commercial tracking scripts.',
+                'priv-5-callout-title': 'Exemption from Consent (No Banner Required)',
+                'priv-5-callout-text': 'Our digital infrastructure utilizes strictly necessary technical storage (cookies/local storage) solely for the purpose of carrying out the transmission of a communication and ensuring the functional integrity of the interface. Pursuant to Article 5(3) of the ePrivacy Directive (2002/58/EC) and its implementation under Section 89(3) of the Electronic Communications Act (CZ), these technical operations are exempt from the requirement of user consent.',
+                'priv-5-scope-title': 'Scope of Technical Storage:',
+                'priv-5-l1-title': 'Security Tokens:',
+                'priv-5-l1-desc': 'To prevent Cross-Site Request Forgery (CSRF).',
+                'priv-5-l2-title': 'Load Balancing:',
+                'priv-5-l2-desc': 'To ensure computational stability across server nodes.',
+                'priv-5-l3-title': 'Session State:',
+                'priv-5-l3-desc': 'To maintain user context during active navigation.',
+                'priv-5-end': 'Consequently, no "Cookie Consent Banner" is deployed, as no non-essential data processing occurs.',
+                
+                'priv-6-title': '6. DATA RETENTION & SECURITY',
+                'priv-6-text': 'We employ enterprise-grade encryption and access control protocols. Data is retained only for the duration mandated by applicable commercial laws (e.g., archiving periods for tax documents) or for the limitation periods of potential legal claims.',
+                
+                'priv-7-title': '7. RIGHTS OF THE DATA SUBJECT',
+                'priv-7-intro': 'Under GDPR, you maintain the right to:',
+                'priv-7-l1': 'Request access to your personal data.',
+                'priv-7-l2': 'Request correction or erasure of data ("Right to be Forgotten").',
+                'priv-7-l3': 'Object to processing based on legitimate interest.',
+                'priv-7-l4': 'Lodge a complaint with the Supervisory Authority (Úřad pro ochranu osobních údajů - ÚOOÚ).',
+                
+                'priv-8-title': '8. CONTACT & DATA COMPLIANCE OFFICE',
+                'priv-8-intro': 'For all privacy-related inquiries, clarifications regarding our Zero-Tracking Architecture, or to exercise your rights under GDPR, contact:'
+            }
+        };
+
+        function setLanguage(lang) {
+            const elements = document.querySelectorAll('[data-i18n]');
+            
+            // Set active class on buttons
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            const btns = document.querySelectorAll('.lang-btn');
+            if(lang === 'en') btns[0].classList.add('active');
+            if(lang === 'de') btns[1].classList.add('active');
+            if(lang === 'cs') btns[2].classList.add('active');
+
+            if(translations[lang]) {
+                elements.forEach(element => {
+                    const key = element.getAttribute('data-i18n');
+                    if (translations[lang][key]) {
+                        element.innerHTML = translations[lang][key];
+                    }
+                });
+                localStorage.setItem('lang', lang);
+            }
+        }
+
+        // Auto-detect or load saved
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedLang = localStorage.getItem('lang');
+            const userLang = navigator.language || navigator.userLanguage; 
+            
+            if (savedLang) {
+                setLanguage(savedLang);
+            } else if (userLang.startsWith('cs')) {
+                setLanguage('cs');
+            } else if (userLang.startsWith('de')) {
+                setLanguage('de');
+            }
+            // Default is EN (HTML is already EN)
+        });
+    </script>
+
+</body>
+</html>

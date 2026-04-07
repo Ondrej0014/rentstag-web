@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RENTSTAG | For Owners Who Are Done With Mediocrity</title>
+    
+    <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@100,200,300,400,500,700,800,900&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- 1. DESIGN SETTINGS --- */
+        :root {
+            --primary-color: #C86B3D;
+            --copper-gradient: linear-gradient(135deg, #A0552D 0%, #E69B6A 50%, #A0552D 100%);
+            --primary-text-on-color: #FFFFFF;
+            
+            --bg-body: #F7F7F5;
+            --bg-card: #FFFFFF;
+            --text-main: #121212;
+            --text-muted: #666666;
+            
+            --radius-small: 6px;
+            --radius-large: 24px;
+            
+            /* ZMĚNA FONTU ZDE */
+            --font-family: 'Cabinet Grotesk', sans-serif;
+            
+            --container-width: 1240px;
+        }
+
+        /* --- 2. BASE STYLES --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        a { text-decoration: none; color: inherit; transition: 0.2s; }
+        ul { list-style: none; }
+
+        .container {
+            max-width: var(--container-width);
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* --- BUTTONS --- */
+        .btn {
+            display: inline-block; padding: 12px 24px; border-radius: var(--radius-small);
+            font-weight: 700; cursor: pointer; transition: all 0.3s ease;
+            font-size: 15px; border: none; position: relative; overflow: hidden; text-align: center;
+        }
+        .btn:active { transform: scale(0.98); }
+
+        .btn-primary {
+            background: var(--copper-gradient); background-size: 200% auto;
+            color: var(--primary-text-on-color);
+            box-shadow: 0 4px 15px rgba(160, 85, 45, 0.3);
+        }
+        .btn-primary:hover { 
+            background-position: right center; box-shadow: 0 6px 20px rgba(160, 85, 45, 0.4); transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background-color: transparent; border: 1px solid #ccc; color: var(--text-main);
+        }
+        .btn-secondary:hover { border-color: #A0552D; color: #A0552D; }
+
+        /* --- 3. MEGA MENU NAVIGATION --- */
+        header {
+            height: 80px; position: sticky; top: 0;
+            background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px);
+            z-index: 1000; border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .nav-container {
+            max-width: var(--container-width); margin: 0 auto; padding: 0 24px; height: 100%;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .logo img { height: 28px; width: auto; vertical-align: middle; }
+
+        .nav-links { display: flex; gap: 0; height: 100%; }
+        
+        .nav-item {
+            height: 100%; display: flex; align-items: center; padding: 0 12px;
+            cursor: pointer; position: static;
+        }
+        
+        .nav-link {
+            font-weight: 600; font-size: 15px; color: var(--text-muted);
+            display: flex; align-items: center; gap: 6px; padding: 8px 12px;
+            border-radius: var(--radius-small); transition: all 0.2s;
+        }
+        
+        .nav-link::after {
+            content: ''; border: solid var(--text-muted); border-width: 0 1.5px 1.5px 0;
+            display: inline-block; padding: 2.5px; transform: rotate(45deg) translateY(-2px);
+            transition: transform 0.2s;
+        }
+        
+        .nav-item:hover .nav-link { background: #f5f5f5; color: var(--text-main); }
+        .nav-item:hover .nav-link::after { transform: rotate(-135deg) translateY(-1px); border-color: var(--text-main); }
+        .nav-link.simple::after { display: none; }
+
+        /* Mega Menu Styles */
+        .mega-menu {
+            position: absolute; top: 80px; left: 0; width: 100%;
+            background: #fff; border-top: 1px solid #f0f0f0;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08); padding: 40px 0;
+            opacity: 0; visibility: hidden; transform: translateY(10px);
+            transition: all 0.2s ease; cursor: default;
+        }
+        .nav-item:hover .mega-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+        .mega-content {
+            max-width: var(--container-width); margin: 0 auto; padding: 0 24px;
+            display: grid; gap: 60px;
+        }
+        .mega-column h4 {
+            font-size: 12px; text-transform: uppercase; color: var(--text-muted);
+            margin-bottom: 20px; letter-spacing: 1px; font-weight: 800;
+        }
+        .menu-item-group { display: flex; flex-direction: column; gap: 10px; }
+        .menu-link {
+            display: flex; align-items: flex-start; gap: 16px; padding: 12px;
+            border-radius: var(--radius-small); transition: background 0.2s;
+        }
+        .menu-link:hover { background: #F9F9F9; }
+        .menu-icon {
+            width: 40px; height: 40px; background: #fff; border: 1px solid #eee;
+            border-radius: 8px; display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; color: #A0552D;
+        }
+        .menu-text h5 { font-size: 16px; font-weight: 700; color: var(--text-main); margin-bottom: 4px; }
+        .menu-text p { font-size: 14px; color: var(--text-muted); line-height: 1.4; }
+        .nav-buttons { display: flex; gap: 10px; }
+        @media (max-width: 900px) { .nav-links, .mega-menu { display: none; } }
+
+        /* --- HERO SECTION --- */
+        .manifesto-hero {
+            padding: 120px 0 80px; text-align: left; max-width: 900px; margin: 0 auto;
+        }
+        .manifesto-hero h1 {
+            font-size: 68px; font-weight: 800; line-height: 1; letter-spacing: -2px;
+            margin-bottom: 30px; color: #121212;
+        }
+        .manifesto-hero p.lead {
+            font-size: 24px; color: var(--text-muted); line-height: 1.5; margin-bottom: 40px; font-weight: 500;
+        }
+        .problem-statement {
+            font-size: 19px; padding: 30px; background: #fff;
+            border-left: 4px solid var(--primary-color);
+            border-radius: 0 var(--radius-small) var(--radius-small) 0;
+            margin-bottom: 40px; color: #444; font-weight: 500;
+        }
+
+        /* --- HORIZONTAL SCROLL (MOTTO) --- */
+        .horizontal-scroll-section {
+            padding: 80px 0; background: #111; color: #fff;
+            overflow: hidden; position: relative; display: flex; align-items: center; height: 300px;
+        }
+        .scrolling-text {
+            font-size: 130px; font-weight: 900; white-space: nowrap;
+            text-transform: uppercase; letter-spacing: -3px; color: transparent;
+            -webkit-text-stroke: 2px rgba(255,255,255,0.2); will-change: transform;
+        }
+        .text-highlight { color: var(--primary-color); -webkit-text-stroke: 0px; }
+
+        /* --- SCROLLYTELLING SECTION --- */
+        .scrolly-section { position: relative; padding: 100px 0 150px; }
+        .scrolly-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+        
+        .scrolly-text-col { position: relative; padding-left: 20px; }
+        
+        .scroll-item {
+            min-height: 60vh; display: flex; flex-direction: column; justify-content: center;
+            opacity: 0.3; transition: opacity 0.6s ease, transform 0.6s ease; padding-right: 20px;
+        }
+        .scroll-item.active { opacity: 1; transform: translateX(10px); }
+        
+        .scroll-item h3 {
+            font-size: 34px; font-weight: 800; margin-bottom: 15px;
+            color: #121212; letter-spacing: -1px; display: flex; align-items: center;
+        }
+        .scroll-item p { font-size: 20px; color: #444; line-height: 1.6; }
+
+        /* PULSING BALL */
+        .pulsing-ball {
+            width: 12px; height: 12px; background-color: var(--primary-color);
+            border-radius: 50%; display: inline-block; margin-right: 15px;
+            box-shadow: 0 0 0 0 rgba(200, 107, 61, 0.7); animation: pulse-copper 2s infinite;
+            flex-shrink: 0;
+        }
+        @keyframes pulse-copper {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(200, 107, 61, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(200, 107, 61, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(200, 107, 61, 0); }
+        }
+
+        /* Right Column: Sticky Visuals */
+        .scrolly-visual-col {
+            position: sticky; top: 120px; height: 500px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .visual-card {
+            width: 100%; height: 100%; background: #fff;
+            border-radius: var(--radius-large); box-shadow: 0 30px 60px -10px rgba(0,0,0,0.1);
+            overflow: hidden; position: relative; border: 1px solid rgba(0,0,0,0.05);
+        }
+        .visual-img {
+            width: 100%; height: 100%; object-fit: cover; opacity: 0;
+            position: absolute; top: 0; left: 0; transition: opacity 0.5s ease;
+        }
+        .visual-img.active { opacity: 1; }
+
+        /* --- FOOTER --- */
+        footer {
+            background-color: #0F0F0F; color: #999; padding: 100px 0 40px; font-size: 14px;
+        }
+        .footer-grid {
+            display: grid; grid-template-columns: repeat(5, 1fr); gap: 40px; margin-bottom: 80px;
+        }
+        .footer-col h4 { color: #fff; margin-bottom: 25px; font-weight: 700; font-size: 16px; }
+        .footer-col li { margin-bottom: 14px; }
+        .footer-col a:hover { color: var(--primary-color); text-decoration: underline; }
+        .footer-bottom {
+            border-top: 1px solid #222; padding-top: 40px;
+            display: flex; justify-content: space-between; align-items: center; color: #555;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .manifesto-hero h1 { font-size: 44px; }
+            .scrolly-grid { grid-template-columns: 1fr; }
+            .scrolly-visual-col { display: none; }
+            .scroll-item { min-height: auto; margin-bottom: 60px; opacity: 1; }
+            .footer-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <img src="Rentstaglogo.png" alt="RENTSTAG">
+            </a>
+            
+            <ul class="nav-links">
+                <li class="nav-item">
+                    <div class="nav-link">Management</div>
+                    <div class="mega-menu">
+                        <div class="mega-content" style="grid-template-columns: 1fr 1fr 300px;">
+                            <div class="mega-column">
+                                <h4>Core Services</h4>
+                                <div class="menu-item-group">
+                                    <a href="#" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l8-4 8 4v14M8 21v-4h8v4"></path></svg></div>
+                                        <div class="menu-text"><h5>Residential Management</h5><p>Full-service care for apartments.</p></div>
+                                    </a>
+                                    <a href="#" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div>
+                                        <div class="menu-text"><h5>Association Management</h5><p>Modern administration for HOAs.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="mega-column">
+                                <h4>Leasing</h4>
+                                <div class="menu-item-group">
+                                    <a href="#" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="22" y1="12" x2="18" y2="12"></line><line x1="6" y1="12" x2="2" y2="12"></line><line x1="12" y1="6" x2="12" y2="2"></line><line x1="12" y1="22" x2="12" y2="18"></line></svg></div>
+                                        <div class="menu-text"><h5>Smart Leasing</h5><p>Data-driven tenant placement.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="menu-featured">
+                                <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop" class="menu-featured-bg" alt="Feature">
+                                <h5>Radical Integrity</h5>
+                                <p>We provide a "glass-box" view of every transaction. No hidden fees.</p>
+                                <a href="#" class="menu-featured-link">Learn about our standards &rarr;</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="nav-item">
+                    <div class="nav-link">Experience</div>
+                    <div class="mega-menu">
+                        <div class="mega-content" style="grid-template-columns: 1fr 1fr 1fr;">
+                            <div class="mega-column">
+                                <h4>Technology</h4>
+                                <div class="menu-item-group">
+                                    <a href="#" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg></div>
+                                        <div class="menu-text"><h5>Owner Portal</h5><p>Real-time visibility.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="mega-column">
+                                <h4>Services</h4>
+                                <div class="menu-item-group">
+                                    <a href="#" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg></div>
+                                        <div class="menu-text"><h5>Maintenance Network</h5><p>Vetted high-quality contractors.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                             <div class="mega-column">
+                                <h4>Trust</h4>
+                                <div class="menu-item-group">
+                                    <a href="#" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></div>
+                                        <div class="menu-text"><h5>Transparency Standards</h5><p>Zero black boxes.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="nav-item">
+                    <div class="nav-link">Clients</div>
+                    <div class="mega-menu">
+                         <div class="mega-content" style="grid-template-columns: 1fr 1fr 1fr;">
+                            <div class="mega-column">
+                                <h4>Who we serve</h4>
+                                <div class="menu-item-group">
+                                    <a href="#" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></div>
+                                        <div class="menu-text"><h5>Private Owners</h5><p>Protecting wealth.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="mega-column">
+                                <h4>&nbsp;</h4>
+                                <div class="menu-item-group">
+                                    <a href="#" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg></div>
+                                        <div class="menu-text"><h5>Institutional Investors</h5><p>P&L & NAV tracking.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="mega-column">
+                                <h4>&nbsp;</h4>
+                                <div class="menu-item-group">
+                                    <a href="#" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 22h20"></path><path d="M4 22V7l7-3 7 3v15"></path><path d="M14 14h-4v8"></path></svg></div>
+                                        <div class="menu-text"><h5>Developers</h5><p>From build to occupancy.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="nav-item"><a href="pricing.html" class="nav-link simple">Pricing</a></li>
+            </ul>
+
+            <div class="nav-buttons">
+                <a href="#" class="btn btn-secondary">Log in</a>
+                <a href="#" class="btn btn-primary">Start for free</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="manifesto-hero">
+        <div class="container">
+            <h1>For Owners Who Are<br>Done With Mediocrity.</h1>
+            <p class="lead">You have your property managed by others—yet emails go unanswered, statements arrive late, and tenants remain frustrated.</p>
+            
+            <div class="problem-statement">
+                <strong>Why?</strong> Because 90% of property managers don't actually manage. They simply react.
+            </div>
+            
+            <div style="display: flex; gap: 15px;">
+                <a href="#" class="btn btn-primary">Request Proposal</a>
+                <a href="#" class="btn btn-secondary">Learn More</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="horizontal-scroll-section">
+        <div class="scrolling-text" id="mottoText">
+            PROPERTY MANAGEMENT <span class="text-highlight">AS IT WAS MEANT TO BE.</span> NO COMPROMISE.
+        </div>
+    </section>
+
+    <section class="scrolly-section">
+        <div class="container scrolly-grid">
+            
+            <div class="scrolly-text-col">
+                <div class="scroll-item active" data-img="img-1">
+                    <h3><span class="pulsing-ball"></span>Protects your asset.</h3>
+                    <p>We spot the pipe leak before the ceiling drips. We shield you from "rent nomads," unnecessary costs, and legal traps.</p>
+                </div>
+
+                <div class="scroll-item" data-img="img-2">
+                    <h3><span class="pulsing-ball"></span>Thinks like an entrepreneur.</h3>
+                    <p>We focus on smart investments, targeted renovations, and clear ROI targets—not just square meters.</p>
+                </div>
+
+                <div class="scroll-item" data-img="img-3">
+                    <h3><span class="pulsing-ball"></span>Knows the law.</h3>
+                    <p>From local tenancy acts to construction codes: no Google searches, just proven expertise. We don't just send reminders; we act.</p>
+                </div>
+
+                <div class="scroll-item" data-img="img-4">
+                    <h3><span class="pulsing-ball"></span>Speaks plainly.</h3>
+                    <p>No legalese. Fast answers, proactive solutions. We give you the bottom line on one page, not seven.</p>
+                </div>
+
+                <div class="scroll-item" data-img="img-5">
+                    <h3><span class="pulsing-ball"></span>Digital yet human.</h3>
+                    <p>Modern reporting via our app, but driven by human intelligence. Software alone solves nothing if the manager isn't thinking three steps ahead.</p>
+                </div>
+
+                <div class="scroll-item" data-img="img-6">
+                    <h3><span class="pulsing-ball"></span>Builds real value.</h3>
+                    <p>We don't just "maintain"; we advance your property, support your goals as an owner, and increase your asset value over the long term.</p>
+                </div>
+
+                <div class="scroll-item" data-img="img-7">
+                    <h3><span class="pulsing-ball"></span>Masters the numbers.</h3>
+                    <p>Operating costs, community funds, reserves. If a discrepancy appears, we act instantly—not at the end of the fiscal year.</p>
+                </div>
+
+                <div class="scroll-item" data-img="img-8">
+                    <h3><span class="pulsing-ball"></span>Sets real priorities.</h3>
+                    <p>Urgent issues handled now; important goals handled with a plan. Our actions are always strategic, never random.</p>
+                </div>
+
+                <div class="scroll-item" data-img="img-9">
+                    <h3><span class="pulsing-ball"></span>Demands only the best.</h3>
+                    <p>We accept zero compromise—from our own managers to our contractors. No "good enough." No "that'll do."</p>
+                </div>
+
+                <div class="scroll-item" data-img="img-10">
+                    <h3><span class="pulsing-ball"></span>Loves the craft.</h3>
+                    <p>And it shows. In every email. In every conversation. In every result.</p>
+                </div>
+            </div>
+
+            <div class="scrolly-visual-col">
+                <div class="visual-card">
+                    <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:#ccc; z-index:1; text-align:center;">Dynamic Visuals</div>
+
+                    <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=1000&auto=format&fit=crop" class="visual-img active" id="img-1" alt="Protection">
+                    <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=1000&auto=format&fit=crop" class="visual-img" id="img-2" alt="Entrepreneur">
+                    <img src="https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=1000&auto=format&fit=crop" class="visual-img" id="img-3" alt="Law">
+                    <img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?q=80&w=1000&auto=format&fit=crop" class="visual-img" id="img-4" alt="Plain Speak">
+                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1000&auto=format&fit=crop" class="visual-img" id="img-5" alt="Digital">
+                    <img src="https://images.unsplash.com/photo-1460472178825-e5240623afd5?q=80&w=1000&auto=format&fit=crop" class="visual-img" id="img-6" alt="Value">
+                    <img src="https://images.unsplash.com/photo-1554224154-260327c00c4b?q=80&w=1000&auto=format&fit=crop" class="visual-img" id="img-7" alt="Numbers">
+                    <img src="https://images.unsplash.com/photo-1512314889357-e157c22f938d?q=80&w=1000&auto=format&fit=crop" class="visual-img" id="img-8" alt="Priorities">
+                    <img src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=1000&auto=format&fit=crop" class="visual-img" id="img-9" alt="Quality">
+                    <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=1000&auto=format&fit=crop" class="visual-img" id="img-10" alt="Craft">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>Management</h4>
+                    <ul>
+                        <li><a href="#">Residential</a></li>
+                        <li><a href="#">Association (WEG)</a></li>
+                        <li><a href="#">Smart Leasing</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Experience</h4>
+                    <ul>
+                        <li><a href="#">Owner Portal</a></li>
+                        <li><a href="#">Maintenance Network</a></li>
+                        <li><a href="#">Transparency Standards</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Clients</h4>
+                    <ul>
+                        <li><a href="#">Private Owners</a></li>
+                        <li><a href="#">Institutional Investors</a></li>
+                        <li><a href="#">Developers</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="pricing.html" style="color: #fff;">Pricing</a></li>
+                    </ul>
+                </div>
+
+                 <div class="footer-col">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="footer-copy">
+                    &copy; 2025 RENTSTAG SE. All rights reserved.
+                </div>
+                <div class="footer-links" style="display: flex; gap: 20px; font-size: 13px;">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Cookie Settings</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 1. HORIZONTAL SCROLL
+        const mottoText = document.getElementById('mottoText');
+        window.addEventListener('scroll', () => {
+            const scrolled = window.scrollY;
+            const rate = scrolled * 0.3; 
+            if(mottoText) mottoText.style.transform = `translateX(${-200 + rate}px)`; 
+        });
+
+        // 2. SCROLLYTELLING LOGIC
+        document.addEventListener('DOMContentLoaded', () => {
+            const items = document.querySelectorAll('.scroll-item');
+            const images = document.querySelectorAll('.visual-img');
+            
+            const observerOptions = {
+                root: null,
+                rootMargin: '-45% 0px -45% 0px', // Střed obrazovky
+                threshold: 0
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        items.forEach(i => i.classList.remove('active'));
+                        images.forEach(img => img.classList.remove('active'));
+
+                        entry.target.classList.add('active');
+
+                        const imgId = entry.target.getAttribute('data-img');
+                        const targetImg = document.getElementById(imgId);
+                        if (targetImg) targetImg.classList.add('active');
+                    }
+                });
+            }, observerOptions);
+
+            items.forEach(item => {
+                observer.observe(item);
+            });
+        });
+    </script>
+
+</body>
+</html>

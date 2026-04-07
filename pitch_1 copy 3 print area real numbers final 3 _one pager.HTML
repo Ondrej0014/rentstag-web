@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rentstag | Executive One Pager</title>
+    <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@100,200,300,400,500,700,800,900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #C86B3D;
+            --primary-dim: rgba(200, 107, 61, 0.1);
+            --text-dark: #1a1a1a;
+            --text-gray: #555555;
+            --bg-gray: #F4F4F4;
+            --font-main: 'Cabinet Grotesk', sans-serif;
+        }
+
+        * { box-sizing: border-box; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+
+        body {
+            font-family: var(--font-main);
+            background: #555;
+            display: flex;
+            justify-content: center;
+            padding: 40px;
+            margin: 0;
+        }
+
+        .page {
+            width: 210mm;
+            height: 297mm; /* A4 Portrait */
+            background: white;
+            padding: 12mm 15mm;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 40px rgba(0,0,0,0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* TYPOGRAPHY */
+        h1 { font-size: 32px; font-weight: 800; line-height: 1; margin: 0; color: var(--text-dark); letter-spacing: -1px; }
+        h2 { font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 6px; margin: 25px 0 12px 0; }
+        h3 { font-size: 14px; font-weight: 800; margin: 0 0 4px 0; color: var(--text-dark); }
+        p { font-size: 10.5px; line-height: 1.45; color: var(--text-gray); margin: 0 0 10px 0; text-align: justify; }
+        
+        .tagline { font-size: 14px; color: var(--text-gray); margin-top: 5px; font-weight: 500; }
+        .highlight { color: var(--primary); font-weight: 700; }
+
+        /* LAYOUT */
+        .header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+        .logo-area img { height: 55px; width: auto; display: block; margin-bottom: 5px; }
+        .contact-info { text-align: right; font-size: 10px; color: #777; line-height: 1.4; }
+
+        .main-grid { display: grid; grid-template-columns: 1.35fr 1fr; gap: 25px; height: 100%; }
+        .col-left { display: flex; flex-direction: column; }
+        .col-right { display: flex; flex-direction: column; background: #fff; }
+
+        /* COMPONENTS */
+        .metric-box { background: var(--bg-gray); padding: 12px; border-radius: 6px; margin-bottom: 10px; }
+        .metric-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; }
+        .metric-val { font-size: 18px; font-weight: 800; color: var(--text-dark); }
+        .metric-lbl { font-size: 10px; text-transform: uppercase; color: #777; font-weight: 600; }
+
+        /* TABLE STYLES */
+        .comp-table { width: 100%; border-collapse: collapse; font-size: 10px; margin-top: 5px; }
+        .comp-table th { text-align: left; color: #999; font-weight: 700; padding: 4px 0; text-transform: uppercase; border-bottom: 1px solid #ddd; }
+        .comp-table td { padding: 6px 0; border-bottom: 1px solid #eee; color: var(--text-dark); }
+        .comp-table .bad { color: #c00; font-weight: 600; }
+        .comp-table .good { color: green; font-weight: 700; }
+        .comp-table tr:last-child td { border-bottom: none; font-weight: 800; font-size: 12px; padding-top: 10px; }
+
+        /* DEAL BOX */
+        .deal-box { 
+            background: var(--primary-dim); 
+            border: 1px solid var(--primary); 
+            padding: 15px; 
+            border-radius: 8px; 
+            margin-top: 25px; /* Odsazení shora, aby to nebylo nalepené dole */
+        }
+        .deal-header { font-size: 11px; font-weight: 700; color: var(--primary); text-transform: uppercase; margin-bottom: 10px; display: flex; justify-content: space-between; }
+        .deal-amount { font-size: 36px; font-weight: 800; color: var(--primary); line-height: 0.9; margin-bottom: 5px; }
+        .deal-terms { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+        .term-item span { display: block; font-size: 9px; color: #666; text-transform: uppercase; }
+        .term-item strong { display: block; font-size: 12px; color: #333; }
+
+        /* TEAM COMPACT */
+        .team-row { display: flex; gap: 10px; margin-top: 10px; }
+        .team-card { flex: 1; background: white; border: 1px solid #eee; padding: 8px; border-radius: 4px; }
+        .team-name { font-size: 11px; font-weight: 800; }
+        .team-role { font-size: 9px; color: var(--primary); font-weight: 700; text-transform: uppercase; }
+        .team-exp { font-size: 9px; color: #777; margin-top: 2px; line-height: 1.2; }
+
+        /* ARBITRAGE VISUAL */
+        .arb-flow { display: flex; align-items: center; justify-content: space-between; background: #333; color: white; padding: 12px; border-radius: 6px; margin-bottom: 15px; }
+        .arb-step { text-align: center; }
+        .arb-val { font-size: 16px; font-weight: 800; display: block; }
+        .arb-desc { font-size: 9px; color: #ccc; text-transform: uppercase; }
+        .arb-arrow { color: var(--primary); font-weight: bold; }
+
+        /* FOOTER */
+        .footer { position: absolute; bottom: 12mm; left: 15mm; right: 15mm; border-top: 1px solid #eee; padding-top: 10px; display: flex; justify-content: space-between; font-size: 9px; color: #999; }
+
+        @media print {
+            body { background: none; padding: 0; margin: 0; }
+            .page { width: 100%; height: 100%; box-shadow: none; padding: 0; }
+            .footer { bottom: 0; position: relative; margin-top: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page">
+        <div class="header">
+            <div class="logo-area">
+                <img src="logo_for_presi_rentstag.png" alt="Rentstag Logo">
+            </div>
+            <div class="contact-info">
+                <strong>Dr. Ondrej Karasek</strong>, CEO<br>
+                dr.karasek@rentstag.com | +420 604 953 511<br>
+                www.rentstag.com
+            </div>
+        </div>
+
+        <div class="main-grid">
+            
+            <div class="col-left">
+                <h1>The Operating System for Property Management Roll-Ups.</h1>
+                <p style="margin-top: 10px; font-size: 12px;">
+                    Rentstag identifies fragmented, low-tech property management firms in CEE, acquires them, and migrates them to a proprietary AI-driven operating system. We turn low-margin service businesses into high-margin asset-light platforms.
+                </p>
+
+                <h2>Investment Thesis: The Arbitrage</h2>
+                <div class="arb-flow">
+                    <div class="arb-step">
+                        <span class="arb-desc">Entry (Buy)</span>
+                        <span class="arb-val">4.0x EBITDA</span>
+                    </div>
+                    <div class="arb-arrow">&rarr;</div>
+                    <div class="arb-step">
+                        <span class="arb-desc">Optimize</span>
+                        <span class="arb-val" style="color:var(--primary);">+300% Margin</span>
+                    </div>
+                    <div class="arb-arrow">&rarr;</div>
+                    <div class="arb-step">
+                        <span class="arb-desc">Exit (Sell)</span>
+                        <span class="arb-val">12.0x EBITDA</span>
+                    </div>
+                </div>
+                <p>
+                    The CEE market is dominated by "Mom & Pop" agencies managing &lt;500 units manually. They are unscalable and face succession issues. By aggregating them onto <strong>Rentstag OS</strong>, we unlock massive operational leverage unavailable to legacy players.
+                </p>
+
+                <h2>Operational Alpha</h2>
+                <p>Our proprietary stack (PSD2 Banking API, AI Tenant Chatbots, Automated Dispatch) fundamentally changes the unit economics of management.</p>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="metric-box">
+                        <div class="metric-lbl">Efficiency Ratio (Staff:Units)</div>
+                        <div class="metric-row">
+                            <span style="font-size:12px; color:#999;">Market Avg: 1:70</span>
+                            <span class="metric-val" style="color:green;">1:350+</span>
+                        </div>
+                        <div style="font-size:9px; color:#555; margin-top:4px;">5x Leverage via AI Automation</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-lbl">Gross Margin Target</div>
+                        <div class="metric-row">
+                            <span style="font-size:12px; color:#999;">Legacy: 31%</span>
+                            <span class="metric-val" style="color:var(--primary);">85%</span>
+                        </div>
+                        <div style="font-size:9px; color:#555; margin-top:4px;">Driven by remote-first setup</div>
+                    </div>
+                </div>
+
+                <h2>Management Team</h2>
+                <div class="team-row">
+                    <div class="team-card">
+                        <div class="team-name">Dr. Ondrej Karasek</div>
+                        <div class="team-role">CEO</div>
+                        <div class="team-exp">PhD/MBA Switzerland. Exited Deep-Tech founder. EU Innovation Expert.</div>
+                    </div>
+                    <div class="team-card">
+                        <div class="team-name">Michal Ševčík</div>
+                        <div class="team-role">CPO</div>
+                        <div class="team-exp">Ex-ALICE Tech (Silicon Valley ConTech). Digital Banking Veteran.</div>
+                    </div>
+                    <div class="team-card">
+                        <div class="team-name">Tomáš Ludvík</div>
+                        <div class="team-role">CTO</div>
+                        <div class="team-exp">Ex-CETIN Data Warehouse Lead. Scaled systems for millions of records.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-right">
+                
+                <h2>Unit Economics (Monthly)</h2>
+                <table class="comp-table">
+                    <thead>
+                        <tr>
+                            <th>Cost per Unit</th>
+                            <th>Legacy</th>
+                            <th>Rentstag</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Revenue (Fees)</td>
+                            <td>1,500 CZK</td>
+                            <td>1,650 CZK</td>
+                        </tr>
+                        <tr>
+                            <td>Labor (PMs)</td>
+                            <td class="bad">-780</td>
+                            <td class="good">-220</td>
+                        </tr>
+                        <tr>
+                            <td>Back-Office</td>
+                            <td class="bad">-250</td>
+                            <td class="good">-30</td>
+                        </tr>
+                        <tr>
+                            <td>Office/Overhead</td>
+                            <td class="bad">-100</td>
+                            <td class="good">0</td>
+                        </tr>
+                         <tr>
+                            <td>Tech Costs</td>
+                            <td>-10</td>
+                            <td class="bad">-50</td>
+                        </tr>
+                        <tr>
+                            <td style="color:var(--primary);">GROSS PROFIT</td>
+                            <td>360 CZK</td>
+                            <td style="color:var(--primary); font-size:14px;">1,350 CZK</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p style="font-size: 9px; margin-top: 8px; color: #777;">*Based on standard Prague apartment rent (19k CZK). Rentstag eliminates physical offices and automates 99% of payment pairing.</p>
+
+                <h2>Traction & Pipeline</h2>
+                <ul style="list-style: none; padding: 0; font-size: 11px; line-height: 1.6; color: var(--text-dark);">
+                    <li><strong>&check; 120+ Units</strong> currently in management/pilot.</li>
+                    <li><strong>&check; 150+ Targets</strong> mapped in proprietary database.</li>
+                    <li><strong>&check; Validation:</strong> Validated by CBRE CEE benchmarking.</li>
+                    <li><strong>&check; Speed:</strong> Standardized 4-week M&A closing cycle.</li>
+                </ul>
+
+                <h2>Downside Protection</h2>
+                <div style="background: #f9f9f9; padding: 10px; border-radius: 4px; border-left: 3px solid #333;">
+                    <div style="display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 5px;">
+                        <span>Breakeven Efficiency:</span>
+                        <strong>1 : 120 Units</strong>
+                    </div>
+                    <div style="width: 100%; height: 6px; background: #ddd; border-radius: 3px; position: relative;">
+                        <div style="width: 30%; height: 100%; background: #999; position: absolute;"></div>
+                        <div style="width: 2px; height: 120%; background: #333; position: absolute; left: 35%; top: -10%;"></div>
+                        <div style="width: 2px; height: 120%; background: var(--primary); position: absolute; right: 0; top: -10%;"></div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 8px; color: #777; margin-top: 3px;">
+                        <span>Market (1:70)</span>
+                        <span style="color:#333; font-weight:700;">Safety Margin</span>
+                        <span style="color:var(--primary);">Target (1:350)</span>
+                    </div>
+                    <p style="font-size: 9px; margin: 5px 0 0 0;">Even if we miss AI targets by 50%, we are 2x more profitable than the market.</p>
+                </div>
+
+                <div class="deal-box">
+                    <div class="deal-header">
+                        <span>Round Allocation: Series A / SPV</span>
+                        <span>[OPEN]</span>
+                    </div>
+                    <div class="deal-amount">€2.5M</div>
+                    <div style="font-size: 10px; color: #555; margin-bottom: 10px;">Equity Investment for Acquisition Capital</div>
+                    
+                    <div style="width: 100%; height: 8px; display: flex; border-radius: 4px; overflow: hidden;">
+                        <div style="width: 60%; background: var(--primary);"></div>
+                        <div style="width: 25%; background: #333;"></div>
+                        <div style="width: 15%; background: #999;"></div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 8px; color: #555; margin-top: 4px;">
+                        <span>60% Acquisitions</span>
+                        <span>25% Tech</span>
+                        <span>15% Ops</span>
+                    </div>
+
+                    <div class="deal-terms">
+                        <div class="term-item">
+                            <span>Target ROI</span>
+                            <strong>15x (5 Years)</strong>
+                        </div>
+                        <div class="term-item">
+                            <span>Alternative Exit</span>
+                            <strong>Div. Recap / Hold</strong>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="footer">
+            <div>CONFIDENTIAL - FOR QUALIFIED INVESTORS ONLY</div>
+            <div>&copy; 2026 Rentstag AG & Co s.r.o. All rights reserved.</div>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RENTSTAG | The Financial Orchestration Layer</title>
+    <style>
+        /* --- 1. DESIGN SETTINGS (Premium Copper Theme) --- */
+        :root {
+            --primary-color: #C86B3D;
+            --copper-gradient: linear-gradient(135deg, #A0552D 0%, #E69B6A 50%, #A0552D 100%);
+            --primary-text-on-color: #FFFFFF;
+            
+            --bg-body: #F7F7F5;
+            --bg-card: #FFFFFF;
+            --text-main: #121212;
+            --text-muted: #666666;
+            
+            --radius-small: 6px;
+            --radius-large: 20px;
+            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --container-width: 1240px;
+        }
+
+        /* --- 2. BASE STYLES --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a { text-decoration: none; color: inherit; transition: 0.2s; }
+        ul { list-style: none; }
+
+        .container {
+            max-width: var(--container-width);
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* --- BUTTONS --- */
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            border-radius: var(--radius-small);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 15px;
+            border: none;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+        .btn:active { transform: scale(0.98); }
+
+        .btn-primary {
+            background: var(--copper-gradient);
+            background-size: 200% auto;
+            color: var(--primary-text-on-color);
+            box-shadow: 0 4px 15px rgba(160, 85, 45, 0.3);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+        .btn-primary:hover { 
+            background-position: right center;
+            box-shadow: 0 6px 20px rgba(160, 85, 45, 0.4);
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background-color: transparent;
+            border: 1px solid #ccc;
+            color: var(--text-main);
+        }
+        .btn-secondary:hover { border-color: #A0552D; color: #A0552D; }
+
+        /* --- 3. MEGA MENU NAVIGATION --- */
+        header {
+            height: 80px;
+            position: sticky;
+            top: 0;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .nav-container {
+            max-width: var(--container-width);
+            margin: 0 auto;
+            padding: 0 24px;
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo { 
+            /* Logo je nyní obrázek, ale zachováme flex pro zarovnání */
+            display: flex;
+            align-items: center;
+            z-index: 1001;
+        }
+
+        .nav-links { display: flex; gap: 0; height: 100%; }
+        
+        .nav-item {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            cursor: pointer;
+            position: static;
+        }
+        
+        .nav-link {
+            font-weight: 500; 
+            font-size: 15px; 
+            color: var(--text-muted); 
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 12px;
+            border-radius: var(--radius-small);
+            transition: all 0.2s;
+        }
+        
+        .nav-link::after {
+            content: '';
+            border: solid var(--text-muted);
+            border-width: 0 1.5px 1.5px 0;
+            display: inline-block;
+            padding: 2.5px;
+            transform: rotate(45deg) translateY(-2px);
+            transition: transform 0.2s;
+        }
+        
+        .nav-item:hover .nav-link { background: #f5f5f5; color: var(--text-main); }
+        .nav-item:hover .nav-link::after { transform: rotate(-135deg) translateY(-1px); border-color: var(--text-main); }
+        
+        /* Odkaz bez šipky (Pricing) */
+        .nav-link.simple::after { display: none; }
+
+        /* --- MEGA MENU --- */
+        .mega-menu {
+            position: absolute;
+            top: 80px;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            border-top: 1px solid #f0f0f0;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+            padding: 40px 0;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.2s ease;
+            cursor: default;
+        }
+
+        .nav-item:hover .mega-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+
+        .mega-content {
+            max-width: var(--container-width);
+            margin: 0 auto;
+            padding: 0 24px;
+            display: grid;
+            gap: 60px;
+        }
+        
+        .mega-column h4 {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        .menu-item-group { display: flex; flex-direction: column; gap: 10px; }
+        
+        .menu-link {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 12px;
+            border-radius: var(--radius-small);
+            transition: background 0.2s;
+        }
+        .menu-link:hover { background: #F9F9F9; }
+
+        .menu-icon {
+            width: 40px;
+            height: 40px;
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: #A0552D;
+        }
+
+        .menu-text h5 { font-size: 15px; font-weight: 700; color: var(--text-main); margin-bottom: 4px; }
+        .menu-text p { font-size: 13px; color: var(--text-muted); line-height: 1.4; }
+
+        .menu-featured {
+            background: #111;
+            border-radius: var(--radius-large);
+            padding: 30px;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            min-height: 300px;
+            position: relative;
+            overflow: hidden;
+            text-align: left;
+        }
+        .menu-featured h5 { font-size: 24px; margin-bottom: 10px; z-index: 2; position: relative; }
+        .menu-featured p { font-size: 14px; color: #ccc; margin-bottom: 20px; z-index: 2; position: relative; }
+        .menu-featured-link { font-size: 14px; font-weight: 600; color: #fff; text-decoration: underline; z-index: 2; position: relative; }
+        .menu-featured::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(160, 85, 45, 0.6) 100%); z-index: 1;
+        }
+        .menu-featured-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.6; }
+
+        .nav-buttons { display: flex; gap: 10px; }
+        @media (max-width: 900px) { .nav-links, .mega-menu { display: none; } }
+
+        /* --- HERO SECTION --- */
+        .hero { padding: 80px 0 100px; overflow: hidden; }
+        .hero-container { display: flex; align-items: center; gap: 80px; }
+        .hero-content { flex: 1; max-width: 600px; }
+        
+        .hero-eyebrow { 
+            font-size: 13px; 
+            text-transform: uppercase; 
+            letter-spacing: 2px; 
+            font-weight: 800; 
+            margin-bottom: 24px; 
+            display: block; 
+            background: var(--copper-gradient); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+            background-clip: text; 
+        }
+        
+        .hero h1 { 
+            font-size: 64px; 
+            line-height: 1.05; 
+            font-weight: 800; 
+            letter-spacing: -2px; 
+            margin-bottom: 24px; 
+            color: #1a1a1a; 
+        }
+        
+        .hero p { 
+            font-size: 20px; 
+            color: var(--text-muted); 
+            margin-bottom: 40px; 
+            max-width: 520px; 
+            line-height: 1.6; 
+        }
+        
+        .hero-form { display: flex; gap: 10px; margin-bottom: 20px; width: 100%; max-width: 480px; }
+        .email-input { flex: 1; padding: 16px 20px; border: 1px solid #d1d1d1; border-radius: var(--radius-small); font-size: 16px; outline: none; transition: all 0.2s; }
+        .email-input:focus { border-color: #A0552D; box-shadow: 0 0 0 3px rgba(160, 85, 45, 0.15); }
+        .hero-form .btn-primary { white-space: nowrap; padding: 16px 30px; font-size: 16px; }
+        
+        .secondary-link { font-size: 14px; color: var(--text-muted); text-decoration: underline; cursor: pointer; margin-left: 2px; }
+        .secondary-link:hover { color: #A0552D; }
+        
+        .hero-visual-wrapper { flex: 1; display: flex; justify-content: flex-end; position: relative; }
+        /* Styl pro video kontejner */
+        .hero-visual { width: 100%; min-height: 600px; background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%); border-radius: var(--radius-large); border: 1px solid rgba(0,0,0,0.05); box-shadow: 0 40px 80px -20px rgba(0,0,0,0.15); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+        
+        /* --- PARTNERS --- */
+        .clients { padding: 40px 0; text-align: center; border-bottom: 1px solid #e5e5e5; background: #fff; }
+        .clients p { font-size: 12px; color: var(--text-muted); margin-bottom: 30px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; opacity: 0.7; }
+        .logo-grid { display: flex; justify-content: center; align-items: center; gap: 50px; flex-wrap: wrap; opacity: 0.6; }
+        .partner-logo { font-size: 18px; font-weight: 700; color: #999; letter-spacing: -0.5px; text-transform: uppercase; }
+
+        /* --- FEATURES (BENTO GRID) --- */
+        .features { padding: 100px 0; }
+        .section-header { margin-bottom: 70px; max-width: 800px; }
+        .section-header h2 { font-size: 42px; font-weight: 800; letter-spacing: -1.5px; margin-bottom: 20px; line-height: 1.1; }
+        .section-header p { font-size: 20px; color: var(--text-muted); line-height: 1.5; }
+        
+        .bento-grid { display: grid; grid-template-columns: 1fr; gap: 24px; }
+        @media (min-width: 768px) { .bento-grid { grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 360px); } .card-large { grid-column: span 2; } .card-tall { grid-row: span 2; } }
+        
+        .card { background: var(--bg-card); border-radius: var(--radius-large); padding: 40px; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); border: 1px solid rgba(0,0,0,0.06); overflow: hidden; position: relative; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 25px 50px rgba(0,0,0,0.08); border-color: rgba(160, 85, 45, 0.2); }
+        .card h3 { font-size: 24px; margin-bottom: 12px; font-weight: 700; }
+        .card p { color: var(--text-muted); font-size: 16px; line-height: 1.5; }
+        .card-visual { height: 160px; background: #fcfcfc; border-radius: var(--radius-small); margin-top: 30px; margin-bottom: -70px; width: 120%; margin-left: -10%; border: 1px solid #eee; }
+
+        /* --- CTA & FOOTER --- */
+        .cta-section { background-color: #1A1A1A; color: #fff; padding: 100px 0; text-align: center; border-radius: var(--radius-large); margin-bottom: 60px; position: relative; overflow: hidden; }
+        .cta-section::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--copper-gradient); }
+        .cta-section h2 { font-size: 42px; margin-bottom: 24px; font-weight: 700; letter-spacing: -1px; }
+
+        footer {
+            background-color: #0F0F0F;
+            color: #999;
+            padding: 100px 0 40px;
+            font-size: 14px;
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 40px;
+            margin-bottom: 80px;
+        }
+        
+        .footer-col h4 { color: #fff; margin-bottom: 25px; font-weight: 600; font-size: 15px; }
+        .footer-col ul { list-style: none; }
+        .footer-col li { margin-bottom: 14px; }
+        .footer-col a:hover { color: var(--primary-color); text-decoration: underline; }
+
+        .footer-bottom {
+            border-top: 1px solid #222;
+            padding-top: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #555;
+        }
+        .footer-socials { display: flex; gap: 20px; }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <img src="Rentstaglogo.png" alt="RENTSTAG" style="height: 28px; width: auto; vertical-align: middle;">
+            </a>
+            
+            <ul class="nav-links">
+                <li class="nav-item">
+                    <div class="nav-link">Product</div>
+                    <div class="mega-menu">
+                        <div class="mega-content" style="grid-template-columns: 1fr 1fr 300px;">
+                            <div class="mega-column">
+                                <h4>Core Infrastructure</h4>
+                                <div class="menu-item-group">
+                                    <a href="#" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg></div>
+                                        <div class="menu-text"><h5>Semantic Cashflow Engine</h5><p>Financial logic & ontology layer.</p></div>
+                                    </a>
+                                    <a href="#" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line></svg></div>
+                                        <div class="menu-text"><h5>Truth & Audit Layer</h5><p>Deterministic event ledger.</p></div>
+                                    </a>
+                                    <a href="#" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg></div>
+                                        <div class="menu-text"><h5>Rule Engine</h5><p>Programmable partitioning.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="mega-column">
+                                <h4>Applications</h4>
+                                <div class="menu-item-group">
+                                    <a href="#" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg></div>
+                                        <div class="menu-text"><h5>Utility Settlement</h5><p>Real-time billing & consumption.</p></div>
+                                    </a>
+                                    <a href="#" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path></svg></div>
+                                        <div class="menu-text"><h5>ESG + Carbon</h5><p>Semantic linking of energy data.</p></div>
+                                    </a>
+                                    <a href="#" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg></div>
+                                        <div class="menu-text"><h5>PnL & NAV</h5><p>Instant asset valuation.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="menu-featured">
+                                <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop" class="menu-featured-bg" alt="Feature">
+                                <h5>Global Data Standard</h5>
+                                <p>Unifying multi-country operations for the built world.</p>
+                                <a href="#" class="menu-featured-link">Read the whitepaper &rarr;</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="nav-item">
+                    <div class="nav-link">Solutions</div>
+                    <div class="mega-menu">
+                        <div class="mega-content" style="grid-template-columns: 1fr 1fr 1fr;">
+                            <div class="mega-column">
+                                <h4>By Customer</h4>
+                                <div class="menu-item-group">
+                                    <a href="#" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l8-4 8 4v14M8 21v-4h8v4"></path></svg></div>
+                                        <div class="menu-text"><h5>Landlords & Operators</h5><p>Automate reconciliation.</p></div>
+                                    </a>
+                                    <a href="#" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg></div>
+                                        <div class="menu-text"><h5>Corporate Tenants</h5><p>Global portfolio visibility.</p></div>
+                                    </a>
+                                    <a href="#" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg></div>
+                                        <div class="menu-text"><h5>Fund Managers</h5><p>SPV & REIT distribution.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="mega-column">
+                                <h4>By Use Case</h4>
+                                <div class="menu-item-group">
+                                    <a href="#" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg></div>
+                                        <div class="menu-text"><h5>Programmable Rent</h5></div>
+                                    </a>
+                                    <a href="#" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M16.2 7.8l-2 6.3-6.4 2.1 2-6.3z"></path></svg></div>
+                                        <div class="menu-text"><h5>Cross-border Capital</h5></div>
+                                    </a>
+                                    <a href="#" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"></path><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"></path><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"></path></svg></div>
+                                        <div class="menu-text"><h5>Tokenization Support</h5></div>
+                                    </a>
+                                </div>
+                            </div>
+                             <div class="mega-column">
+                                <h4>Developers</h4>
+                                <div class="menu-item-group">
+                                    <a href="#" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg></div>
+                                        <div class="menu-text"><h5>API Documentation</h5></div>
+                                    </a>
+                                    <a href="#" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line></svg></div>
+                                        <div class="menu-text"><h5>Integration Guides</h5></div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="nav-item">
+                    <div class="nav-link">Resources</div>
+                    <div class="mega-menu">
+                         <div class="mega-content" style="grid-template-columns: 1fr 1fr;">
+                            <div class="mega-column">
+                                <h4>Learn</h4>
+                                <div class="menu-item-group">
+                                    <a href="#" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg></div>
+                                        <div class="menu-text"><h5>Blog</h5><p>Latest industry news.</p></div>
+                                    </a>
+                                    <a href="#" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg></div>
+                                        <div class="menu-text"><h5>Case Studies</h5><p>How customers use RENTSTAG.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="mega-column">
+                                <h4>Support</h4>
+                                <div class="menu-item-group">
+                                    <a href="#" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></div>
+                                        <div class="menu-text"><h5>Help Center</h5><p>Guides & Support.</p></div>
+                                    </a>
+                                    <a href="#" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg></div>
+                                        <div class="menu-text"><h5>System Status</h5><p>Real-time uptime.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="nav-item"><a href="pricing.html" class="nav-link simple">Pricing</a></li>
+            </ul>
+
+            <div class="nav-buttons">
+                <a href="#" class="btn btn-secondary">Log in</a>
+                <a href="#" class="btn btn-primary">Start for free</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container hero-container">
+            <div class="hero-content">
+                <span class="hero-eyebrow">PROGRAMMABLE. SEMANTIC. NO-CUSTODY.</span>
+                <h1>The Financial Orchestration Layer for Real Estate.</h1>
+                <p>Unify, interpret, and audit every financial event across banks, developers, SPVs, and tenants. No more spreadsheets.</p>
+                
+                <form class="hero-form" onsubmit="event.preventDefault(); alert('You entered: ' + this.querySelector('input').value);">
+                    <input type="email" class="email-input" placeholder="What's your work email?" required>
+                    <button type="submit" class="btn btn-primary">Get started</button>
+                </form>
+                
+                <div style="padding-left: 2px;">
+                    <a href="#" class="secondary-link">or Book a demo</a>
+                </div>
+            </div>
+
+            <div class="hero-visual-wrapper">
+                <div class="hero-visual">
+                    <video class="hero-visual" autoplay muted loop playsinline style="object-fit: cover; padding: 0; width: 100%; height: 100%;">
+                        <source src="harmony.mp4" type="video/mp4">
+                        <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop" alt="Dashboard fallback">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="clients">
+        <div class="container">
+            <p>Trusted by industry leaders</p>
+            <div class="logo-grid">
+                <span class="partner-logo">CBRE</span>
+                <span class="partner-logo">MICROSOFT</span>
+                <span class="partner-logo">TRIGEMA</span>
+                <span class="partner-logo">SAP</span>
+                <span class="partner-logo">JLL</span>
+                <span class="partner-logo">BP</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Trillion-dollar friction,<br>solved.</h2>
+                <p>Real estate runs on pre-digital infrastructure. RENTSTAG turns every cashflow into a programmable, semantic financial object.</p>
+            </div>
+
+            <div class="bento-grid">
+                <div class="card card-large">
+                    <div>
+                        <h3>Programmable Rent</h3>
+                        <p>Split rent automatically to SPVs, investors, utilities, reserves, and taxes. No manual reconciliation.</p>
+                    </div>
+                    <div class="card-visual" style="background: linear-gradient(135deg, rgba(160, 85, 45, 0.05) 0%, rgba(230, 155, 106, 0.05) 100%);"></div>
+                </div>
+
+                <div class="card">
+                    <div>
+                        <h3>Utility Settlement</h3>
+                        <p>Real-time consumption matching with billing rules and allocation logic.</p>
+                    </div>
+                    <div class="card-visual" style="background: #fff;"></div>
+                </div>
+
+                <div class="card">
+                    <div>
+                        <h3>SPV & REIT Routing</h3>
+                        <p>Programmatic distributions, waterfalls, and multi-entity orchestration.</p>
+                    </div>
+                    <div class="card-visual" style="background: #fff;"></div>
+                </div>
+
+                <div class="card card-tall">
+                    <div>
+                        <h3>Unified Truth Ledger</h3>
+                        <p>Cross-entity truth infrastructure. Create a global data standard for your portfolio with deterministic audit trails.</p>
+                    </div>
+                    <div class="card-visual" style="height: 300px; background: linear-gradient(135deg, rgba(160, 85, 45, 0.08) 0%, rgba(230, 155, 106, 0.08) 100%);"></div>
+                </div>
+
+                <div class="card">
+                    <div>
+                        <h3>Automated Compliance</h3>
+                        <p>Real-time tax and ESG reporting mandated by new regulations.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="container">
+        <div class="cta-section">
+            <h2>Ready to orchestrate your portfolio?</h2>
+            <p style="margin-bottom: 30px; color: #ccc;">Onboarding for Growth & Enterprise plans available now.</p>
+            <a href="#" class="btn btn-primary">Request Access</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#">About RENTSTAG</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Partners</a></li>
+                        <li><a href="#">Newsroom</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Platform</h4>
+                    <ul>
+                        <li><a href="#">Semantic Engine</a></li>
+                        <li><a href="#">Billing Engine</a></li>
+                        <li><a href="#">Truth Ledger</a></li>
+                        <li><a href="#">Data Fabric API</a></li>
+                        <li><a href="pricing.html" style="color: #fff;">Pricing</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Solutions</h4>
+                    <ul>
+                        <li><a href="#">Landlords</a></li>
+                        <li><a href="#">Corporate Tenants</a></li>
+                        <li><a href="#">Fund Managers</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Applications</h4>
+                    <ul>
+                        <li><a href="#">Utility Settlement</a></li>
+                        <li><a href="#">ESG & Carbon</a></li>
+                        <li><a href="#">SPV Routing</a></li>
+                        <li><a href="#">Real-time NAV</a></li>
+                    </ul>
+                </div>
+
+                 <div class="footer-col">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="#">API Documentation</a></li>
+                        <li><a href="#">Integration Guides</a></li>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Status</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="footer-copy">
+                    &copy; 2025 RENTSTAG SE. All rights reserved.
+                </div>
+                <div class="footer-links" style="display: flex; gap: 20px; font-size: 13px;">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Cookie Settings</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transparency Standards | Rentstag</title>
+    
+    <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@100,200,300,400,500,700,800,900&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- DESIGN SETTINGS --- */
+        :root {
+            --primary-color: #C86B3D;
+            --copper-gradient: linear-gradient(135deg, #A0552D 0%, #E69B6A 50%, #A0552D 100%);
+            --bg-body: #F7F7F5;
+            --bg-card: #FFFFFF;
+            --bg-header: rgba(255, 255, 255, 0.95);
+            --text-main: #121212;
+            --text-muted: #666666;
+            --border-color: rgba(0,0,0,0.06);
+            --shadow-color: rgba(0,0,0,0.08);
+            --logo-filter: grayscale(100%); 
+            --radius-small: 6px;
+            --radius-large: 20px;
+            --font-family: 'Cabinet Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            --container-width: 1240px;
+        }
+
+        body.dark-mode {
+            --bg-body: #050505;
+            --bg-card: #111111;
+            --bg-header: rgba(5, 5, 5, 0.9);
+            --text-main: #FFFFFF;
+            --text-muted: #999999;
+            --border-color: rgba(255,255,255,0.1);
+            --shadow-color: rgba(0,0,0,0.5);
+            --logo-filter: grayscale(100%) invert(1) brightness(2);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            width: 100%;
+        }
+
+        a { text-decoration: none; color: inherit; transition: 0.2s; }
+        ul { list-style: none; }
+
+        .container {
+            max-width: var(--container-width);
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* BUTTONS */
+        .btn {
+            display: inline-block; padding: 14px 28px; border-radius: var(--radius-small);
+            font-weight: 700; cursor: pointer; transition: all 0.3s ease;
+            font-size: 15px; border: none; position: relative; overflow: hidden; text-align: center;
+        }
+        .btn-primary {
+            background: var(--copper-gradient); background-size: 200% auto;
+            color: #fff; box-shadow: 0 4px 15px rgba(160, 85, 45, 0.3);
+        }
+        .btn-primary:hover { 
+            background-position: right center; box-shadow: 0 6px 20px rgba(160, 85, 45, 0.4); transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background-color: transparent; border: 1px solid var(--text-muted); color: var(--text-main);
+        }
+        .btn-secondary:hover { border-color: #A0552D; color: #A0552D; }
+
+        /* THEME TOGGLE */
+        .theme-toggle {
+            background: transparent; border: 1px solid var(--border-color);
+            width: 40px; height: 40px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; color: var(--text-main); margin-right: 10px;
+            transition: all 0.3s ease;
+        }
+        .theme-toggle:hover { background: var(--bg-card); border-color: var(--primary-color); color: var(--primary-color); }
+        .theme-toggle svg { width: 20px; height: 20px; stroke: currentColor; fill: none; }
+
+        /* HEADER */
+        header {
+            height: 80px; position: sticky; top: 0;
+            background: var(--bg-header); backdrop-filter: blur(10px);
+            z-index: 1000; border-bottom: 1px solid var(--border-color);
+            transition: background 0.3s ease;
+        }
+        .nav-container {
+            max-width: var(--container-width); margin: 0 auto; padding: 0 24px; height: 100%;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .logo { display: flex; align-items: center; z-index: 1001; }
+        .logo img { height: 28px; width: auto; vertical-align: middle; object-fit: contain; }
+        body.dark-mode .logo img { filter: invert(1); }
+        .nav-links { display: flex; gap: 0; height: 100%; }
+        .nav-item { height: 100%; display: flex; align-items: center; padding: 0 12px; cursor: pointer; position: static; }
+        .nav-link { font-weight: 600; font-size: 15px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; padding: 8px 12px; border-radius: var(--radius-small); transition: all 0.2s; }
+        .nav-link::after { content: ''; border: solid var(--text-muted); border-width: 0 1.5px 1.5px 0; display: inline-block; padding: 2.5px; transform: rotate(45deg) translateY(-2px); transition: transform 0.2s; }
+        .nav-item:hover .nav-link { background: var(--bg-card); color: var(--text-main); }
+        .nav-item:hover .nav-link::after { transform: rotate(-135deg) translateY(-1px); border-color: var(--text-main); }
+        
+        /* Mega Menu */
+        .mega-menu { position: absolute; top: 80px; left: 0; width: 100%; background: var(--bg-card); border-top: 1px solid var(--border-color); box-shadow: 0 20px 40px var(--shadow-color); padding: 40px 0; opacity: 0; visibility: hidden; transform: translateY(10px); transition: all 0.2s ease; cursor: default; }
+        .nav-item:hover .mega-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+        .mega-content { max-width: var(--container-width); margin: 0 auto; padding: 0 24px; display: grid; gap: 60px; }
+        .mega-column h4 { font-size: 12px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 20px; letter-spacing: 1px; font-weight: 700; }
+        .menu-item-group { display: flex; flex-direction: column; gap: 10px; }
+        .menu-link { display: flex; align-items: flex-start; gap: 16px; padding: 12px; border-radius: var(--radius-small); transition: background 0.2s; }
+        .menu-link:hover { background: rgba(200, 107, 61, 0.05); }
+        .menu-icon { width: 40px; height: 40px; background: var(--bg-body); border: 1px solid var(--border-color); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #A0552D; }
+        .menu-text h5 { font-size: 16px; font-weight: 700; color: var(--text-main); margin-bottom: 4px; }
+        .menu-text p { font-size: 14px; color: var(--text-muted); line-height: 1.4; }
+        .menu-featured { background: #1a1a1a; border-radius: var(--radius-large); padding: 30px; color: #fff; display: flex; flex-direction: column; justify-content: flex-end; min-height: 300px; position: relative; overflow: hidden; text-align: left; border: 1px solid var(--border-color); }
+        .menu-featured h5 { font-size: 24px; margin-bottom: 10px; z-index: 2; position: relative; color: #fff; }
+        .menu-featured p { font-size: 14px; color: #ccc; margin-bottom: 20px; z-index: 2; position: relative; }
+        .menu-featured-link { font-size: 14px; font-weight: 600; color: #fff; text-decoration: underline; z-index: 2; position: relative; }
+        .menu-featured::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(160, 85, 45, 0.6) 100%); z-index: 1; }
+        .menu-featured-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.6; }
+        .nav-buttons { display: flex; gap: 10px; align-items: center; }
+        @media (max-width: 900px) { .nav-links, .mega-menu { display: none; } }
+
+        /* TRANSPARENCY STYLES */
+        .trans-hero { padding: 120px 0 80px; text-align: center; background: var(--bg-card); border-bottom: 1px solid var(--border-color); }
+        .trans-hero h1 { font-size: 64px; font-weight: 800; line-height: 1; margin-bottom: 24px; color: var(--text-main); letter-spacing: -2px; }
+        .trans-hero p { font-size: 22px; color: var(--text-muted); max-width: 800px; line-height: 1.5; margin: 0 auto 40px; }
+        .mono-tag { font-family: monospace; background: rgba(200, 107, 61, 0.1); color: var(--primary-color); padding: 6px 12px; border-radius: 4px; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; display: inline-block; margin-bottom: 20px; }
+        
+        .audit-section { padding: 100px 0; background: #111; color: #fff; }
+        .audit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+        .audit-visual { background: #000; border: 1px solid #333; padding: 30px; border-radius: 8px; font-family: monospace; font-size: 13px; color: #2ecc71; line-height: 1.6; }
+        .log-entry { margin-bottom: 10px; border-bottom: 1px solid #222; padding-bottom: 5px; }
+        .log-time { color: #666; margin-right: 10px; }
+        .log-user { color: #C86B3D; font-weight: 700; margin-right: 10px; }
+        
+        .standards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; padding: 100px 0; }
+        .std-card { border-left: 2px solid var(--primary-color); padding-left: 20px; }
+        .std-title { font-size: 20px; font-weight: 700; margin-bottom: 10px; color: var(--text-main); }
+        .std-desc { font-size: 15px; color: var(--text-muted); line-height: 1.6; }
+
+        @media (max-width: 900px) {
+            .trans-hero h1 { font-size: 42px; }
+            .audit-grid { grid-template-columns: 1fr; }
+            .standards-grid { grid-template-columns: 1fr; }
+        }
+
+        /* FOOTER */
+        footer { background-color: #050505; color: #999; padding: 100px 0 40px; font-size: 14px; border-top: 1px solid #111; }
+        .footer-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 40px; margin-bottom: 80px; }
+        .footer-col h4 { color: #fff; margin-bottom: 25px; font-weight: 600; font-size: 16px; }
+        .footer-col ul { list-style: none; }
+        .footer-col li { margin-bottom: 14px; }
+        .footer-col a:hover { color: var(--primary-color); text-decoration: underline; }
+        .footer-bottom { border-top: 1px solid #222; padding-top: 40px; display: flex; justify-content: space-between; align-items: center; color: #555; }
+        .footer-center { display: flex; align-items: center; gap: 20px; }
+        .footer-right { display: flex; gap: 20px; align-items: center; }
+        .social-icon svg { width: 18px; height: 18px; fill: #999; transition: fill 0.2s; }
+        .social-icon:hover svg { fill: var(--primary-color); }
+        .lang-switch { display: flex; gap: 10px; align-items: center; border-left: 1px solid #333; padding-left: 20px; }
+        .lang-btn { background: none; border: none; color: #666; font-size: 13px; font-weight: 600; cursor: pointer; padding: 0; transition: color 0.2s; }
+        .lang-btn:hover, .lang-btn.active { color: var(--primary-color); }
+        .footer-legal { margin-top: 20px; font-size: 11px; line-height: 1.6; color: #555; opacity: 0.7; max-width: 800px; }
+    </style>
+</head>
+<body class="">
+
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <img src="Rentstaglogo.png" alt="Rentstag">
+            </a>
+            
+            <ul class="nav-links">
+                <li class="nav-item">
+                    <div class="nav-link" data-i18n="nav-management">Management</div>
+                    <div class="mega-menu">
+                        <div class="mega-content" style="grid-template-columns: 1fr 1fr 300px;">
+                            <div class="mega-column">
+                                <h4 data-i18n="menu-core">Core Services</h4>
+                                <div class="menu-item-group">
+                                    <a href="residential.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l8-4 8 4v14M8 21v-4h8v4"></path></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-res">Residential Management</h5><p data-i18n="menu-res-desc">Full-service care for apartments.</p></div>
+                                    </a>
+                                    <a href="association.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-assoc">Association Management</h5><p data-i18n="menu-assoc-desc">Modern administration for HOAs.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="mega-column">
+                                <h4 data-i18n="menu-leasing">Leasing</h4>
+                                <div class="menu-item-group">
+                                    <a href="leasing.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="22" y1="12" x2="18" y2="12"></line><line x1="6" y1="12" x2="2" y2="12"></line><line x1="12" y1="6" x2="12" y2="2"></line><line x1="12" y1="22" x2="12" y2="18"></line></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-smart">Smart Leasing</h5><p data-i18n="menu-smart-desc">Data-driven tenant placement.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="menu-featured">
+                                <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop" class="menu-featured-bg" alt="Feature">
+                                <h5 data-i18n="menu-integrity">Radical Integrity</h5>
+                                <p data-i18n="menu-integrity-desc">We provide a "glass-box" view of every transaction. No hidden fees.</p>
+                                <a href="integrity.html" class="menu-featured-link" data-i18n="menu-learn">Learn about our standards &rarr;</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="nav-item">
+                    <div class="nav-link" data-i18n="nav-experience">Experience</div>
+                    <div class="mega-menu">
+                        <div class="mega-content" style="grid-template-columns: 1fr 1fr 1fr;">
+                            <div class="mega-column">
+                                <h4 data-i18n="menu-tech">Technology</h4>
+                                <div class="menu-item-group">
+                                    <a href="owner-portal.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-portal">Owner Portal</h5><p data-i18n="menu-portal-desc">Real-time visibility.</p></div>
+                                    </a>
+                                    <a href="tenant-portal.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-tenant-portal">Tenant Portal</h5><p data-i18n="menu-tenant-portal-desc">Payments & requests.</p></div>
+                                    </a>
+                                    <a href="asset-portal.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-asset-portal">Asset Manager / Property Manager Portal</h5><p data-i18n="menu-asset-portal-desc">Granular control.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="mega-column">
+                                <h4 data-i18n="menu-services">Services</h4>
+                                <div class="menu-item-group">
+                                    <a href="maintenance.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-maint">Maintenance Network</h5><p data-i18n="menu-maint-desc">Vetted high-quality contractors.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="mega-column">
+                                <h4 data-i18n="menu-trust">Trust</h4>
+                                <div class="menu-item-group">
+                                    <a href="transparency.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-transparency">Transparency Standards</h5><p data-i18n="menu-transparency-desc">Zero black boxes.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <div class="nav-link" data-i18n="nav-clients">Clients</div>
+                    <div class="mega-menu">
+                        <div class="mega-content" style="grid-template-columns: 1fr 1fr 1fr;">
+                            <div class="mega-column">
+                                <h4 data-i18n="menu-who">Who we serve</h4>
+                                <div class="menu-item-group">
+                                    <a href="private.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-private">Private Owners</h5><p data-i18n="menu-private-desc">Protecting wealth.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="mega-column">
+                                <h4>&nbsp;</h4>
+                                <div class="menu-item-group">
+                                    <a href="investors.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-inst">Institutional Investors</h5><p data-i18n="menu-inst-desc">P&L & NAV tracking.</p></div>
+                                    </a>
+                                    <a href="managers.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h18v18H3zM8 12h8"></path></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-pm">Property Managers</h5><p data-i18n="menu-pm-desc">Outsourced operations.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="mega-column">
+                                <h4>&nbsp;</h4>
+                                <div class="menu-item-group">
+                                    <a href="developers.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 22h20"></path><path d="M4 22V7l7-3 7 3v15"></path><path d="M14 14h-4v8"></path></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-dev">Developers</h5><p data-i18n="menu-dev-desc">From build to occupancy.</p></div>
+                                    </a>
+                                    <a href="brokers.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-brokers">Rental Real Estate Brokers</h5><p data-i18n="menu-brokers-desc">Streamlined handovers.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+
+            <div class="nav-buttons">
+                <button class="theme-toggle" id="theme-toggle" aria-label="Switch Theme">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                </button>
+                <a href="owner-portal.html" class="btn btn-secondary" data-i18n="btn-login">Log in</a>
+                <a href="contact.html" class="btn btn-primary" data-i18n="btn-start">Start for free</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="trans-hero">
+        <div class="container">
+            <span class="mono-tag" data-i18n="trans-tag">GLASS BOX PROTOCOL</span>
+            <h1 data-i18n="trans-title">We Hide Nothing.</h1>
+            <p data-i18n="trans-desc">Our entire operation is built on an open-ledger philosophy. You see every transaction, every receipt, and every communication log.</p>
+        </div>
+    </div>
+
+    <div class="audit-section">
+        <div class="container">
+            <div class="audit-grid">
+                <div>
+                    <h2 style="font-size: 36px; margin-bottom: 20px;">The Immutable Log</h2>
+                    <p style="color: #ccc; margin-bottom: 30px;">Every action taken on your property is time-stamped and user-tagged. Whether it's a rent payment or a repair authorization, the history is permanent.</p>
+                    <a href="owner-portal.html" class="btn btn-primary">View Live Demo</a>
+                </div>
+                <div class="audit-visual">
+                    <div class="log-entry">
+                        <span class="log-time">[10:42:15]</span> <span class="log-user">SYSTEM:</span> Rent collected (Unit 402) - €1,200
+                    </div>
+                    <div class="log-entry">
+                        <span class="log-time">[11:05:30]</span> <span class="log-user">J.NOVAK:</span> Ticket #591 Created (Leaking Tap)
+                    </div>
+                    <div class="log-entry">
+                        <span class="log-time">[11:06:00]</span> <span class="log-user">AI_BOT:</span> Ticket #591 Assigned to 'Plumbing S.R.O.'
+                    </div>
+                    <div class="log-entry">
+                        <span class="log-time">[14:20:10]</span> <span class="log-user">M.DVOŘÁK:</span> Invoice #INV-2024-001 Uploaded
+                    </div>
+                    <div class="log-entry" style="color: var(--primary-color);">
+                        <span class="log-time">[14:20:12]</span> <span class="log-user">SYSTEM:</span> Owner Notification Sent
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="standards-grid">
+            <div class="std-card">
+                <div class="std-title" data-i18n="std-1-t">No Kickbacks</div>
+                <div class="std-desc" data-i18n="std-1-d">We strictly forbid commissions from vendors. We negotiate bulk discounts and pass 100% of the savings to you.</div>
+            </div>
+            <div class="std-card">
+                <div class="std-title" data-i18n="std-2-t">Original Invoices</div>
+                <div class="std-desc" data-i18n="std-2-d">You don't get a Rentstag invoice for repairs. You get the original PDF from the plumber. No markups, ever.</div>
+            </div>
+            <div class="std-card">
+                <div class="std-title" data-i18n="std-3-t">Open Banking</div>
+                <div class="std-desc" data-i18n="std-3-d">Rent is collected into segregated accounts. We use banking APIs to match payments instantly.</div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4 data-i18n="nav-management">Management</h4>
+                    <ul>
+                        <li><a href="residential.html" data-i18n="menu-res">Residential</a></li>
+                        <li><a href="association.html" data-i18n="menu-assoc">Association</a></li>
+                        <li><a href="leasing.html" data-i18n="menu-smart">Smart Leasing</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 data-i18n="nav-experience">Experience</h4>
+                    <ul>
+                        <li><a href="owner-portal.html" data-i18n="menu-portal">Owner Portal</a></li>
+                        <li><a href="tenant-portal.html" data-i18n="menu-tenant-portal">Tenant Portal</a></li>
+                        <li><a href="asset-portal.html" data-i18n="menu-asset-portal">Asset Manager / Property Manager Portal</a></li>
+                        <li><a href="maintenance.html" data-i18n="menu-maint">Maintenance Network</a></li>
+                        <li><a href="transparency.html" data-i18n="menu-transparency">Transparency Standards</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 data-i18n="nav-clients">Clients</h4>
+                    <ul>
+                        <li><a href="private.html" data-i18n="menu-private">Private Owners</a></li>
+                        <li><a href="investors.html" data-i18n="menu-inst">Institutional Investors</a></li>
+                        <li><a href="managers.html" data-i18n="menu-pm">Property Managers</a></li>
+                        <li><a href="developers.html" data-i18n="menu-dev">Developers</a></li>
+                        <li><a href="brokers.html" data-i18n="menu-brokers">Rental Real Estate Brokers</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 data-i18n="footer-company">Company</h4>
+                    <ul>
+                        <li><a href="about.html" data-i18n="footer-about">About Us</a></li>
+                        <li><a href="careers.html" data-i18n="footer-careers">Careers</a></li>
+                        <li><a href="contact.html" data-i18n="footer-contact">Contact</a></li>
+                    </ul>
+                </div>
+                 <div class="footer-col">
+                    <h4 data-i18n="footer-resources">Resources</h4>
+                    <ul>
+                        <li><a href="help.html" data-i18n="footer-help">Help Center</a></li>
+                        <li><a href="privacy.html" data-i18n="footer-privacy">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="footer-copy">
+                    &copy; 2026 Rentstag AG & Co s.r.o. All rights reserved.<br>
+                    <span style="font-size: 12px; opacity: 0.8; margin-top: 4px; display: inline-block;" data-i18n="footer-swiss">Shaped in Geneva, Switzerland 🇨🇭 (2022) — engineered for Central & Eastern Europe</span>
+                    <div class="footer-legal" data-i18n="footer-legal">
+                        Rentstag is a proprietary operating entity acting suo nomine, leveraging proprietary computational architecture for internal asset optimization. For the avoidance of doubt, “Rentstag AG & Co s.r.o.” is an internal designation (“Algorithmic Governance”) and does not imply any specific legal form or regulated status; see Legal/Disclosures. The Entity is not a licensed broker-dealer, bank, or collective investment scheme. Utilization of any software infrastructure is provided on an “as-is” basis without warranty of computational infallibility. All materials herein are provided pro notitia and do not constitute financial advice, a solicitation, or a binding offer to contract (invitatio ad offerendum). Any potential transaction is strictly contingent upon satisfactory due diligence and definitive legal execution.
+                    </div>
+                </div>
+               
+                <div class="footer-center">
+                    <a href="https://www.linkedin.com/company/rentstag-official/" target="_blank" class="social-icon" aria-label="LinkedIn">
+                        <svg viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                    </a>
+                </div>
+
+                <div class="footer-right">
+                    <div class="footer-links" style="display: flex; gap: 20px; font-size: 13px;">
+                        <a href="privacy.html" data-i18n="footer-privacy">Privacy Policy</a>
+                        <a href="terms.html" data-i18n="footer-terms">Terms of Service</a>
+                    </div>
+                    <div class="lang-switch">
+                        <button class="lang-btn" onclick="setLanguage('en')">EN</button>
+                        <span style="color:#444">|</span>
+                        <button class="lang-btn" onclick="setLanguage('de')">DE</button>
+                        <span style="color:#444">|</span>
+                        <button class="lang-btn" onclick="setLanguage('cs')">CZ</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 1. DARK MODE TOGGLE
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleBtn = document.getElementById('theme-toggle');
+            const body = document.body;
+            if (localStorage.getItem('theme') === 'dark') { body.classList.add('dark-mode'); }
+            toggleBtn.addEventListener('click', () => {
+                body.classList.toggle('dark-mode');
+                localStorage.setItem('theme', body.classList.contains('dark-mode') ? 'dark' : 'light');
+            });
+        });
+
+        // 2. CLICK SOUND
+        document.addEventListener('DOMContentLoaded', () => {
+            const clickSound = new Audio('Rentstag_mouse-click.mp3');
+            clickSound.volume = 0.4; 
+            const buttons = document.querySelectorAll('.btn, .nav-link, .menu-link, .theme-toggle, .lang-btn, .social-icon');
+            buttons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    clickSound.currentTime = 0;
+                    const playPromise = clickSound.play();
+                    if (playPromise !== undefined) { playPromise.catch(error => {}); }
+                });
+            });
+        });
+
+        // 3. TRANSLATIONS
+        const translations = {
+            'cs': {
+                'nav-management': 'Správa', 'nav-experience': 'Zkušenost', 'nav-clients': 'Klienti', 'nav-pricing': 'Ceník',
+                'btn-login': 'Přihlásit', 'btn-start': 'Začít zdarma', 'menu-core': 'Hlavní služby', 'menu-res': 'Správa bytových domů', 'menu-res-desc': 'Kompletní péče o nájemní domy.',
+                'menu-assoc': 'Správa SVJ', 'menu-assoc-desc': 'Moderní administrativa pro společenství.', 'menu-leasing': 'Pronájem', 'menu-smart': 'Chytrý pronájem',
+                'menu-smart-desc': 'Prověření nájemníci a data.', 'menu-integrity': 'Radikální Integrita', 'menu-integrity-desc': 'Vidíte každou transakci. Žádné skryté poplatky.',
+                'menu-learn': 'Více o našich standardech &rarr;', 'menu-tech': 'Technologie', 'menu-portal': 'Portál vlastníka', 'menu-portal-desc': 'Přehled v reálném čase.',
+                'menu-tenant-portal': 'Portál nájemníka', 'menu-tenant-portal-desc': 'Platby a požadavky.',
+                'menu-asset-portal': 'Portál pro asset manažery', 'menu-asset-portal-desc': 'Detailní kontrola.',
+                'menu-services': 'Služby', 'menu-maint': 'Síť údržby', 'menu-maint-desc': 'Prověření řemeslníci a kvalita.', 'menu-trust': 'Důvěra', 'menu-transparency': 'Standardy transparentnosti',
+                'menu-transparency-desc': 'Žádné černé skříňky.', 'menu-who': 'Komu sloužíme', 'menu-private': 'Soukromí vlastníci', 'menu-private-desc': 'Ochrana a růst majetku.',
+                'menu-inst': 'Investiční fondy', 'menu-inst-desc': 'P&L a sledování NAV.', 'menu-pm': 'Správci nemovitostí', 'menu-pm-desc': 'Outsourcing provozu.',
+                'menu-dev': 'Developeři', 'menu-dev-desc': 'Od výstavby po obsazenost.', 'menu-brokers': 'Realitní makléři', 'menu-brokers-desc': 'Hladké předání.',
+                'footer-company': 'Společnost',
+                'footer-about': 'O nás', 'footer-careers': 'Kariéra', 'footer-contact': 'Kontakt', 'footer-resources': 'Zdroje', 'footer-help': 'Centrum nápovědy', 'footer-privacy': 'Ochrana soukromí',
+                'footer-terms': 'Podmínky služby', 'footer-cookies': 'Nastavení cookies', 
+                'hero-origin': 'Původ: Ženeva, Švýcarsko 🇨🇭',
+                'footer-swiss': 'Formováno v Ženevě, Švýcarsku 🇨🇭 (2022) — vyvinuto pro střední a východní Evropu',
+                'footer-legal': 'Rentstag je proprietární provozní subjekt jednající suo nomine, využívající proprietární výpočetní architekturu pro optimalizaci interních aktiv. Pro vyloučení pochybností je „Rentstag AG & Co s.r.o.“ interním označením („Algorithmic Governance“) a neimplikuje žádnou konkrétní právní formu či regulovaný status; viz Právní/Zveřejnění. Subjekt není licencovaným obchodníkem s cennými papíry, bankou ani systémem kolektivního investování. Využití jakékoli softwarové infrastruktury je poskytováno na bázi „jak stojí a leží“ bez záruky výpočetní neomylnosti. Veškeré materiály zde uvedené jsou poskytovány pro notitia a nepředstavují finanční poradenství, výzvu ani závaznou nabídku k uzavření smlouvy (invitatio ad offerendum). Jakákoli potenciální transakce je přísně podmíněna uspokojivou due diligence a definitivním právním provedením.',
+                
+                // TRANSPARENCY SPECIFIC
+                'trans-tag': 'PROTOKOL SKLENĚNÉ SKŘÍŇKY',
+                'trans-title': 'Nic neskrýváme.',
+                'trans-desc': 'Celý náš provoz je postaven na filozofii otevřené knihy. Vidíte každou transakci, každou účtenku a každý záznam komunikace.',
+                'std-1-t': 'Žádné úplatky', 'std-1-d': 'Přísně zakazujeme provize od dodavatelů. Vyjednáváme množstevní slevy a 100 % úspor přenášíme na vás.',
+                'std-2-t': 'Originální faktury', 'std-2-d': 'Nedostáváte fakturu od Rentstagu za opravy. Dostáváte originální PDF od instalatéra. Žádné přirážky, nikdy.',
+                'std-3-t': 'Otevřené bankovnictví', 'std-3-d': 'Nájemné je vybíráno na oddělené účty. Používáme bankovní API pro okamžité párování plateb.'
+            },
+            'de': {
+                'nav-management': 'Verwaltung', 'nav-experience': 'Erfahrung', 'nav-clients': 'Kunden', 'nav-pricing': 'Preise',
+                'btn-login': 'Anmelden', 'btn-start': 'Kostenlos starten', 'menu-core': 'Kernleistungen', 'menu-res': 'Mietverwaltung', 'menu-res-desc': 'Rundum-Service für Mietshäuser.',
+                'menu-assoc': 'WEG-Verwaltung', 'menu-assoc-desc': 'Moderne Verwaltung für Eigentümer.', 'menu-leasing': 'Vermietung', 'menu-smart': 'Smart Leasing',
+                'menu-smart-desc': 'Datengetriebene Vermietung.', 'menu-integrity': 'Radikale Integrität', 'menu-integrity-desc': 'Transparenz bei jeder Transaktion.',
+                'menu-learn': 'Mehr über unsere Standards &rarr;', 'menu-tech': 'Technologie', 'menu-portal': 'Eigentümer-Portal', 'menu-portal-desc': 'Echtzeit-Überblick.',
+                'menu-tenant-portal': 'Mieterportal', 'menu-tenant-portal-desc': 'Zahlungen & Anfragen.',
+                'menu-asset-portal': 'Asset Manager Portal', 'menu-asset-portal-desc': 'Granulare Kontrolle.',
+                'menu-services': 'Dienstleistungen', 'menu-maint': 'Handwerker-Netzwerk', 'menu-maint-desc': 'Geprüfte Qualität.', 'menu-trust': 'Vertrauen', 'menu-transparency': 'Transparenz-Standards',
+                'menu-transparency-desc': 'Keine Blackboxen.', 'menu-who': 'Für wen wir arbeiten', 'menu-private': 'Privateigentümer', 'menu-private-desc': 'Vermögensschutz.',
+                'menu-inst': 'Institutionelle Investoren', 'menu-inst-desc': 'P&L und NAV Tracking.', 'menu-pm': 'Hausverwaltungen', 'menu-pm-desc': 'Ausgelagerter Betrieb.',
+                'menu-dev': 'Bauträger', 'menu-dev-desc': 'Vom Bau bis zur Vermietung.', 'menu-brokers': 'Immobilienmakler', 'menu-brokers-desc': 'Reibungslose Übergaben.',
+                'footer-company': 'Unternehmen',
+                'footer-about': 'Über uns', 'footer-careers': 'Karriere', 'footer-contact': 'Kontakt', 'footer-resources': 'Ressourcen', 'footer-help': 'Hilfe-Center', 'footer-privacy': 'Datenschutz',
+                'footer-terms': 'AGB', 'footer-cookies': 'Cookie-Einstellungen', 
+                'hero-origin': 'Ursprung: Genf, Schweiz 🇨🇭',
+                'footer-swiss': 'Geprägt in Genf, Schweiz 🇨🇭 (2022) — entwickelt für Mittel- und Osteuropa',
+                'footer-legal': 'Rentstag ist eine proprietäre operative Einheit, die suo nomine handelt und proprietäre Rechenarchitektur zur internen Vermögensoptimierung nutzt. Zur Vermeidung von Zweifeln ist „Rentstag AG & Co s.r.o.“ eine interne Bezeichnung („Algorithmic Governance“) und impliziert keine spezifische Rechtsform oder einen regulierten Status; siehe Rechtliches/Offenlegungen. Die Einheit ist kein lizenzierter Broker-Dealer, keine Bank und kein kollektives Anlagesystem. Die Nutzung jeglicher Softwareinfrastruktur erfolgt auf einer „Ist-Zustand“-Basis ohne Gewähr für rechnerische Unfehlbarkeit. Alle hierin enthaltenen Materialien werden pro notitia zur Verfügung gestellt und stellen keine Finanzberatung, Aufforderung oder ein verbindliches Vertragsangebot (invitatio ad offerendum) dar. Jede potenzielle Transaktion steht unter dem strengen Vorbehalt einer zufriedenstellenden Due Diligence und einer definitiven rechtlichen Ausführung.',
+                
+                // TRANSPARENCY SPECIFIC
+                'trans-tag': 'GLASKASTEN-PROTOKOLL',
+                'trans-title': 'Wir verbergen nichts.',
+                'trans-desc': 'Unser gesamter Betrieb basiert auf einer Open-Ledger-Philosophie. Sie sehen jede Transaktion, jeden Beleg und jedes Kommunikationsprotokoll.',
+                'std-1-t': 'Keine Rückvergütungen', 'std-1-d': 'Wir verbieten Provisionen von Anbietern strikt. Wir verhandeln Mengenrabatte und geben 100% der Einsparungen an Sie weiter.',
+                'std-2-t': 'Originalrechnungen', 'std-2-d': 'Sie erhalten keine Rentstag-Rechnung für Reparaturen. Sie erhalten das Original-PDF vom Klempner. Keine Aufschläge, niemals.',
+                'std-3-t': 'Open Banking', 'std-3-d': 'Die Miete wird auf getrennten Konten gesammelt. Wir nutzen Bank-APIs, um Zahlungen sofort abzugleichen.'
+            },
+            'en': {
+                'nav-management': 'Management', 'nav-experience': 'Experience', 'nav-clients': 'Clients', 'nav-pricing': 'Pricing',
+                'btn-login': 'Log in', 'btn-start': 'Start for free', 'menu-core': 'Core Services', 'menu-res': 'Residential Management', 'menu-res-desc': 'Full-service care for apartments.',
+                'menu-assoc': 'Association Management', 'menu-assoc-desc': 'Modern administration for HOAs.', 'menu-leasing': 'Leasing', 'menu-smart': 'Smart Leasing',
+                'menu-smart-desc': 'Data-driven tenant placement.', 'menu-integrity': 'Radical Integrity', 'menu-integrity-desc': 'We provide a "glass-box" view of every transaction. No hidden fees.',
+                'menu-learn': 'Learn about our standards &rarr;', 'menu-tech': 'Technology', 'menu-portal': 'Owner Portal', 'menu-portal-desc': 'Real-time visibility.',
+                'menu-tenant-portal': 'Tenant Portal', 'menu-tenant-portal-desc': 'Payments & requests.',
+                'menu-asset-portal': 'Asset Manager Portal', 'menu-asset-portal-desc': 'Granular control.',
+                'menu-services': 'Services', 'menu-maint': 'Maintenance Network', 'menu-maint-desc': 'Vetted high-quality contractors.', 'menu-trust': 'Trust', 'menu-transparency': 'Transparency Standards',
+                'menu-transparency-desc': 'Zero black boxes.', 'menu-who': 'Who we serve', 'menu-private': 'Private Owners', 'menu-private-desc': 'Protecting wealth.',
+                'menu-inst': 'Institutional Investors', 'menu-inst-desc': 'P&L & NAV tracking.', 'menu-pm': 'Property Managers', 'menu-pm-desc': 'Outsourced operations.',
+                'menu-dev': 'Developers', 'menu-dev-desc': 'From build to occupancy.', 'menu-brokers': 'Rental Real Estate Brokers', 'menu-brokers-desc': 'Streamlined handovers.',
+                'footer-company': 'Company',
+                'footer-about': 'About Us', 'footer-careers': 'Careers', 'footer-contact': 'Contact', 'footer-resources': 'Resources', 'footer-help': 'Help Center', 'footer-privacy': 'Privacy Policy',
+                'footer-terms': 'Terms of Service', 'footer-cookies': 'Cookie Settings', 
+                'hero-origin': 'Origin: Geneva, Switzerland 🇨🇭',
+                'footer-swiss': 'Shaped in Geneva, Switzerland 🇨🇭 (2022) — engineered for Central & Eastern Europe',
+                'footer-legal': 'Rentstag is a proprietary operating entity acting suo nomine, leveraging proprietary computational architecture for internal asset optimization. For the avoidance of doubt, “Rentstag AG & Co s.r.o.” is an internal designation (“Algorithmic Governance”) and does not imply any specific legal form or regulated status; see Legal/Disclosures. The Entity is not a licensed broker-dealer, bank, or collective investment scheme. Utilization of any software infrastructure is provided on an “as-is” basis without warranty of computational infallibility. All materials herein are provided pro notitia and do not constitute financial advice, a solicitation, or a binding offer to contract (invitatio ad offerendum). Any potential transaction is strictly contingent upon satisfactory due diligence and definitive legal execution.',
+                
+                // TRANSPARENCY SPECIFIC
+                'trans-tag': 'GLASS BOX PROTOCOL',
+                'trans-title': 'We Hide Nothing.',
+                'trans-desc': 'Our entire operation is built on an open-ledger philosophy. You see every transaction, every receipt, and every communication log.',
+                'std-1-t': 'No Kickbacks', 'std-1-d': 'We strictly forbid commissions from vendors. We negotiate bulk discounts and pass 100% of the savings to you.',
+                'std-2-t': 'Original Invoices', 'std-2-d': 'You don\'t get a Rentstag invoice for repairs. You get the original PDF from the plumber. No markups, ever.',
+                'std-3-t': 'Open Banking', 'std-3-d': 'Rent is collected into segregated accounts. We use banking APIs to match payments instantly.'
+            }
+        };
+
+        function setLanguage(lang) {
+            const elements = document.querySelectorAll('[data-i18n]');
+            
+            // Set active class on buttons
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            const btns = document.querySelectorAll('.lang-btn');
+            if(lang === 'en') btns[0].classList.add('active');
+            if(lang === 'de') btns[1].classList.add('active');
+            if(lang === 'cs') btns[2].classList.add('active');
+
+            if(translations[lang]) {
+                elements.forEach(element => {
+                    const key = element.getAttribute('data-i18n');
+                    if (translations[lang][key]) {
+                        element.innerHTML = translations[lang][key];
+                    }
+                });
+                localStorage.setItem('lang', lang);
+            }
+        }
+
+        // Auto-detect or load saved
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedLang = localStorage.getItem('lang');
+            const userLang = navigator.language || navigator.userLanguage; 
+            
+            if (savedLang) {
+                setLanguage(savedLang);
+            } else if (userLang.startsWith('cs')) {
+                setLanguage('cs');
+            } else if (userLang.startsWith('de')) {
+                setLanguage('de');
+            }
+            // Default is EN (HTML is already EN)
+        });
+    </script>
+
+</body>
+</html>

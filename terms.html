@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service | Rentstag</title>
+    
+    <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@100,200,300,400,500,700,800,900&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- DESIGN SETTINGS (MATCHING MAIN PAGE) --- */
+        :root {
+            --primary-color: #C86B3D;
+            --copper-gradient: linear-gradient(135deg, #A0552D 0%, #E69B6A 50%, #A0552D 100%);
+            
+            /* LIGHT MODE */
+            --bg-body: #F7F7F5;
+            --bg-card: #FFFFFF;
+            --bg-header: rgba(255, 255, 255, 0.95);
+            --text-main: #121212;
+            --text-muted: #666666;
+            --border-color: rgba(0,0,0,0.06);
+            --shadow-color: rgba(0,0,0,0.08);
+            --logo-filter: grayscale(100%); 
+            
+            --radius-small: 6px;
+            --radius-large: 20px;
+            
+            --font-family: 'Cabinet Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            --container-width: 1240px;
+        }
+
+        /* --- DARK MODE OVERRIDES --- */
+        body.dark-mode {
+            --bg-body: #050505;
+            --bg-card: #111111;
+            --bg-header: rgba(5, 5, 5, 0.9);
+            --text-main: #FFFFFF;
+            --text-muted: #999999;
+            --border-color: rgba(255,255,255,0.1);
+            --shadow-color: rgba(0,0,0,0.5);
+            --logo-filter: grayscale(100%) invert(1) brightness(2);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            width: 100%;
+        }
+
+        a { text-decoration: none; color: inherit; transition: 0.2s; }
+        ul { list-style: none; }
+
+        .container {
+            max-width: var(--container-width);
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* --- BUTTONS --- */
+        .btn {
+            display: inline-block; padding: 14px 28px; border-radius: var(--radius-small);
+            font-weight: 700; cursor: pointer; transition: all 0.3s ease;
+            font-size: 15px; border: none; position: relative; overflow: hidden; text-align: center;
+        }
+        .btn-primary {
+            background: var(--copper-gradient); background-size: 200% auto;
+            color: #fff; box-shadow: 0 4px 15px rgba(160, 85, 45, 0.3);
+        }
+        .btn-primary:hover { 
+            background-position: right center; box-shadow: 0 6px 20px rgba(160, 85, 45, 0.4); transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background-color: transparent; border: 1px solid var(--text-muted); color: var(--text-main);
+        }
+        .btn-secondary:hover { border-color: #A0552D; color: #A0552D; }
+
+        /* THEME TOGGLE */
+        .theme-toggle {
+            background: transparent; border: 1px solid var(--border-color);
+            width: 40px; height: 40px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; color: var(--text-main); margin-right: 10px;
+            transition: all 0.3s ease;
+        }
+        .theme-toggle:hover { background: var(--bg-card); border-color: var(--primary-color); color: var(--primary-color); }
+        .theme-toggle svg { width: 20px; height: 20px; stroke: currentColor; fill: none; }
+
+        /* --- HEADER & NAVIGATION --- */
+        header {
+            height: 80px; position: sticky; top: 0;
+            background: var(--bg-header); backdrop-filter: blur(10px);
+            z-index: 1000; border-bottom: 1px solid var(--border-color);
+            transition: background 0.3s ease;
+        }
+        .nav-container {
+            max-width: var(--container-width); margin: 0 auto; padding: 0 24px; height: 100%;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        
+        .logo { display: flex; align-items: center; z-index: 1001; }
+        .logo img { height: 28px; width: auto; vertical-align: middle; object-fit: contain; }
+        body.dark-mode .logo img { filter: invert(1); }
+
+        .nav-links { display: flex; gap: 0; height: 100%; }
+        .nav-item {
+            height: 100%; display: flex; align-items: center; padding: 0 12px; cursor: pointer; position: static;
+        }
+        .nav-link {
+            font-weight: 600; font-size: 15px; color: var(--text-muted);
+            display: flex; align-items: center; gap: 6px; padding: 8px 12px;
+            border-radius: var(--radius-small); transition: all 0.2s;
+        }
+        .nav-link::after {
+            content: ''; border: solid var(--text-muted); border-width: 0 1.5px 1.5px 0;
+            display: inline-block; padding: 2.5px; transform: rotate(45deg) translateY(-2px); transition: transform 0.2s;
+        }
+        .nav-item:hover .nav-link { background: var(--bg-card); color: var(--text-main); }
+        .nav-item:hover .nav-link::after { transform: rotate(-135deg) translateY(-1px); border-color: var(--text-main); }
+        .nav-link.simple::after { display: none; }
+
+        /* Mega Menu */
+        .mega-menu {
+            position: absolute; top: 80px; left: 0; width: 100%;
+            background: var(--bg-card); border-top: 1px solid var(--border-color);
+            box-shadow: 0 20px 40px var(--shadow-color); padding: 40px 0;
+            opacity: 0; visibility: hidden; transform: translateY(10px);
+            transition: all 0.2s ease; cursor: default;
+        }
+        .nav-item:hover .mega-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+        .mega-content {
+            max-width: var(--container-width); margin: 0 auto; padding: 0 24px;
+            display: grid; gap: 60px;
+        }
+        .mega-column h4 {
+            font-size: 12px; text-transform: uppercase; color: var(--text-muted);
+            margin-bottom: 20px; letter-spacing: 1px; font-weight: 700;
+        }
+        .menu-item-group { display: flex; flex-direction: column; gap: 10px; }
+        .menu-link {
+            display: flex; align-items: flex-start; gap: 16px; padding: 12px;
+            border-radius: var(--radius-small); transition: background 0.2s;
+        }
+        .menu-link:hover { background: rgba(200, 107, 61, 0.05); }
+        .menu-icon {
+            width: 40px; height: 40px; background: var(--bg-body); border: 1px solid var(--border-color);
+            border-radius: 8px; display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; color: #A0552D;
+        }
+        .menu-text h5 { font-size: 16px; font-weight: 700; color: var(--text-main); margin-bottom: 4px; }
+        .menu-text p { font-size: 14px; color: var(--text-muted); line-height: 1.4; }
+        
+        .menu-featured {
+            background: #1a1a1a; border-radius: var(--radius-large); padding: 30px;
+            color: #fff; display: flex; flex-direction: column; justify-content: flex-end;
+            min-height: 300px; position: relative; overflow: hidden; text-align: left;
+            border: 1px solid var(--border-color);
+        }
+        .menu-featured h5 { font-size: 24px; margin-bottom: 10px; z-index: 2; position: relative; color: #fff; }
+        .menu-featured p { font-size: 14px; color: #ccc; margin-bottom: 20px; z-index: 2; position: relative; }
+        .menu-featured-link { font-size: 14px; font-weight: 600; color: #fff; text-decoration: underline; z-index: 2; position: relative; }
+        .menu-featured::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(160, 85, 45, 0.6) 100%); z-index: 1;
+        }
+        .menu-featured-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.6; }
+        .nav-buttons { display: flex; gap: 10px; align-items: center; }
+        @media (max-width: 900px) { .nav-links, .mega-menu { display: none; } }
+
+        /* --- TERMS OF SERVICE SPECIFIC STYLES --- */
+        .legal-page-header {
+            padding: 100px 0 60px;
+            text-align: center;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+        }
+        .legal-page-header h1 {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: var(--text-main);
+            letter-spacing: -1px;
+        }
+        .legal-content {
+            max-width: 800px;
+            margin: 60px auto;
+            padding: 0 24px;
+        }
+        .legal-block {
+            margin-bottom: 50px;
+        }
+        .legal-block h2 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--text-main);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .legal-block h3 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        .legal-text {
+            font-size: 15px;
+            line-height: 1.7;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        .preamble {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 40px;
+            border: 1px solid var(--border-color);
+            padding: 30px;
+            background: var(--bg-card);
+            border-radius: var(--radius-small);
+        }
+
+        /* --- FOOTER --- */
+        footer { background-color: #050505; color: #999; padding: 100px 0 40px; font-size: 14px; border-top: 1px solid #111; }
+        .footer-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 40px; margin-bottom: 80px; }
+        .footer-col h4 { color: #fff; margin-bottom: 25px; font-weight: 600; font-size: 16px; }
+        .footer-col ul { list-style: none; }
+        .footer-col li { margin-bottom: 14px; }
+        .footer-col a:hover { color: var(--primary-color); text-decoration: underline; }
+        .footer-bottom { border-top: 1px solid #222; padding-top: 40px; display: flex; justify-content: space-between; align-items: center; color: #555; }
+        
+        .footer-center { display: flex; align-items: center; gap: 20px; }
+        .footer-right { display: flex; gap: 20px; align-items: center; }
+        .social-icon svg { width: 18px; height: 18px; fill: #999; transition: fill 0.2s; }
+        .social-icon:hover svg { fill: var(--primary-color); }
+        .lang-switch { display: flex; gap: 10px; align-items: center; border-left: 1px solid #333; padding-left: 20px; }
+        .lang-btn { background: none; border: none; color: #666; font-size: 13px; font-weight: 600; cursor: pointer; padding: 0; transition: color 0.2s; }
+        .lang-btn:hover, .lang-btn.active { color: var(--primary-color); }
+
+        .footer-legal {
+            margin-top: 20px;
+            font-size: 11px;
+            line-height: 1.6;
+            color: #555;
+            opacity: 0.7;
+            max-width: 800px;
+        }
+    </style>
+</head>
+<body class="">
+
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <img src="Rentstaglogo.png" alt="Rentstag">
+            </a>
+            
+            <ul class="nav-links">
+                <li class="nav-item">
+                    <div class="nav-link" data-i18n="nav-management">Management</div>
+                    <div class="mega-menu">
+                        <div class="mega-content" style="grid-template-columns: 1fr 1fr 300px;">
+                            <div class="mega-column">
+                                <h4 data-i18n="menu-core">Core Services</h4>
+                                <div class="menu-item-group">
+                                    <a href="residential.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l8-4 8 4v14M8 21v-4h8v4"></path></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-res">Residential Management</h5><p data-i18n="menu-res-desc">Full-service care for apartments.</p></div>
+                                    </a>
+                                    <a href="association.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-assoc">Association Management</h5><p data-i18n="menu-assoc-desc">Modern administration for HOAs.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="mega-column">
+                                <h4 data-i18n="menu-leasing">Leasing</h4>
+                                <div class="menu-item-group">
+                                    <a href="leasing.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="22" y1="12" x2="18" y2="12"></line><line x1="6" y1="12" x2="2" y2="12"></line><line x1="12" y1="6" x2="12" y2="2"></line><line x1="12" y1="22" x2="12" y2="18"></line></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-smart">Smart Leasing</h5><p data-i18n="menu-smart-desc">Data-driven tenant placement.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="menu-featured">
+                                <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop" class="menu-featured-bg" alt="Feature">
+                                <h5 data-i18n="menu-integrity">Radical Integrity</h5>
+                                <p data-i18n="menu-integrity-desc">We provide a "glass-box" view of every transaction. No hidden fees.</p>
+                                <a href="integrity.html" class="menu-featured-link" data-i18n="menu-learn">Learn about our standards &rarr;</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="nav-item">
+                    <div class="nav-link" data-i18n="nav-experience">Experience</div>
+                    <div class="mega-menu">
+                        <div class="mega-content" style="grid-template-columns: 1fr 1fr 1fr;">
+                            <div class="mega-column">
+                                <h4 data-i18n="menu-tech">Technology</h4>
+                                <div class="menu-item-group">
+                                    <a href="owner-portal.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-portal">Owner Portal</h5><p data-i18n="menu-portal-desc">Real-time visibility.</p></div>
+                                    </a>
+                                    <a href="tenant-portal.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-tenant-portal">Tenant Portal</h5><p data-i18n="menu-tenant-portal-desc">Payments & requests.</p></div>
+                                    </a>
+                                    <a href="asset-portal.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-asset-portal">Asset Manager / Property Manager Portal</h5><p data-i18n="menu-asset-portal-desc">Granular control.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="mega-column">
+                                <h4 data-i18n="menu-services">Services</h4>
+                                <div class="menu-item-group">
+                                    <a href="maintenance.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-maint">Maintenance Network</h5><p data-i18n="menu-maint-desc">Vetted high-quality contractors.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="mega-column">
+                                <h4 data-i18n="menu-trust">Trust</h4>
+                                <div class="menu-item-group">
+                                    <a href="transparency.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-transparency">Transparency Standards</h5><p data-i18n="menu-transparency-desc">Zero black boxes.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <div class="nav-link" data-i18n="nav-clients">Clients</div>
+                    <div class="mega-menu">
+                        <div class="mega-content" style="grid-template-columns: 1fr 1fr 1fr;">
+                            <div class="mega-column">
+                                <h4 data-i18n="menu-who">Who we serve</h4>
+                                <div class="menu-item-group">
+                                    <a href="private.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-private">Private Owners</h5><p data-i18n="menu-private-desc">Protecting wealth.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="mega-column">
+                                <h4>&nbsp;</h4>
+                                <div class="menu-item-group">
+                                    <a href="investors.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-inst">Institutional Investors</h5><p data-i18n="menu-inst-desc">P&L & NAV tracking.</p></div>
+                                    </a>
+                                    <a href="managers.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h18v18H3zM8 12h8"></path></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-pm">Property Managers</h5><p data-i18n="menu-pm-desc">Outsourced operations.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="mega-column">
+                                <h4>&nbsp;</h4>
+                                <div class="menu-item-group">
+                                    <a href="developers.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 22h20"></path><path d="M4 22V7l7-3 7 3v15"></path><path d="M14 14h-4v8"></path></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-dev">Developers</h5><p data-i18n="menu-dev-desc">From build to occupancy.</p></div>
+                                    </a>
+                                    <a href="brokers.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-brokers">Rental Real Estate Brokers</h5><p data-i18n="menu-brokers-desc">Streamlined handovers.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+
+            <div class="nav-buttons">
+                <button class="theme-toggle" id="theme-toggle" aria-label="Switch Theme">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                </button>
+                <a href="owner-portal.html" class="btn btn-secondary" data-i18n="btn-login">Log in</a>
+                <a href="contact.html" class="btn btn-primary" data-i18n="btn-start">Start for free</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="legal-page-header">
+        <div class="container">
+            <h1 data-i18n="terms-title">TERMS OF SERVICE AND LEGAL DISCLAIMER</h1>
+        </div>
+    </div>
+
+    <div class="legal-content">
+        <div class="preamble" data-i18n="preamble-text">
+            BY ACCESSING, BROWSING, OR UTILIZING ANY DIGITAL INTERFACE, DATA REPOSITORY, OR CONTENT HOSTED UNDER THE DOMAIN OF RENTSTAG AG & CO S.R.O. (HEREINAFTER REFERRED TO AS THE “ENTITY”), THE USER (HEREINAFTER THE “ACCESSOR”) HEREBY UNEQUIVOCALLY SIGNIFIES THEIR VOLUNTARY ACQUIESCENCE TO, AND ACCEPTANCE OF, THE STIPULATIONS, PROVISOS, AND LIMITATIONS SET FORTH IN THIS INSTRUMENT. IF THE ACCESSOR DOES NOT CONCUR WITH THESE TERMS IN TOTO, THEY ARE HEREBY PRECLUDED FROM FURTHER ACCESS AND MUST CEASE UTILIZATION OF THIS DIGITAL LOCUS IMMEDIATELY.
+        </div>
+
+        <div class="legal-block">
+            <h2 data-i18n="art1-title">I. STATUTORY DELINEATION AND EXCLUSION OF REGULATORY SUBSUMPTION</h2>
+            <div class="legal-text" data-i18n="art1-1">1.1. Corporate Essence and Proprietary Trading. Rentstag AG & Co s.r.o. hereby declaratively asserts that its corporate substance consists exclusively of the effectuation of proprietary rights regarding equity participations and the administration of its own asset base via automated protocols. All acquisition processes, asset management protocols, and contractual portfolio administrations are executed suo nomine (in its own name) and solely for its own account.</div>
+            <div class="legal-text" data-i18n="art1-2">1.2. Regulatory Disclaimer. The Entity explicitly disclaims that its operational modus implies, constitutes, or resembles collective investment schemes within the meaning of Section 15 of Act No. 240/2013 Coll., on Investment Companies and Investment Funds, as amended, or that it possesses licensure for the provision of banking services, investment intermediation, or securities trading under Act No. 256/2004 Coll., on Capital Market Undertakings. Any interpretation of the Entity’s activities as those of a regulated financial institution is erroneous ab initio and contradicts the factual substrate of the Entity’s operations.</div>
+        </div>
+
+        <div class="legal-block">
+            <h2 data-i18n="art2-title">II. NOMENCLATURE CLARIFICATION AND COMMERCIAL DESIGNATION</h2>
+            <div class="legal-text" data-i18n="art2-1">2.1. Trade Name and Semiotic Definition. The Entity conducts its external facing operations and branding under the commercial designation and proprietary trade name “Rentstag Algorithmic Governance”. This nomenclature serves as the primary identifier of the Entity’s operational framework involving autonomous computational asset optimization.</div>
+            <div class="legal-text" data-i18n="art2-2">2.2. Link to Legal Entity. For all statutory, regulatory, and contractual purposes, the designation “Rentstag Algorithmic Governance” refers explicitly and exclusively to the legal entity Rentstag AG & Co s.r.o., a limited liability company incorporated under the laws of the Czech Republic. The particle “AG” within the registered legal name is a semantic derivative of the phrase “Algorithmic Governance” and does not denote the legal form of an Aktiengesellschaft.</div>
+            <div class="legal-text" data-i18n="art2-3">2.3. Exclusion of Misinterpretation. The usage of the branding “Rentstag Algorithmic Governance” or the registered name “Rentstag AG & Co s.r.o.” shall not be construed as an indication of public listing, banking licensure, or operation under a foreign corporate statute. The Entity operates strictly within the bounds of its registered legal form (s.r.o.).</div>
+        </div>
+
+        <div class="legal-block">
+            <h2 data-i18n="art3-title">III. ORIGIN OF INTELLECTUAL PROPERTY AND GEOGRAPHIC NEXUS</h2>
+            <div class="legal-text" data-i18n="art3-1">3.1. Intellectual Genesis vs. Corporate Domicile. The designation “Shaped in Geneva, Switzerland” or any visual iconography denoting the Swiss Confederation (including the sovereign flag 🇨🇭) employed within the Entity’s branding narrative refers exclusively to the locus of intellectual conception and the academic genesis of the foundational research regarding digital technology integration within M&A Roll-up frameworks (MBA/DBA dissertation protocols). This academic research constitutes the theoretical substrate upon which the Entity’s current Algorithmic Governance model is operative.</div>
+            <div class="legal-text" data-i18n="art3-2">3.2. Exclusion of Swiss Corporate Status. Such geographic references are strictly historical and biographical in nature, pertaining to the Managing Partner’s academic tenure and the development of the foundational business methodology (Raison d'être) regarding technology-driven consolidation efficiencies in Geneva, Canton of Geneva, Switzerland (circa 2022). They shall not be construed to imply that the Entity is incorporated, domiciled, tax-resident, or regulated in the Swiss Confederation, nor that its services constitute “Swiss origin” products under the Swiss Federal Act on the Protection of Trade Marks and Indications of Source.</div>
+            <div class="legal-text" data-i18n="art3-3">3.3. Operational Territory. The operational engineering, execution of mandates, and legal domiciliation are exclusively situated within the Central and Eastern European (CEE) jurisdiction, specifically the Czech Republic, as defined in Section I. of these Terms.</div>
+        </div>
+
+        <div class="legal-block">
+            <h2 data-i18n="art4-title">IV. CHARACTER OF DATA AND EXCLUSION OF CONTRACTUAL IMPLICATIONS</h2>
+            <div class="legal-text" data-i18n="art4-1">4.1. Informational Nature (Pro Notitia). All data, schematics, textual expressions, and projections (hereinafter “Information”) accessible via this interface are provided exclusively pro notitia (for informational purposes only) and are devoid of binding legal force. Under no circumstances shall this Information be construed as legal, fiscal, investment, or other professional counsel, nor as a manifestation of will aimed at establishing a fiduciary or mandatory relationship.</div>
+            <div class="legal-text" data-i18n="art4-2">4.2. Invitation to Treat (Invitatio ad Offerendum). The content of this website does not constitute a proposal to conclude a contract (offer) within the meaning of Section 1731 et seq. of Act No. 89/2012 Coll., the Civil Code (hereinafter “CZ CC”), nor a public promise or announcement of a public tender. The Entity explicitly excludes the application of Section 1732(2) of the CZ CC; all presentations herein possess the character of a mere invitation to submit offers (invitatio ad offerendum), whereby no obligation arises for the Entity to accept any such submission.</div>
+            <div class="legal-text" data-i18n="art4-3">4.3. Assumption of Risk (Suo Periculo). Reliance on any Information contained herein for the purpose of executing any disposition of property or securities is undertaken exclusively at the Accessor’s own peril (suo periculo).</div>
+        </div>
+
+        <div class="legal-block">
+            <h2 data-i18n="art5-title">V. ABSENCE OF AFFILIATION AND THIRD-PARTY OBLIGATIONS</h2>
+            <div class="legal-text" data-i18n="art5-1">5.1. Independence of Operations. Any citations, references, or graphical depictions of third-party logotypes are presented solely for referential utility and do not establish a presumption of any legal relationship, whether in the form of a silent partnership, acting in concert, agency representation, or any other form of corporate affiliation between the Entity and said third parties.</div>
+            <div class="legal-text" data-i18n="art5-2">5.2. Disclaimer of External Integrity. The Entity provides no warranties regarding the integrity, veracity, or currency of external data sources referenced herein.</div>
+        </div>
+
+        <div class="legal-block">
+            <h2 data-i18n="art6-title">VI. PROPRIETARY COMPUTATIONAL ARCHITECTURE</h2>
+            <div class="legal-text" data-i18n="art6-1">6.1. "As-Is" Software Provision. The Entity leverages proprietary computational architecture and software infrastructure for internal asset optimization ("Algorithmic Governance"). Any external visibility or output of this infrastructure is provided on an strictly "as-is" basis. The Entity explicitly disclaims any warranty of computational infallibility, algorithmic neutrality, or error-free operation.</div>
+            <div class="legal-text" data-i18n="art6-2">6.2. Exclusion of Technological Liability. The Entity assumes no liability for discrepancies arising from algorithmic execution, code latency, or synthetic data processing.</div>
+        </div>
+
+        <div class="legal-block">
+            <h2 data-i18n="art7-title">VII. DUE DILIGENCE RESERVATION AND SUSPENSIVE CONDITIONS</h2>
+            <div class="legal-text" data-i18n="art7-1">7.1. Conditions Precedent (Conditio Sine Qua Non). The potential realization of any transaction mentioned or implied on this website is unconditionally subject to: (i) The successful completion of due diligence with results satisfactory to the Entity; (ii) The negotiation and execution of definitive transactional documentation in the form mandated by law; (iii) The acquisition of all requisite corporate approvals; and (iv) Compliance with all applicable regulatory and statutory requirements.</div>
+            <div class="legal-text" data-i18n="art7-2">7.2. Pre-contractual Liability Exclusion. Until the cumulative fulfillment of these conditions, no obligation or pre-contractual liability within the meaning of Section 1729 of the CZ CC shall arise on the part of the Entity.</div>
+        </div>
+
+        <div class="legal-block">
+            <h2 data-i18n="art8-title">VIII. SYNTHETIC NATURE OF VISUAL AND NARRATIVE ELEMENTS</h2>
+            <div class="legal-text" data-i18n="art8-1">8.1. Artificial Generation and Simulacra. The Entity notifies the Accessor that certain visual assets, graphical interfaces, or imagery displayed herein may be the output of generative artificial intelligence models or computational synthesis. These elements possess the nature of simulacra and are provided strictly for illustrative purposes without claim to correspondence with actual reality (non est factum).</div>
+            <div class="legal-text" data-i18n="art8-2">8.2. Hypothetical Composites. Any “success stories,” case studies, or scenarios are constructed as hypothetical composites; they must not be interpreted as a covenant of future performance, a guarantee of yield, or a reference reflecting the empirical reality of specific contractual relations.</div>
+        </div>
+
+        <div class="legal-block">
+            <h2 data-i18n="art9-title">IX. INTELLECTUAL PROPERTY DOMINION</h2>
+            <div class="legal-text" data-i18n="art9-1">9.1. Proprietary Rights. All intellectual property rights, including but not limited to copyright, trademarks, trade secrets, and sui generis database rights resident in this digital interface, remain under the exclusive dominion of the Entity or its licensors. Unauthorized reproduction, dissemination, or reverse engineering is strictly prohibited inter alia under applicable international conventions.</div>
+        </div>
+
+        <div class="legal-block">
+            <h2 data-i18n="art10-title">X. LIMITATION OF LIABILITY AND INDEMNIFICATION</h2>
+            <div class="legal-text" data-i18n="art10-1">10.1. Exclusion of Damages. To the maximum extent permitted by applicable law (lex fori), the Entity shall not be liable for any direct, indirect, incidental, special, consequential, or exemplary damages, including but not limited to damages for loss of profits (lucrum cessans), goodwill, use, data, or other intangible losses (damnum emergens) resulting from the use or inability to use this interface.</div>
+        </div>
+
+        <div class="legal-block">
+            <h2 data-i18n="art11-title">XI. GOVERNING LAW AND JURISDICTION</h2>
+            <div class="legal-text" data-i18n="art11-1">11.1. Lex Causae. These Terms shall be governed by and construed in accordance with the substantive laws of the Czech Republic, without regard to its conflict of law principles.</div>
+            <div class="legal-text" data-i18n="art11-2">11.2. Forum Selection. Any dispute arising out of or in connection with these Terms or the use of the website shall be subject to the exclusive jurisdiction of the competent courts in Prague, Czech Republic.</div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4 data-i18n="nav-management">Management</h4>
+                    <ul>
+                        <li><a href="residential.html" data-i18n="menu-res">Residential</a></li>
+                        <li><a href="association.html" data-i18n="menu-assoc">Association</a></li>
+                        <li><a href="leasing.html" data-i18n="menu-smart">Smart Leasing</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 data-i18n="nav-experience">Experience</h4>
+                    <ul>
+                        <li><a href="owner-portal.html" data-i18n="menu-portal">Owner Portal</a></li>
+                        <li><a href="tenant-portal.html" data-i18n="menu-tenant-portal">Tenant Portal</a></li>
+                        <li><a href="asset-portal.html" data-i18n="menu-asset-portal">Asset Manager / Property Manager Portal</a></li>
+                        <li><a href="maintenance.html" data-i18n="menu-maint">Maintenance Network</a></li>
+                        <li><a href="transparency.html" data-i18n="menu-transparency">Transparency Standards</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 data-i18n="nav-clients">Clients</h4>
+                    <ul>
+                        <li><a href="private.html" data-i18n="menu-private">Private Owners</a></li>
+                        <li><a href="investors.html" data-i18n="menu-inst">Institutional Investors</a></li>
+                        <li><a href="managers.html" data-i18n="menu-pm">Property Managers</a></li>
+                        <li><a href="developers.html" data-i18n="menu-dev">Developers</a></li>
+                        <li><a href="brokers.html" data-i18n="menu-brokers">Rental Real Estate Brokers</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 data-i18n="footer-company">Company</h4>
+                    <ul>
+                        <li><a href="about.html" data-i18n="footer-about">About Us</a></li>
+                        <li><a href="careers.html" data-i18n="footer-careers">Careers</a></li>
+                        <li><a href="contact.html" data-i18n="footer-contact">Contact</a></li>
+                    </ul>
+                </div>
+                 <div class="footer-col">
+                    <h4 data-i18n="footer-resources">Resources</h4>
+                    <ul>
+                        <li><a href="help.html" data-i18n="footer-help">Help Center</a></li>
+                        <li><a href="privacy.html" data-i18n="footer-privacy">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="footer-copy">
+                    &copy; 2026 Rentstag AG & Co s.r.o. All rights reserved.<br>
+                    <span style="font-size: 12px; opacity: 0.8; margin-top: 4px; display: inline-block;" data-i18n="footer-swiss">Shaped in Geneva, Switzerland 🇨🇭 (2022) — engineered for Central & Eastern Europe</span>
+                    <div class="footer-legal" data-i18n="footer-legal">
+                        Rentstag is a proprietary operating entity acting suo nomine, leveraging proprietary computational architecture for internal asset optimization. For the avoidance of doubt, “Rentstag AG & Co s.r.o.” is an internal designation (“Algorithmic Governance”) and does not imply any specific legal form or regulated status; see Legal/Disclosures. The Entity is not a licensed broker-dealer, bank, or collective investment scheme. Utilization of any software infrastructure is provided on an “as-is” basis without warranty of computational infallibility. All materials herein are provided pro notitia and do not constitute financial advice, a solicitation, or a binding offer to contract (invitatio ad offerendum). Any potential transaction is strictly contingent upon satisfactory due diligence and definitive legal execution.
+                    </div>
+                </div>
+               
+                <div class="footer-center">
+                    <a href="https://www.linkedin.com/company/rentstag-official/" target="_blank" class="social-icon" aria-label="LinkedIn">
+                        <svg viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                    </a>
+                </div>
+
+                <div class="footer-right">
+                    <div class="footer-links" style="display: flex; gap: 20px; font-size: 13px;">
+                        <a href="privacy.html" data-i18n="footer-privacy">Privacy Policy</a>
+                        <a href="terms.html" data-i18n="footer-terms">Terms of Service</a>
+                    </div>
+                    <div class="lang-switch">
+                        <button class="lang-btn" onclick="setLanguage('en')">EN</button>
+                        <span style="color:#444">|</span>
+                        <button class="lang-btn" onclick="setLanguage('de')">DE</button>
+                        <span style="color:#444">|</span>
+                        <button class="lang-btn" onclick="setLanguage('cs')">CZ</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 1. DARK MODE TOGGLE
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleBtn = document.getElementById('theme-toggle');
+            const body = document.body;
+            if (localStorage.getItem('theme') === 'dark') { body.classList.add('dark-mode'); }
+            toggleBtn.addEventListener('click', () => {
+                body.classList.toggle('dark-mode');
+                localStorage.setItem('theme', body.classList.contains('dark-mode') ? 'dark' : 'light');
+            });
+        });
+
+        // 2. CLICK SOUND
+        document.addEventListener('DOMContentLoaded', () => {
+            const clickSound = new Audio('Rentstag_mouse-click.mp3');
+            clickSound.volume = 0.4; 
+            const buttons = document.querySelectorAll('.btn, .nav-link, .menu-link, .theme-toggle, .lang-btn, .social-icon');
+            buttons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    clickSound.currentTime = 0;
+                    const playPromise = clickSound.play();
+                    if (playPromise !== undefined) { playPromise.catch(error => {}); }
+                });
+            });
+        });
+
+        // 3. TRANSLATIONS
+        const translations = {
+            'cs': {
+                'nav-management': 'Správa', 'nav-experience': 'Zkušenost', 'nav-clients': 'Klienti', 'nav-pricing': 'Ceník',
+                'btn-login': 'Přihlásit', 'btn-start': 'Začít zdarma', 'menu-core': 'Hlavní služby', 'menu-res': 'Správa bytových domů', 'menu-res-desc': 'Kompletní péče o nájemní domy.',
+                'menu-assoc': 'Správa SVJ', 'menu-assoc-desc': 'Moderní administrativa pro společenství.', 'menu-leasing': 'Pronájem', 'menu-smart': 'Chytrý pronájem',
+                'menu-smart-desc': 'Prověření nájemníci a data.', 'menu-integrity': 'Radikální Integrita', 'menu-integrity-desc': 'Vidíte každou transakci. Žádné skryté poplatky.',
+                'menu-learn': 'Více o našich standardech &rarr;', 'menu-tech': 'Technologie', 'menu-portal': 'Portál vlastníka', 'menu-portal-desc': 'Přehled v reálném čase.',
+                'menu-tenant-portal': 'Portál nájemníka', 'menu-tenant-portal-desc': 'Platby a požadavky.',
+                'menu-asset-portal': 'Portál pro asset manažery', 'menu-asset-portal-desc': 'Detailní kontrola.',
+                'menu-services': 'Služby', 'menu-maint': 'Síť údržby', 'menu-maint-desc': 'Prověření řemeslníci a kvalita.', 'menu-trust': 'Důvěra', 'menu-transparency': 'Standardy transparentnosti',
+                'menu-transparency-desc': 'Žádné černé skříňky.', 'menu-who': 'Komu sloužíme', 'menu-private': 'Soukromí vlastníci', 'menu-private-desc': 'Ochrana a růst majetku.',
+                'menu-inst': 'Investiční fondy', 'menu-inst-desc': 'P&L a sledování NAV.', 'menu-pm': 'Správci nemovitostí', 'menu-pm-desc': 'Outsourcing provozu.',
+                'menu-dev': 'Developeři', 'menu-dev-desc': 'Od výstavby po obsazenost.', 'menu-brokers': 'Realitní makléři', 'menu-brokers-desc': 'Hladké předání.',
+                'footer-company': 'Společnost',
+                'footer-about': 'O nás', 'footer-careers': 'Kariéra', 'footer-contact': 'Kontakt', 'footer-resources': 'Zdroje', 'footer-help': 'Centrum nápovědy', 'footer-privacy': 'Ochrana soukromí',
+                'footer-terms': 'Podmínky služby', 'footer-cookies': 'Nastavení cookies', 
+                'hero-origin': 'Původ: Ženeva, Švýcarsko 🇨🇭',
+                'footer-swiss': 'Formováno v Ženevě, Švýcarsku 🇨🇭 (2022) — vyvinuto pro střední a východní Evropu',
+                'footer-legal': 'Rentstag je proprietární provozní subjekt jednající suo nomine, využívající proprietární výpočetní architekturu pro optimalizaci interních aktiv. Pro vyloučení pochybností je „Rentstag AG & Co s.r.o.“ interním označením („Algorithmic Governance“) a neimplikuje žádnou konkrétní právní formu či regulovaný status; viz Právní/Zveřejnění. Subjekt není licencovaným obchodníkem s cennými papíry, bankou ani systémem kolektivního investování. Využití jakékoli softwarové infrastruktury je poskytováno na bázi „jak stojí a leží“ bez záruky výpočetní neomylnosti. Veškeré materiály zde uvedené jsou poskytovány pro notitia a nepředstavují finanční poradenství, výzvu ani závaznou nabídku k uzavření smlouvy (invitatio ad offerendum). Jakákoli potenciální transakce je přísně podmíněna uspokojivou due diligence a definitivním právním provedením.',
+                
+                // TERMS TRANSLATION
+                'terms-title': 'PODMÍNKY SLUŽBY A PRÁVNÍ UPOZORNĚNÍ',
+                'preamble-text': 'PŘÍSTUPEM, PROHLÍŽENÍM NEBO VYUŽÍVÁNÍM JAKÉHOKOLI DIGITÁLNÍHO ROZHRANÍ, DATOVÉHO ÚLOŽIŠTĚ NEBO OBSAHU HOSTOVANÉHO POD DOMÉNOU RENTSTAG AG & CO S.R.O. (DÁLE JEN „SUBJEKT“) UŽIVATEL (DÁLE JEN „PŘISTUPUJÍCÍ“) TÍMTO JEDNOZNAČNĚ VYJADŘUJE SVŮJ DOBROVOLNÝ SOUHLAS S USTANOVENÍMI, VÝHRADAMI A OMEZENÍMI UVEDENÝMI V TOMTO DOKUMENTU. POKUD PŘISTUPUJÍCÍ S TĚMITO PODMÍNKAMI V CELÉM ROZSAHU NESOUHLASÍ, JE MU TÍMTO ZAMEZEN DALŠÍ PŘÍSTUP A MUSÍ OKAMŽITĚ UKONČIT VYUŽÍVÁNÍ TOHOTO DIGITÁLNÍHO MÍSTA.',
+                'art1-title': 'I. ZÁKONNÉ VYMEZENÍ A VYLOUČENÍ REGULAČNÍHO ZAŘAZENÍ',
+                'art1-1': '1.1. Podstata korporace a obchodování na vlastní účet. Rentstag AG & Co s.r.o. tímto deklaratorně prohlašuje, že její korporátní podstata spočívá výhradně ve výkonu vlastnických práv k majetkovým účastem a ve správě vlastní majetkové základny prostřednictvím automatizovaných protokolů. Veškeré akviziční procesy, protokoly správy aktiv a smluvní správy portfolia jsou vykonávány suo nomine (vlastním jménem) a výhradně na vlastní účet.',
+                'art1-2': '1.2. Regulační vyloučení. Subjekt výslovně odmítá, že by jeho způsob fungování implikoval, představoval nebo připomínal systémy kolektivního investování ve smyslu § 15 zákona č. 240/2013 Sb., o investičních společnostech a investičních fondech, ve znění pozdějších předpisů, nebo že by vlastnil licenci k poskytování bankovních služeb, investičního zprostředkování nebo obchodování s cennými papíry podle zákona č. 256/2004 Sb., o podnikání na kapitálovém trhu. Jakýkoli výklad činností Subjektu jako činností regulované finanční instituce je od počátku (ab initio) chybný a odporuje faktickému podkladu operací Subjektu.',
+                'art2-title': 'II. OBJASNĚNÍ NÁZVOSLOVÍ A OBCHODNÍ OZNAČENÍ',
+                'art2-1': '2.1. Obchodní jméno a sémiotická definice. Subjekt provádí své navenek směřující operace a branding pod obchodním označením a proprietárním obchodním názvem „Rentstag Algorithmic Governance“. Toto názvosloví slouží jako primární identifikátor operačního rámce Subjektu zahrnujícího autonomní výpočetní optimalizaci aktiv.',
+                'art2-2': '2.2. Vazba na právní subjekt. Pro veškeré zákonné, regulační a smluvní účely označení „Rentstag Algorithmic Governance“ odkazuje výslovně a výhradně na právní subjekt Rentstag AG & Co s.r.o., společnost s ručením omezeným založenou podle práva České republiky. Částice „AG“ v registrovaném právním názvu je sémantickým derivátem fráze „Algorithmic Governance“ a neoznačuje právní formu akciové společnosti (Aktiengesellschaft).',
+                'art2-3': '2.3. Vyloučení chybného výkladu. Používání značky „Rentstag Algorithmic Governance“ nebo registrovaného názvu „Rentstag AG & Co s.r.o.“ nesmí být vykládáno jako indikace veřejné obchodovatelnosti, bankovní licence nebo působení podle zahraničního korporátního statutu. Subjekt působí striktně v mezích své registrované právní formy (s.r.o.).',
+                'art3-title': 'III. PŮVOD DUŠEVNÍHO VLASTNICTVÍ A GEOGRAFICKÁ VAZBA',
+                'art3-1': '3.1. Intelektuální geneze vs. sídlo společnosti. Označení „Shaped in Geneva, Switzerland“ nebo jakákoli vizuální ikonografie označující Švýcarskou konfederaci (včetně státní vlajky 🇨🇭) použitá v rámci brandingu Subjektu odkazuje výhradně na místo intelektuálního početí a akademickou genezi základního výzkumu týkajícího se integrace digitálních technologií v rámci M&A Roll-up rámců (protokoly disertačních prací MBA/DBA). Tento akademický výzkum tvoří teoretický podklad, na kterém funguje současný model Algoritmického řízení Subjektu.',
+                'art3-2': '3.2. Vyloučení švýcarského korporátního statutu. Takové geografické odkazy jsou striktně historické a biografické povahy, týkající se akademického působení řídícího partnera a vývoje základní obchodní metodologie (Raison d\'être) ohledně technologicky řízených konsolidačních efektivit v Ženevě, kanton Ženeva, Švýcarsko (cca 2022). Nesmí být vykládány tak, že Subjekt je založen, má sídlo, je daňovým rezidentem nebo je regulován ve Švýcarské konfederaci, ani že jeho služby představují produkty „švýcarského původu“ podle švýcarského federálního zákona o ochraně ochranných známek a označení původu.',
+                'art3-3': '3.3. Operační území. Operační inženýrství, výkon mandátů a právní sídlo jsou situovány výhradně v jurisdikci střední a východní Evropy (CEE), konkrétně v České republice, jak je definováno v článku I. těchto Podmínek.',
+                'art4-title': 'IV. POVAHA DAT A VYLOUČENÍ SMLUVNÍCH IMPLIKACÍ',
+                'art4-1': '4.1. Informativní povaha (Pro Notitia). Veškerá data, schémata, textová vyjádření a projekce (dále jen „Informace“) přístupné přes toto rozhraní jsou poskytovány výhradně pro notitia (pouze pro informační účely) a postrádají závaznou právní sílu. Za žádných okolností nesmí být tyto Informace vykládány jako právní, daňové, investiční nebo jiné odborné poradenství, ani jako projev vůle směřující k založení svěřeneckého nebo příkazního vztahu.',
+                'art4-2': '4.2. Výzva k podání nabídky (Invitatio ad Offerendum). Obsah této webové stránky nepředstavuje návrh na uzavření smlouvy (nabídku) ve smyslu § 1731 a násl. zákona č. 89/2012 Sb., občanský zákoník (dále jen „OZ“), ani veřejný příslib nebo vyhlášení veřejné soutěže. Subjekt výslovně vylučuje aplikaci § 1732 odst. 2 OZ; veškeré prezentace zde mají povahu pouhé výzvy k podání nabídek (invitatio ad offerendum), přičemž Subjektu nevzniká povinnost jakékoli takové podání přijmout.',
+                'art4-3': '4.3. Převzetí rizika (Suo Periculo). Spoléhání se na jakékoli Informace zde obsažené za účelem provedení jakékoli dispozice s majetkem nebo cennými papíry je prováděno výhradně na vlastní nebezpečí Přistupujícího (suo periculo).',
+                'art5-title': 'V. ABSENCE PŘIDRUŽENÍ A POVINNOSTI TŘETÍCH STRAN',
+                'art5-1': '5.1. Nezávislost operací. Jakékoli citace, odkazy nebo grafická zobrazení logotypů třetích stran jsou prezentovány pouze pro referenční užitek a nezakládají domněnku jakéhokoli právního vztahu, ať už ve formě tichého společenství, jednání ve shodě, zastoupení nebo jakékoli jiné formy korporátního přidružení mezi Subjektem a uvedenými třetími stranami.',
+                'art5-2': '5.2. Vyloučení odpovědnosti za externí integritu. Subjekt neposkytuje žádné záruky týkající se integrity, pravdivosti nebo aktuálnosti externích datových zdrojů zde odkazovaných.',
+                'art6-title': 'VI. PROPRIETÁRNÍ VÝPOČETNÍ ARCHITEKTURA',
+                'art6-1': '6.1. Poskytování softwaru „tak, jak je“. Subjekt využívá proprietární výpočetní architekturu a softwarovou infrastrukturu pro interní optimalizaci aktiv („Algoritmické řízení“). Jakákoli externí viditelnost nebo výstup této infrastruktury je poskytován striktně na bázi „tak, jak je“ (as-is). Subjekt výslovně odmítá jakoukoli záruku výpočetní neomylnosti, algoritmické neutrality nebo bezchybného provozu.',
+                'art6-2': '6.2. Vyloučení technologické odpovědnosti. Subjekt nepřebírá žádnou odpovědnost za nesrovnalosti vzniklé v důsledku algoritmického provádění, latence kódu nebo zpracování syntetických dat.',
+                'art7-title': 'VII. VÝHRADA DUE DILIGENCE A ODKLÁDACÍ PODMÍNKY',
+                'art7-1': '7.1. Podmínky nutné (Conditio Sine Qua Non). Potenciální realizace jakékoli transakce zmíněné nebo naznačené na této webové stránce je bezpodmínečně závislá na: (i) Úspěšném dokončení due diligence s výsledky uspokojivými pro Subjekt; (ii) Vyjednání a uzavření definitivní transakční dokumentace ve formě vyžadované zákonem; (iii) Získání všech nezbytných korporátních schválení; a (iv) Dodržení všech platných regulačních a zákonných požadavků.',
+                'art7-2': '7.2. Vyloučení předsmluvní odpovědnosti. Do kumulativního splnění těchto podmínek nevzniká na straně Subjektu žádná povinnost ani předsmluvní odpovědnost ve smyslu § 1729 OZ.',
+                'art8-title': 'VIII. SYNTETICKÁ POVAHA VIZUÁLNÍCH A NARATIVNÍCH PRVKŮ',
+                'art8-1': '8.1. Umělá generace a simulakra. Subjekt upozorňuje Přistupujícího, že některé vizuální prvky, grafická rozhraní nebo zobrazení zde uvedená mohou být výstupem generativních modelů umělé inteligence nebo výpočetní syntézy. Tyto prvky mají povahu simulakrů a jsou poskytovány striktně pro ilustrační účely bez nároku na korespondenci se skutečnou realitou (non est factum).',
+                'art8-2': '8.2. Hypotetické kompozity. Jakékoli „příběhy úspěchu“, případové studie nebo scénáře jsou konstruovány jako hypotetické kompozity; nesmí být vykládány jako závazek budoucího výkonu, záruka výnosu nebo reference odrážející empirickou realitu konkrétních smluvních vztahů.',
+                'art9-title': 'IX. DOMINIUM DUŠEVNÍHO VLASTNICTVÍ',
+                'art9-1': '9.1. Vlastnická práva. Veškerá práva duševního vlastnictví, včetně, ale nikoli výhradně, autorských práv, ochranných známek, obchodních tajemství a práv k databázím sui generis sídlících v tomto digitálním rozhraní, zůstávají pod výhradním panstvím Subjektu nebo jeho poskytovatelů licencí. Neoprávněná reprodukce, šíření nebo zpětné inženýrství je přísně zakázáno inter alia podle platných mezinárodních úmluv.',
+                'art10-title': 'X. OMEZENÍ ODPOVĚDNOSTI A ODŠKODNĚNÍ',
+                'art10-1': '10.1. Vyloučení škod. V maximálním rozsahu povoleném platným právem (lex fori) nenese Subjekt odpovědnost za jakékoli přímé, nepřímé, náhodné, zvláštní, následné nebo exemplární škody, včetně, ale nikoli výhradně, škod za ušlý zisk (lucrum cessans), dobré jméno, užívání, data nebo jiné nehmotné ztráty (damnum emergens) vyplývající z používání nebo nemožnosti používat toto rozhraní.',
+                'art11-title': 'XI. ROZHODNÉ PRÁVO A SOUDNÍ PŘÍSLUŠNOST',
+                'art11-1': '11.1. Lex Causae. Tyto Podmínky se řídí a vykládají v souladu s hmotným právem České republiky, bez ohledu na jeho kolizní normy.',
+                'art11-2': '11.2. Volba fóra. Jakýkoli spor vzniklý z těchto Podmínek nebo v souvislosti s nimi nebo s používáním webové stránky podléhá výlučné jurisdikci příslušných soudů v Praze, Česká republika.'
+            },
+            'de': {
+                'nav-management': 'Verwaltung', 'nav-experience': 'Erfahrung', 'nav-clients': 'Kunden', 'nav-pricing': 'Preise',
+                'btn-login': 'Anmelden', 'btn-start': 'Kostenlos starten', 'menu-core': 'Kernleistungen', 'menu-res': 'Mietverwaltung', 'menu-res-desc': 'Rundum-Service für Mietshäuser.',
+                'menu-assoc': 'WEG-Verwaltung', 'menu-assoc-desc': 'Moderne Verwaltung für Eigentümer.', 'menu-leasing': 'Vermietung', 'menu-smart': 'Smart Leasing',
+                'menu-smart-desc': 'Datengetriebene Vermietung.', 'menu-integrity': 'Radikale Integrität', 'menu-integrity-desc': 'Transparenz bei jeder Transaktion.',
+                'menu-learn': 'Mehr über unsere Standards &rarr;', 'menu-tech': 'Technologie', 'menu-portal': 'Eigentümer-Portal', 'menu-portal-desc': 'Echtzeit-Überblick.',
+                'menu-tenant-portal': 'Mieterportal', 'menu-tenant-portal-desc': 'Zahlungen & Anfragen.',
+                'menu-asset-portal': 'Asset Manager Portal', 'menu-asset-portal-desc': 'Granulare Kontrolle.',
+                'menu-services': 'Dienstleistungen', 'menu-maint': 'Handwerker-Netzwerk', 'menu-maint-desc': 'Geprüfte Qualität.', 'menu-trust': 'Vertrauen', 'menu-transparency': 'Transparenz-Standards',
+                'menu-transparency-desc': 'Keine Blackboxen.', 'menu-who': 'Für wen wir arbeiten', 'menu-private': 'Privateigentümer', 'menu-private-desc': 'Vermögensschutz.',
+                'menu-inst': 'Institutionelle Investoren', 'menu-inst-desc': 'P&L und NAV Tracking.', 'menu-pm': 'Hausverwaltungen', 'menu-pm-desc': 'Ausgelagerter Betrieb.',
+                'menu-dev': 'Bauträger', 'menu-dev-desc': 'Vom Bau bis zur Vermietung.', 'menu-brokers': 'Immobilienmakler', 'menu-brokers-desc': 'Reibungslose Übergaben.',
+                'footer-company': 'Unternehmen',
+                'footer-about': 'Über uns', 'footer-careers': 'Karriere', 'footer-contact': 'Kontakt', 'footer-resources': 'Ressourcen', 'footer-help': 'Hilfe-Center', 'footer-privacy': 'Datenschutz',
+                'footer-terms': 'AGB', 'footer-cookies': 'Cookie-Einstellungen', 
+                'hero-origin': 'Ursprung: Genf, Schweiz 🇨🇭',
+                'footer-swiss': 'Geprägt in Genf, Schweiz 🇨🇭 (2022) — entwickelt für Mittel- und Osteuropa',
+                'footer-legal': 'Rentstag ist eine proprietäre operative Einheit, die suo nomine handelt und proprietäre Rechenarchitektur zur internen Vermögensoptimierung nutzt. Zur Vermeidung von Zweifeln ist „Rentstag AG & Co s.r.o.“ eine interne Bezeichnung („Algorithmic Governance“) und impliziert keine spezifische Rechtsform oder einen regulierten Status; siehe Rechtliches/Offenlegungen. Die Einheit ist kein lizenzierter Broker-Dealer, keine Bank und kein kollektives Anlagesystem. Die Nutzung jeglicher Softwareinfrastruktur erfolgt auf einer „Ist-Zustand“-Basis ohne Gewähr für rechnerische Unfehlbarkeit. Alle hierin enthaltenen Materialien werden pro notitia zur Verfügung gestellt und stellen keine Finanzberatung, Aufforderung oder ein verbindliches Vertragsangebot (invitatio ad offerendum) dar. Jede potenzielle Transaktion steht unter dem strengen Vorbehalt einer zufriedenstellenden Due Diligence und einer definitiven rechtlichen Ausführung.',
+                
+                // TERMS TRANSLATION
+                'terms-title': 'NUTZUNGSBEDINGUNGEN UND RECHTLICHER HINWEIS',
+                'preamble-text': 'DURCH DEN ZUGRIFF AUF, DAS DURCHSUCHEN ODER DIE NUTZUNG EINER DIGITALEN SCHNITTSTELLE, EINES DATENARCHIVS ODER INHALTS, DER UNTER DER DOMAIN VON RENTSTAG AG & CO S.R.O. (NACHFOLGEND „DIE EINHEIT“) GEHOSTET WIRD, ERKLÄRT DER NUTZER (NACHFOLGEND DER „ZUGREIFENDE“) HIERMIT EINDEUTIG SEINE FREIWILLIGE ZUSTIMMUNG ZU DEN IN DIESEM DOKUMENT FESTGELEGTEN BESTIMMUNGEN, VORBEHALTEN UND EINSCHRÄNKUNGEN. STIMMT DER ZUGREIFENDE DIESEN BEDINGUNGEN NICHT IN TOTO ZU, IST IHM DER WEITERE ZUGRIFF UNTERSAGT, UND ER MUSS DIE NUTZUNG DIESES DIGITALEN ORTES UNVERZÜGLICH EINSTELLEN.',
+                'art1-title': 'I. GESETZLICHE ABGRENZUNG UND AUSSCHLUSS DER REGULATORISCHEN SUBSUMTION',
+                'art1-1': '1.1. Unternehmenswesen und Eigenhandel. Rentstag AG & Co s.r.o. erklärt hiermit deklaratorisch, dass ihr Unternehmensgegenstand ausschließlich in der Wahrnehmung von Eigentumsrechten an Beteiligungen und der Verwaltung ihres eigenen Vermögensbestands mittels automatisierter Protokolle besteht. Alle Akquisitionsprozesse, Vermögensverwaltungsprotokolle und vertraglichen Portfolioverwaltungen werden suo nomine (im eigenen Namen) und ausschließlich auf eigene Rechnung durchgeführt.',
+                'art1-2': '1.2. Regulatorischer Haftungsausschluss. Die Einheit lehnt ausdrücklich ab, dass ihr Betriebsmodus kollektive Anlagesysteme im Sinne von § 15 des Gesetzes Nr. 240/2013 Slg. über Investmentgesellschaften und Investmentfonds in der geänderten Fassung impliziert, darstellt oder diesen ähnelt, oder dass sie eine Lizenz zur Erbringung von Bankdienstleistungen, Anlagevermittlung oder Wertpapierhandel gemäß Gesetz Nr. 256/2004 Slg. über Kapitalmarktunternehmungen besitzt. Jede Interpretation der Aktivitäten der Einheit als die eines regulierten Finanzinstituts ist ab initio fehlerhaft und widerspricht dem faktischen Substrat der Operationen der Einheit.',
+                'art2-title': 'II. KLÄRUNG DER NOMENKLATUR UND HANDELSBEZEICHNUNG',
+                'art2-1': '2.1. Handelsname und semiotische Definition. Die Einheit führt ihre nach außen gerichteten Operationen und ihr Branding unter der Geschäftsbezeichnung und dem proprietären Handelsnamen „Rentstag Algorithmic Governance“. Diese Nomenklatur dient als primäres Identifikationsmerkmal des operativen Rahmens der Einheit, der autonome rechnergestützte Vermögensoptimierung umfasst.',
+                'art2-2': '2.2. Verknüpfung mit der juristischen Person. Für alle gesetzlichen, regulatorischen und vertraglichen Zwecke bezieht sich die Bezeichnung „Rentstag Algorithmic Governance“ ausdrücklich und ausschließlich auf die juristische Person Rentstag AG & Co s.r.o., eine Gesellschaft mit beschränkter Haftung nach dem Recht der Tschechischen Republik. Der Bestandteil „AG“ im eingetragenen Firmennamen ist eine semantische Ableitung der Phrase „Algorithmic Governance“ und bezeichnet nicht die Rechtsform einer Aktiengesellschaft.',
+                'art2-3': '2.3. Ausschluss von Fehlinterpretationen. Die Verwendung der Marke „Rentstag Algorithmic Governance“ oder des eingetragenen Namens „Rentstag AG & Co s.r.o.“ darf nicht als Hinweis auf eine Börsennotierung, eine Banklizenz oder den Betrieb unter einem ausländischen Gesellschaftsstatut ausgelegt werden. Die Einheit operiert strikt innerhalb der Grenzen ihrer eingetragenen Rechtsform (s.r.o.).',
+                'art3-title': 'III. URSPRUNG DES GEISTIGEN EIGENTUMS UND GEOGRAFISCHER ZUSAMMENHANG',
+                'art3-1': '3.1. Intellektuelle Genese vs. Unternehmenssitz. Die Bezeichnung „Shaped in Geneva, Switzerland“ oder jede visuelle Ikonographie, die auf die Schweizerische Eidgenossenschaft hinweist (einschließlich der Hoheitsflagge 🇨🇭), die im Branding-Narrativ der Einheit verwendet wird, bezieht sich ausschließlich auf den Ort der intellektuellen Konzeption und die akademische Genese der Grundlagenforschung zur Integration digitaler Technologien in M&A Roll-up-Frameworks (MBA/DBA-Dissertationsprotokolle). Diese akademische Forschung bildet das theoretische Substrat, auf dem das aktuelle Modell der Algorithmic Governance der Einheit operiert.',
+                'art3-2': '3.2. Ausschluss des Schweizer Unternehmensstatus. Solche geografischen Hinweise sind rein historischer und biografischer Natur und beziehen sich auf die akademische Laufbahn des Managing Partners und die Entwicklung der grundlegenden Geschäftsmethodik (Raison d\'être) hinsichtlich technologiegetriebener Konsolidierungseffizienzen in Genf, Kanton Genf, Schweiz (ca. 2022). Sie dürfen nicht dahingehend ausgelegt werden, dass die Einheit in der Schweizerischen Eidgenossenschaft inkorporiert, domiziliert, steuerlich ansässig oder reguliert ist, noch dass ihre Dienstleistungen „Schweizer Ursprungs“-Produkte im Sinne des Schweizer Bundesgesetzes über den Schutz von Marken und Herkunftsangaben darstellen.',
+                'art3-3': '3.3. Operationsgebiet. Das operative Engineering, die Ausführung von Mandaten und die rechtliche Domizilierung befinden sich ausschließlich in der mittel- und osteuropäischen (CEE) Gerichtsbarkeit, insbesondere der Tschechischen Republik, wie in Abschnitt I. dieser Bedingungen definiert.',
+                'art4-title': 'IV. CHARAKTER DER DATEN UND AUSSCHLUSS VERTRAGLICHER IMPLIKATIONEN',
+                'art4-1': '4.1. Informatorische Natur (Pro Notitia). Alle Daten, Schemata, textlichen Ausdrücke und Prognosen (nachfolgend „Informationen“), die über diese Schnittstelle zugänglich sind, werden ausschließlich pro notitia (nur zu Informationszwecken) bereitgestellt und entbehren jeder verbindlichen Rechtskraft. Unter keinen Umständen dürfen diese Informationen als rechtliche, steuerliche, investitionsbezogene oder sonstige professionelle Beratung ausgelegt werden, noch als Willenserklärung, die auf die Begründung eines Treuhand- oder Auftragsverhältnisses abzielt.',
+                'art4-2': '4.2. Aufforderung zur Abgabe eines Angebots (Invitatio ad Offerendum). Der Inhalt dieser Website stellt keinen Antrag auf Abschluss eines Vertrages (Angebot) im Sinne von § 1731 ff. des Gesetzes Nr. 89/2012 Slg., Zivilgesetzbuch (nachfolgend „CZ ZGB“), noch ein öffentliches Versprechen oder die Ankündigung einer öffentlichen Ausschreibung dar. Die Einheit schließt die Anwendung von § 1732 Abs. 2 CZ ZGB ausdrücklich aus; alle hierin enthaltenen Präsentationen besitzen den Charakter einer bloßen Aufforderung zur Abgabe von Angeboten (invitatio ad offerendum), wobei für die Einheit keine Verpflichtung entsteht, eine solche Einreichung anzunehmen.',
+                'art4-3': '4.3. Risikoübernahme (Suo Periculo). Das Vertrauen auf hierin enthaltene Informationen zum Zwecke der Durchführung einer Verfügung über Eigentum oder Wertpapiere erfolgt ausschließlich auf eigene Gefahr des Zugreifenden (suo periculo).',
+                'art5-title': 'V. FEHLENDE VERBUNDENHEIT UND PFLICHTEN DRITTER',
+                'art5-1': '5.1. Unabhängigkeit der Operationen. Alle Zitate, Verweise oder grafischen Darstellungen von Logotypen Dritter werden ausschließlich zum referenziellen Nutzen präsentiert und begründen keine Vermutung einer rechtlichen Beziehung, sei es in Form einer stillen Gesellschaft, eines gemeinsamen Handelns (Acting in Concert), einer Vertretung oder einer anderen Form der korporativen Verbundenheit zwischen der Einheit und den genannten Dritten.',
+                'art5-2': '5.2. Haftungsausschluss für externe Integrität. Die Einheit übernimmt keine Gewährleistung für die Integrität, Richtigkeit oder Aktualität externer Datenquellen, auf die hierin verwiesen wird.',
+                'art6-title': 'VI. PROPRIETÄRE RECHENARCHITEKTUR',
+                'art6-1': '6.1. Bereitstellung von Software „wie besehen“. Die Einheit nutzt proprietäre Rechenarchitektur und Softwareinfrastruktur zur internen Vermögensoptimierung („Algorithmic Governance“). Jede externe Sichtbarkeit oder Ausgabe dieser Infrastruktur wird strikt auf einer „As-is“-Basis bereitgestellt. Die Einheit lehnt ausdrücklich jede Gewährleistung für rechnerische Unfehlbarkeit, algorithmische Neutralität oder fehlerfreien Betrieb ab.',
+                'art6-2': '6.2. Ausschluss technologischer Haftung. Die Einheit übernimmt keine Haftung für Diskrepanzen, die sich aus der algorithmischen Ausführung, Code-Latenz oder der Verarbeitung synthetischer Daten ergeben.',
+                'art7-title': 'VII. DUE-DILIGENCE-VORBEHALT UND AUFSCHIEBENDE BEDINGUNGEN',
+                'art7-1': '7.1. Vorbedingungen (Conditio Sine Qua Non). Die potenzielle Realisierung einer auf dieser Website erwähnten oder implizierten Transaktion unterliegt bedingungslos: (i) Dem erfolgreichen Abschluss einer Due Diligence mit für die Einheit zufriedenstellenden Ergebnissen; (ii) Der Verhandlung und Unterzeichnung der definitiven Transaktionsdokumentation in der gesetzlich vorgeschriebenen Form; (iii) Dem Erwerb aller erforderlichen korporativen Genehmigungen; und (iv) Der Einhaltung aller anwendbaren regulatorischen und gesetzlichen Anforderungen.',
+                'art7-2': '7.2. Ausschluss vorvertraglicher Haftung. Bis zur kumulativen Erfüllung dieser Bedingungen entsteht seitens der Einheit keine Verpflichtung oder vorvertragliche Haftung im Sinne von § 1729 CZ ZGB.',
+                'art8-title': 'VIII. SYNTHETISCHE NATUR VISUELLER UND NARRATIVER ELEMENTE',
+                'art8-1': '8.1. Künstliche Generierung und Simulakra. Die Einheit weist den Zugreifenden darauf hin, dass bestimmte hier angezeigte visuelle Assets, grafische Schnittstellen oder Bilder das Ergebnis generativer künstlicher Intelligenzmodelle oder rechnerischer Synthese sein können. Diese Elemente besitzen die Natur von Simulakra und werden ausschließlich zu illustrativen Zwecken bereitgestellt, ohne Anspruch auf Übereinstimmung mit der tatsächlichen Realität (non est factum).',
+                'art8-2': '8.2. Hypothetische Komposite. Alle „Erfolgsgeschichten“, Fallstudien oder Szenarien sind als hypothetische Komposite konstruiert; sie dürfen nicht als Zusicherung zukünftiger Leistung, Renditegarantie oder als Referenz interpretiert werden, die die empirische Realität spezifischer Vertragsbeziehungen widerspiegelt.',
+                'art9-title': 'IX. HERRSCHAFT ÜBER GEISTIGES EIGENTUM',
+                'art9-1': '9.1. Eigentumsrechte. Alle geistigen Eigentumsrechte, einschließlich, aber nicht beschränkt auf Urheberrechte, Marken, Geschäftsgeheimnisse und Datenbankrechte sui generis, die in dieser digitalen Schnittstelle enthalten sind, verbleiben unter der ausschließlichen Herrschaft der Einheit oder ihrer Lizenzgeber. Unbefugte Reproduktion, Verbreitung oder Reverse Engineering ist unter anderem gemäß den geltenden internationalen Übereinkommen strengstens untersagt.',
+                'art10-title': 'X. HAFTUNGSBESCHRÄNKUNG UND SCHADLOSHALTUNG',
+                'art10-1': '10.1. Ausschluss von Schäden. Soweit nach geltendem Recht (lex fori) zulässig, haftet die Einheit nicht für direkte, indirekte, zufällige, besondere, Folge- oder exemplarische Schäden, einschließlich, aber nicht beschränkt auf Schäden aus entgangenem Gewinn (lucrum cessans), Goodwill, Nutzung, Daten oder anderen immateriellen Verlusten (damnum emergens), die aus der Nutzung oder Unmöglichkeit der Nutzung dieser Schnittstelle resultieren.',
+                'art11-title': 'XI. ANWENDBARES RECHT UND GERICHTSSTAND',
+                'art11-1': '11.1. Lex Causae. Diese Bedingungen unterliegen den materiellen Gesetzen der Tschechischen Republik und werden in Übereinstimmung mit diesen ausgelegt, ohne Rücksicht auf deren kollisionsrechtliche Prinzipien.',
+                'art11-2': '11.2. Gerichtsstandswahl. Alle Streitigkeiten, die sich aus oder im Zusammenhang mit diesen Bedingungen oder der Nutzung der Website ergeben, unterliegen der ausschließlichen Zuständigkeit der kompetenten Gerichte in Prag, Tschechische Republik.'
+            },
+            'en': {
+                'nav-management': 'Management', 'nav-experience': 'Experience', 'nav-clients': 'Clients', 'nav-pricing': 'Pricing',
+                'btn-login': 'Log in', 'btn-start': 'Start for free', 'menu-core': 'Core Services', 'menu-res': 'Residential Management', 'menu-res-desc': 'Full-service care for apartments.',
+                'menu-assoc': 'Association Management', 'menu-assoc-desc': 'Modern administration for HOAs.', 'menu-leasing': 'Leasing', 'menu-smart': 'Smart Leasing',
+                'menu-smart-desc': 'Data-driven tenant placement.', 'menu-integrity': 'Radical Integrity', 'menu-integrity-desc': 'We provide a "glass-box" view of every transaction. No hidden fees.',
+                'menu-learn': 'Learn about our standards &rarr;', 'menu-tech': 'Technology', 'menu-portal': 'Owner Portal', 'menu-portal-desc': 'Real-time visibility.',
+                'menu-tenant-portal': 'Tenant Portal', 'menu-tenant-portal-desc': 'Payments & requests.',
+                'menu-asset-portal': 'Asset Manager Portal', 'menu-asset-portal-desc': 'Granular control.',
+                'menu-services': 'Services', 'menu-maint': 'Maintenance Network', 'menu-maint-desc': 'Vetted high-quality contractors.', 'menu-trust': 'Trust', 'menu-transparency': 'Transparency Standards',
+                'menu-transparency-desc': 'Zero black boxes.', 'menu-who': 'Who we serve', 'menu-private': 'Private Owners', 'menu-private-desc': 'Protecting wealth.',
+                'menu-inst': 'Institutional Investors', 'menu-inst-desc': 'P&L & NAV tracking.', 'menu-pm': 'Property Managers', 'menu-pm-desc': 'Outsourced operations.',
+                'menu-dev': 'Developers', 'menu-dev-desc': 'From build to occupancy.', 'menu-brokers': 'Rental Real Estate Brokers', 'menu-brokers-desc': 'Streamlined handovers.',
+                'footer-company': 'Company',
+                'footer-about': 'About Us', 'footer-careers': 'Careers', 'footer-contact': 'Contact', 'footer-resources': 'Resources', 'footer-help': 'Help Center', 'footer-privacy': 'Privacy Policy',
+                'footer-terms': 'Terms of Service', 'footer-cookies': 'Cookie Settings', 
+                'hero-origin': 'Origin: Geneva, Switzerland 🇨🇭',
+                'footer-swiss': 'Shaped in Geneva, Switzerland 🇨🇭 (2022) — engineered for Central & Eastern Europe',
+                'footer-legal': 'Rentstag is a proprietary operating entity acting suo nomine, leveraging proprietary computational architecture for internal asset optimization. For the avoidance of doubt, “Rentstag AG & Co s.r.o.” is an internal designation (“Algorithmic Governance”) and does not imply any specific legal form or regulated status; see Legal/Disclosures. The Entity is not a licensed broker-dealer, bank, or collective investment scheme. Utilization of any software infrastructure is provided on an “as-is” basis without warranty of computational infallibility. All materials herein are provided pro notitia and do not constitute financial advice, a solicitation, or a binding offer to contract (invitatio ad offerendum). Any potential transaction is strictly contingent upon satisfactory due diligence and definitive legal execution.',
+                
+                // TERMS TEXT
+                'terms-title': 'TERMS OF SERVICE AND LEGAL DISCLAIMER',
+                'preamble-text': 'BY ACCESSING, BROWSING, OR UTILIZING ANY DIGITAL INTERFACE, DATA REPOSITORY, OR CONTENT HOSTED UNDER THE DOMAIN OF RENTSTAG AG & CO S.R.O. (HEREINAFTER REFERRED TO AS THE “ENTITY”), THE USER (HEREINAFTER THE “ACCESSOR”) HEREBY UNEQUIVOCALLY SIGNIFIES THEIR VOLUNTARY ACQUIESCENCE TO, AND ACCEPTANCE OF, THE STIPULATIONS, PROVISOS, AND LIMITATIONS SET FORTH IN THIS INSTRUMENT. IF THE ACCESSOR DOES NOT CONCUR WITH THESE TERMS IN TOTO, THEY ARE HEREBY PRECLUDED FROM FURTHER ACCESS AND MUST CEASE UTILIZATION OF THIS DIGITAL LOCUS IMMEDIATELY.',
+                'art1-title': 'I. STATUTORY DELINEATION AND EXCLUSION OF REGULATORY SUBSUMPTION',
+                'art1-1': '1.1. Corporate Essence and Proprietary Trading. Rentstag AG & Co s.r.o. hereby declaratively asserts that its corporate substance consists exclusively of the effectuation of proprietary rights regarding equity participations and the administration of its own asset base via automated protocols. All acquisition processes, asset management protocols, and contractual portfolio administrations are executed suo nomine (in its own name) and solely for its own account.',
+                'art1-2': '1.2. Regulatory Disclaimer. The Entity explicitly disclaims that its operational modus implies, constitutes, or resembles collective investment schemes within the meaning of Section 15 of Act No. 240/2013 Coll., on Investment Companies and Investment Funds, as amended, or that it possesses licensure for the provision of banking services, investment intermediation, or securities trading under Act No. 256/2004 Coll., on Capital Market Undertakings. Any interpretation of the Entity’s activities as those of a regulated financial institution is erroneous ab initio and contradicts the factual substrate of the Entity’s operations.',
+                'art2-title': 'II. NOMENCLATURE CLARIFICATION AND COMMERCIAL DESIGNATION',
+                'art2-1': '2.1. Trade Name and Semiotic Definition. The Entity conducts its external facing operations and branding under the commercial designation and proprietary trade name “Rentstag Algorithmic Governance”. This nomenclature serves as the primary identifier of the Entity’s operational framework involving autonomous computational asset optimization.',
+                'art2-2': '2.2. Link to Legal Entity. For all statutory, regulatory, and contractual purposes, the designation “Rentstag Algorithmic Governance” refers explicitly and exclusively to the legal entity Rentstag AG & Co s.r.o., a limited liability company incorporated under the laws of the Czech Republic. The particle “AG” within the registered legal name is a semantic derivative of the phrase “Algorithmic Governance” and does not denote the legal form of an Aktiengesellschaft.',
+                'art2-3': '2.3. Exclusion of Misinterpretation. The usage of the branding “Rentstag Algorithmic Governance” or the registered name “Rentstag AG & Co s.r.o.” shall not be construed as an indication of public listing, banking licensure, or operation under a foreign corporate statute. The Entity operates strictly within the bounds of its registered legal form (s.r.o.).',
+                'art3-title': 'III. ORIGIN OF INTELLECTUAL PROPERTY AND GEOGRAPHIC NEXUS',
+                'art3-1': '3.1. Intellectual Genesis vs. Corporate Domicile. The designation “Shaped in Geneva, Switzerland” or any visual iconography denoting the Swiss Confederation (including the sovereign flag 🇨🇭) employed within the Entity’s branding narrative refers exclusively to the locus of intellectual conception and the academic genesis of the foundational research regarding digital technology integration within M&A Roll-up frameworks (MBA/DBA dissertation protocols). This academic research constitutes the theoretical substrate upon which the Entity’s current Algorithmic Governance model is operative.',
+                'art3-2': '3.2. Exclusion of Swiss Corporate Status. Such geographic references are strictly historical and biographical in nature, pertaining to the Managing Partner’s academic tenure and the development of the foundational business methodology (Raison d\'être) regarding technology-driven consolidation efficiencies in Geneva, Canton of Geneva, Switzerland (circa 2022). They shall not be construed to imply that the Entity is incorporated, domiciled, tax-resident, or regulated in the Swiss Confederation, nor that its services constitute “Swiss origin” products under the Swiss Federal Act on the Protection of Trade Marks and Indications of Source.',
+                'art3-3': '3.3. Operational Territory. The operational engineering, execution of mandates, and legal domiciliation are exclusively situated within the Central and Eastern European (CEE) jurisdiction, specifically the Czech Republic, as defined in Section I. of these Terms.',
+                'art4-title': 'IV. CHARACTER OF DATA AND EXCLUSION OF CONTRACTUAL IMPLICATIONS',
+                'art4-1': '4.1. Informational Nature (Pro Notitia). All data, schematics, textual expressions, and projections (hereinafter “Information”) accessible via this interface are provided exclusively pro notitia (for informational purposes only) and are devoid of binding legal force. Under no circumstances shall this Information be construed as legal, fiscal, investment, or other professional counsel, nor as a manifestation of will aimed at establishing a fiduciary or mandatory relationship.',
+                'art4-2': '4.2. Invitation to Treat (Invitatio ad Offerendum). The content of this website does not constitute a proposal to conclude a contract (offer) within the meaning of Section 1731 et seq. of Act No. 89/2012 Coll., the Civil Code (hereinafter “CZ CC”), nor a public promise or announcement of a public tender. The Entity explicitly excludes the application of Section 1732(2) of the CZ CC; all presentations herein possess the character of a mere invitation to submit offers (invitatio ad offerendum), whereby no obligation arises for the Entity to accept any such submission.',
+                'art4-3': '4.3. Assumption of Risk (Suo Periculo). Reliance on any Information contained herein for the purpose of executing any disposition of property or securities is undertaken exclusively at the Accessor’s own peril (suo periculo).',
+                'art5-title': 'V. ABSENCE OF AFFILIATION AND THIRD-PARTY OBLIGATIONS',
+                'art5-1': '5.1. Independence of Operations. Any citations, references, or graphical depictions of third-party logotypes are presented solely for referential utility and do not establish a presumption of any legal relationship, whether in the form of a silent partnership, acting in concert, agency representation, or any other form of corporate affiliation between the Entity and said third parties.',
+                'art5-2': '5.2. Disclaimer of External Integrity. The Entity provides no warranties regarding the integrity, veracity, or currency of external data sources referenced herein.',
+                'art6-title': 'VI. PROPRIETARY COMPUTATIONAL ARCHITECTURE',
+                'art6-1': '6.1. "As-Is" Software Provision. The Entity leverages proprietary computational architecture and software infrastructure for internal asset optimization ("Algorithmic Governance"). Any external visibility or output of this infrastructure is provided on an strictly "as-is" basis. The Entity explicitly disclaims any warranty of computational infallibility, algorithmic neutrality, or error-free operation.',
+                'art6-2': '6.2. Exclusion of Technological Liability. The Entity assumes no liability for discrepancies arising from algorithmic execution, code latency, or synthetic data processing.',
+                'art7-title': 'VII. DUE DILIGENCE RESERVATION AND SUSPENSIVE CONDITIONS',
+                'art7-1': '7.1. Conditions Precedent (Conditio Sine Qua Non). The potential realization of any transaction mentioned or implied on this website is unconditionally subject to: (i) The successful completion of due diligence with results satisfactory to the Entity; (ii) The negotiation and execution of definitive transactional documentation in the form mandated by law; (iii) The acquisition of all requisite corporate approvals; and (iv) Compliance with all applicable regulatory and statutory requirements.',
+                'art7-2': '7.2. Pre-contractual Liability Exclusion. Until the cumulative fulfillment of these conditions, no obligation or pre-contractual liability within the meaning of Section 1729 of the CZ CC shall arise on the part of the Entity.',
+                'art8-title': 'VIII. SYNTHETISCHE NATUR VISUELLER UND NARRATIVER ELEMENTE',
+                'art8-1': '8.1. Artificial Generation and Simulacra. The Entity notifies the Accessor that certain visual assets, graphical interfaces, or imagery displayed herein may be the output of generative artificial intelligence models or computational synthesis. These elements possess the nature of simulacra and are provided strictly for illustrative purposes without claim to correspondence with actual reality (non est factum).',
+                'art8-2': '8.2. Hypothetical Composites. Any “success stories,” case studies, or scenarios are constructed as hypothetical composites; they must not be interpreted as a covenant of future performance, a guarantee of yield, or a reference reflecting the empirical reality of specific contractual relations.',
+                'art9-title': 'IX. INTELLECTUAL PROPERTY DOMINION',
+                'art9-1': '9.1. Proprietary Rights. All intellectual property rights, including but not limited to copyright, trademarks, trade secrets, and sui generis database rights resident in this digital interface, remain under the exclusive dominion of the Entity or its licensors. Unauthorized reproduction, dissemination, or reverse engineering is strictly prohibited inter alia under applicable international conventions.',
+                'art10-title': 'X. LIMITATION OF LIABILITY AND INDEMNIFICATION',
+                'art10-1': '10.1. Exclusion of Damages. To the maximum extent permitted by applicable law (lex fori), the Entity shall not be liable for any direct, indirect, incidental, special, consequential, or exemplary damages, including but not limited to damages for loss of profits (lucrum cessans), goodwill, use, data, or other intangible losses (damnum emergens) resulting from the use or inability to use this interface.',
+                'art11-title': 'XI. GOVERNING LAW AND JURISDICTION',
+                'art11-1': '11.1. Lex Causae. These Terms shall be governed by and construed in accordance with the substantive laws of the Czech Republic, without regard to its conflict of law principles.',
+                'art11-2': '11.2. Forum Selection. Any dispute arising out of or in connection with these Terms or the use of the website shall be subject to the exclusive jurisdiction of the competent courts in Prague, Czech Republic.'
+            }
+        };
+
+        function setLanguage(lang) {
+            const elements = document.querySelectorAll('[data-i18n]');
+            
+            // Set active class on buttons
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            const btns = document.querySelectorAll('.lang-btn');
+            if(lang === 'en') btns[0].classList.add('active');
+            if(lang === 'de') btns[1].classList.add('active');
+            if(lang === 'cs') btns[2].classList.add('active');
+
+            if(translations[lang]) {
+                elements.forEach(element => {
+                    const key = element.getAttribute('data-i18n');
+                    if (translations[lang][key]) {
+                        element.innerHTML = translations[lang][key];
+                    }
+                });
+                localStorage.setItem('lang', lang);
+            }
+        }
+
+        // Auto-detect or load saved
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedLang = localStorage.getItem('lang');
+            const userLang = navigator.language || navigator.userLanguage; 
+            
+            if (savedLang) {
+                setLanguage(savedLang);
+            } else if (userLang.startsWith('cs')) {
+                setLanguage('cs');
+            } else if (userLang.startsWith('de')) {
+                setLanguage('de');
+            }
+            // Default is EN (HTML is already EN)
+        });
+    </script>
+
+</body>
+</html>

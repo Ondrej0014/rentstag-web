@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RENTSTAG | Property Management As It Was Meant To Be</title>
+    
+    <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@100,200,300,400,500,700,800,900&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- 2. DESIGN SETTINGS (THEMING) --- */
+        :root {
+            --primary-color: #C86B3D;
+            --copper-gradient: linear-gradient(135deg, #A0552D 0%, #E69B6A 50%, #A0552D 100%);
+            
+            /* LIGHT MODE (DEFAULT) */
+            --bg-body: #F7F7F5;
+            --bg-card: #FFFFFF;
+            --bg-header: rgba(255, 255, 255, 0.95);
+            --text-main: #121212;
+            --text-muted: #666666;
+            --border-color: rgba(0,0,0,0.06);
+            --shadow-color: rgba(0,0,0,0.08);
+            --logo-filter: grayscale(100%); 
+            
+            --radius-small: 6px;
+            --radius-large: 20px;
+            
+            --font-family: 'Cabinet Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            --container-width: 1240px;
+        }
+
+        /* --- DARK MODE OVERRIDES --- */
+        body.dark-mode {
+            --bg-body: #050505;
+            --bg-card: #111111;
+            --bg-header: rgba(5, 5, 5, 0.9);
+            --text-main: #FFFFFF;
+            --text-muted: #999999;
+            --border-color: rgba(255,255,255,0.1);
+            --shadow-color: rgba(0,0,0,0.5);
+            --logo-filter: grayscale(100%) invert(1) brightness(2);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        a { text-decoration: none; color: inherit; transition: 0.2s; }
+        ul { list-style: none; }
+
+        .container {
+            max-width: var(--container-width);
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* --- BUTTONS --- */
+        .btn {
+            display: inline-block; padding: 14px 28px; border-radius: var(--radius-small);
+            font-weight: 700; cursor: pointer; transition: all 0.3s ease;
+            font-size: 15px; border: none; position: relative; overflow: hidden; text-align: center;
+        }
+        .btn-primary {
+            background: var(--copper-gradient); background-size: 200% auto;
+            color: #fff; box-shadow: 0 4px 15px rgba(160, 85, 45, 0.3);
+        }
+        .btn-primary:hover { 
+            background-position: right center; box-shadow: 0 6px 20px rgba(160, 85, 45, 0.4); transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background-color: transparent; border: 1px solid var(--text-muted); color: var(--text-main);
+        }
+        .btn-secondary:hover { border-color: #A0552D; color: #A0552D; }
+
+        /* THEME TOGGLE BUTTON */
+        .theme-toggle {
+            background: transparent; border: 1px solid var(--border-color);
+            width: 40px; height: 40px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; color: var(--text-main); margin-right: 10px;
+            transition: all 0.3s ease;
+        }
+        .theme-toggle:hover { background: var(--bg-card); border-color: var(--primary-color); color: var(--primary-color); }
+
+        /* --- HEADER & NAVIGATION --- */
+        header {
+            height: 80px; position: sticky; top: 0;
+            background: var(--bg-header); backdrop-filter: blur(10px);
+            z-index: 1000; border-bottom: 1px solid var(--border-color);
+            transition: background 0.3s ease;
+        }
+        .nav-container {
+            max-width: var(--container-width); margin: 0 auto; padding: 0 24px; height: 100%;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        
+        .logo { display: flex; align-items: center; z-index: 1001; }
+        .logo img { height: 28px; width: auto; vertical-align: middle; object-fit: contain; }
+        body.dark-mode .logo img { filter: invert(1); }
+
+        .nav-links { display: flex; gap: 0; height: 100%; }
+        .nav-item {
+            height: 100%; display: flex; align-items: center; padding: 0 12px; cursor: pointer; position: static;
+        }
+        .nav-link {
+            font-weight: 600; font-size: 15px; color: var(--text-muted);
+            display: flex; align-items: center; gap: 6px; padding: 8px 12px;
+            border-radius: var(--radius-small); transition: all 0.2s;
+        }
+        .nav-link::after {
+            content: ''; border: solid var(--text-muted); border-width: 0 1.5px 1.5px 0;
+            display: inline-block; padding: 2.5px; transform: rotate(45deg) translateY(-2px); transition: transform 0.2s;
+        }
+        .nav-item:hover .nav-link { background: var(--bg-card); color: var(--text-main); }
+        .nav-item:hover .nav-link::after { transform: rotate(-135deg) translateY(-1px); border-color: var(--text-main); }
+        .nav-link.simple::after { display: none; }
+
+        /* Mega Menu */
+        .mega-menu {
+            position: absolute; top: 80px; left: 0; width: 100%;
+            background: var(--bg-card); border-top: 1px solid var(--border-color);
+            box-shadow: 0 20px 40px var(--shadow-color); padding: 40px 0;
+            opacity: 0; visibility: hidden; transform: translateY(10px);
+            transition: all 0.2s ease; cursor: default;
+        }
+        .nav-item:hover .mega-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+        .mega-content {
+            max-width: var(--container-width); margin: 0 auto; padding: 0 24px;
+            display: grid; gap: 60px;
+        }
+        .mega-column h4 {
+            font-size: 12px; text-transform: uppercase; color: var(--text-muted);
+            margin-bottom: 20px; letter-spacing: 1px; font-weight: 700;
+        }
+        .menu-item-group { display: flex; flex-direction: column; gap: 10px; }
+        .menu-link {
+            display: flex; align-items: flex-start; gap: 16px; padding: 12px;
+            border-radius: var(--radius-small); transition: background 0.2s;
+        }
+        .menu-link:hover { background: rgba(200, 107, 61, 0.05); }
+        .menu-icon {
+            width: 40px; height: 40px; background: var(--bg-body); border: 1px solid var(--border-color);
+            border-radius: 8px; display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; color: #A0552D;
+        }
+        .menu-text h5 { font-size: 16px; font-weight: 700; color: var(--text-main); margin-bottom: 4px; }
+        .menu-text p { font-size: 14px; color: var(--text-muted); line-height: 1.4; }
+        
+        .menu-featured {
+            background: #1a1a1a; border-radius: var(--radius-large); padding: 30px;
+            color: #fff; display: flex; flex-direction: column; justify-content: flex-end;
+            min-height: 300px; position: relative; overflow: hidden; text-align: left;
+            border: 1px solid var(--border-color);
+        }
+        .menu-featured h5 { font-size: 24px; margin-bottom: 10px; z-index: 2; position: relative; color: #fff; }
+        .menu-featured p { font-size: 14px; color: #ccc; margin-bottom: 20px; z-index: 2; position: relative; }
+        .menu-featured-link { font-size: 14px; font-weight: 600; color: #fff; text-decoration: underline; z-index: 2; position: relative; }
+        .menu-featured::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(160, 85, 45, 0.6) 100%); z-index: 1;
+        }
+        .menu-featured-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.6; }
+        .nav-buttons { display: flex; gap: 10px; align-items: center; }
+        @media (max-width: 900px) { .nav-links, .mega-menu { display: none; } }
+
+        /* --- HERO SECTION --- */
+        .hero { 
+            padding: 100px 0 60px; overflow: hidden; text-align: center; 
+        }
+        .hero-container { 
+            display: flex; flex-direction: column; align-items: center; gap: 50px; 
+        }
+        .hero-content { 
+            width: 100%; max-width: 900px; margin: 0 auto;
+        }
+        
+        .hero-eyebrow { 
+            font-size: 13px; text-transform: uppercase; letter-spacing: 2px; 
+            font-weight: 800; margin-bottom: 24px; display: inline-block; 
+            background: var(--copper-gradient); -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; background-clip: text; 
+        }
+        .hero h1 { 
+            font-size: 72px; line-height: 1; font-weight: 800; 
+            letter-spacing: -2px; margin-bottom: 24px; color: var(--text-main); 
+        }
+        .hero p { 
+            font-size: 22px; color: var(--text-muted); margin-bottom: 40px; 
+            max-width: 600px; line-height: 1.6; margin-left: auto; margin-right: auto;
+        }
+        .hero-buttons { display: flex; gap: 15px; justify-content: center; }
+        
+        /* Video Container */
+        .hero-visual-wrapper { 
+            width: 100%; max-width: 1100px; position: relative; margin-top: 20px;
+        }
+        .hero-visual { 
+            width: 100%; aspect-ratio: 16/9; 
+            border-radius: var(--radius-large); 
+            border: 1px solid var(--border-color);
+            display: flex; align-items: center; justify-content: center; 
+            position: relative; overflow: hidden; 
+        }
+
+        /* --- PARTNERS --- */
+        .clients { padding: 40px 0; text-align: center; border-bottom: 1px solid var(--border-color); background: var(--bg-card); transition: background 0.3s; }
+        .clients p { font-size: 12px; color: var(--text-muted); margin-bottom: 30px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; opacity: 0.7; }
+        .logo-grid { display: flex; justify-content: center; align-items: center; gap: 50px; flex-wrap: wrap; opacity: 0.7; }
+        
+        .logo-img { 
+            max-height: 35px; width: auto; 
+            filter: var(--logo-filter); 
+            transition: all 0.3s ease; 
+        }
+        .logo-img:hover { filter: grayscale(0%); transform: scale(1.05); }
+        body.dark-mode .logo-img:hover { filter: grayscale(0%) invert(0) brightness(1); }
+
+        /* --- FEATURES --- */
+        .features { padding: 100px 0; }
+        .section-header { margin-bottom: 70px; max-width: 800px; }
+        .section-header h2 { font-size: 48px; font-weight: 800; letter-spacing: -1.5px; margin-bottom: 20px; line-height: 1; color: var(--text-main); }
+        .section-header p { font-size: 20px; color: var(--text-muted); line-height: 1.5; }
+        
+        .bento-grid { display: grid; grid-template-columns: 1fr; gap: 24px; }
+        @media (min-width: 768px) { 
+            .bento-grid { grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 360px); } 
+            .card-large { grid-column: span 2; } 
+            .card-tall { grid-row: span 2; } 
+        }
+        
+        .card { 
+            background: var(--bg-card); border-radius: var(--radius-large); padding: 40px; 
+            display: flex; flex-direction: column; justify-content: space-between; 
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
+            border: 1px solid var(--border-color); overflow: hidden; position: relative; 
+        }
+        .card:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 25px 50px var(--shadow-color); 
+            border-color: rgba(160, 85, 45, 0.2); 
+        }
+        .card h3 { font-size: 26px; margin-bottom: 12px; font-weight: 700; letter-spacing: -0.5px; color: var(--text-main); }
+        .card p { color: var(--text-muted); font-size: 16px; line-height: 1.5; }
+        
+        .card-visual { 
+            height: 160px; border-radius: var(--radius-small); 
+            margin-top: 30px; margin-bottom: -70px; width: 120%; margin-left: -10%; 
+            object-fit: cover; border: 1px solid var(--border-color);
+        }
+        .card-tall .card-visual { height: 300px; margin-bottom: -40px; }
+
+        /* --- CTA & FOOTER --- */
+        .cta-section { background-color: #1A1A1A; color: #fff; padding: 100px 0; text-align: center; border-radius: var(--radius-large); margin-bottom: 60px; position: relative; overflow: hidden; }
+        .cta-section::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--copper-gradient); }
+        .cta-section h2 { font-size: 48px; margin-bottom: 24px; font-weight: 700; letter-spacing: -1px; }
+
+        footer { background-color: #050505; color: #999; padding: 100px 0 40px; font-size: 14px; border-top: 1px solid #111; }
+        .footer-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 40px; margin-bottom: 80px; }
+        .footer-col h4 { color: #fff; margin-bottom: 25px; font-weight: 600; font-size: 16px; }
+        .footer-col ul { list-style: none; }
+        .footer-col li { margin-bottom: 14px; }
+        .footer-col a:hover { color: var(--primary-color); text-decoration: underline; }
+        .footer-bottom { border-top: 1px solid #222; padding-top: 40px; display: flex; justify-content: space-between; align-items: center; color: #555; }
+        .footer-socials { display: flex; gap: 20px; }
+
+    </style>
+</head>
+<body class=""> <header>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <img src="Rentstaglogo.png" alt="RENTSTAG">
+            </a>
+            
+            <ul class="nav-links">
+                <li class="nav-item">
+                    <div class="nav-link" data-i18n="nav-management">Management</div>
+                    <div class="mega-menu">
+                        <div class="mega-content" style="grid-template-columns: 1fr 1fr 300px;">
+                            <div class="mega-column">
+                                <h4 data-i18n="menu-core">Core Services</h4>
+                                <div class="menu-item-group">
+                                    <a href="#" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l8-4 8 4v14M8 21v-4h8v4"></path></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-res">Residential Management</h5><p data-i18n="menu-res-desc">Full-service care for apartments.</p></div>
+                                    </a>
+                                    <a href="#" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-assoc">Association Management</h5><p data-i18n="menu-assoc-desc">Modern administration for HOAs.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="mega-column">
+                                <h4 data-i18n="menu-leasing">Leasing</h4>
+                                <div class="menu-item-group">
+                                    <a href="#" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="22" y1="12" x2="18" y2="12"></line><line x1="6" y1="12" x2="2" y2="12"></line><line x1="12" y1="6" x2="12" y2="2"></line><line x1="12" y1="22" x2="12" y2="18"></line></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-smart">Smart Leasing</h5><p data-i18n="menu-smart-desc">Data-driven tenant placement.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="menu-featured">
+                                <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop" class="menu-featured-bg" alt="Feature">
+                                <h5 data-i18n="menu-integrity">Radical Integrity</h5>
+                                <p data-i18n="menu-integrity-desc">We provide a "glass-box" view of every transaction. No hidden fees.</p>
+                                <a href="#" class="menu-featured-link" data-i18n="menu-learn">Learn about our standards &rarr;</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="nav-item">
+                    <div class="nav-link" data-i18n="nav-experience">Experience</div>
+                    <div class="mega-menu">
+                        <div class="mega-content" style="grid-template-columns: 1fr 1fr 1fr;">
+                            <div class="mega-column">
+                                <h4 data-i18n="menu-tech">Technology</h4>
+                                <div class="menu-item-group">
+                                    <a href="#" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-portal">Owner Portal</h5><p data-i18n="menu-portal-desc">Real-time visibility.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="mega-column">
+                                <h4 data-i18n="menu-services">Services</h4>
+                                <div class="menu-item-group">
+                                    <a href="#" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-maint">Maintenance Network</h5><p data-i18n="menu-maint-desc">Vetted high-quality contractors.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                             <div class="mega-column">
+                                <h4 data-i18n="menu-trust">Trust</h4>
+                                <div class="menu-item-group">
+                                    <a href="#" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-transparency">Transparency Standards</h5><p data-i18n="menu-transparency-desc">Zero black boxes.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="nav-item">
+                    <div class="nav-link" data-i18n="nav-clients">Clients</div>
+                    <div class="mega-menu">
+                         <div class="mega-content" style="grid-template-columns: 1fr 1fr 1fr;">
+                            <div class="mega-column">
+                                <h4>Who we serve</h4>
+                                <div class="menu-item-group">
+                                    <a href="#" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-private">Private Owners</h5><p data-i18n="menu-private-desc">Protecting wealth.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="mega-column">
+                                <h4>&nbsp;</h4>
+                                <div class="menu-item-group">
+                                    <a href="#" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-inst">Institutional Investors</h5><p data-i18n="menu-inst-desc">P&L & NAV tracking.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="mega-column">
+                                <h4>&nbsp;</h4>
+                                <div class="menu-item-group">
+                                    <a href="#" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 22h20"></path><path d="M4 22V7l7-3 7 3v15"></path><path d="M14 14h-4v8"></path></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-dev">Developers</h5><p data-i18n="menu-dev-desc">From build to occupancy.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="nav-item"><a href="pricing.html" class="nav-link simple" data-i18n="nav-pricing">Pricing</a></li>
+            </ul>
+
+            <div class="nav-buttons">
+                <button class="theme-toggle" id="theme-toggle" aria-label="Switch Theme">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                </button>
+                
+                <a href="#" class="btn btn-secondary" data-i18n="btn-login">Log in</a>
+                <a href="#" class="btn btn-primary" data-i18n="btn-start">Start for free</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container hero-container">
+            <div class="hero-content">
+                <span class="hero-eyebrow" data-i18n="hero-eyebrow">RESIDENTIAL & ASSOCIATION MANAGEMENT</span>
+                <h1 data-i18n="hero-title">For Owners Who Are<br>Done With Mediocrity.</h1>
+                <p data-i18n="hero-desc">You have your property managed by others—yet emails go unanswered, statements arrive late, and tenants remain frustrated. 90% of managers don't manage. They simply react.</p>
+                
+                <div class="hero-buttons">
+                    <a href="#" class="btn btn-primary" data-i18n="btn-proposal">Request Proposal</a>
+                    <a href="#" class="btn btn-secondary" data-i18n="btn-learn">Learn More</a>
+                </div>
+            </div>
+
+            <div class="hero-visual-wrapper">
+                <div class="hero-visual">
+                    <video id="heroVideo" autoplay muted loop playsinline style="width: 100%; height: 100%; object-fit: cover;">
+                        <source src="Animace_city_day.mp4" type="video/mp4">
+                        <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop" alt="Dashboard fallback">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="clients">
+        <div class="container">
+            <p data-i18n="trusted-by">Trusted by industry leaders</p>
+            <div class="logo-grid">
+                <img src="logo_cbre.png" class="logo-img" alt="CBRE">
+                <img src="logo_microsoft.png" class="logo-img" alt="Microsoft">
+                <img src="logo_trigema.png" class="logo-img" alt="Trigema">
+                <img src="logo_sap.png" class="logo-img" alt="SAP">
+                <img src="logo_jll.png" class="logo-img" alt="JLL">
+                <img src="logo_bp.png" class="logo-img" alt="BP">
+            </div>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2 data-i18n="features-title">Management as it should be.</h2>
+                <p data-i18n="features-desc">We take the burden of managing property off your shoulders. With zero "nasty surprises".</p>
+            </div>
+
+            <div class="bento-grid">
+                <div class="card card-large">
+                    <div>
+                        <h3 data-i18n="card-dedicated">Dedicated Relationship Manager</h3>
+                        <p data-i18n="card-dedicated-desc">Forget call centers. You get a direct line to a personal expert who knows your property inside and out.</p>
+                    </div>
+                    <img src="feature_manager.jpg" class="card-visual" alt="Dedicated Manager">
+                </div>
+
+                <div class="card">
+                    <div>
+                        <h3 data-i18n="card-portal">Digital Owner Portal</h3>
+                        <p data-i18n="card-portal-desc">Stay ahead with real-time financial tracking. Every rent payment and utility cost is logged.</p>
+                    </div>
+                    <img src="feature_portal.jpg" class="card-visual" alt="Owner Portal">
+                </div>
+
+                <div class="card">
+                    <div>
+                        <h3 data-i18n="card-leasing">Smart Leasing</h3>
+                        <p data-i18n="card-leasing-desc">From listing to contract. Rigorous tenant screening and legally airtight lease agreements.</p>
+                    </div>
+                    <img src="feature_leasing.jpg" class="card-visual" alt="Smart Leasing">
+                </div>
+
+                <div class="card card-tall">
+                    <div>
+                        <h3 data-i18n="card-maint">Maintenance Excellence</h3>
+                        <p data-i18n="card-maint-desc">We don’t search for contractors. We know them. RentStag works only with vetted partners.</p>
+                    </div>
+                    <img src="feature_maintenance.jpg" class="card-visual" alt="Maintenance">
+                </div>
+
+                <div class="card">
+                    <div>
+                        <h3 data-i18n="card-integrity">Radical Integrity</h3>
+                        <p data-i18n="card-integrity-desc">A "glass-box" view of every transaction. No hidden fees, no black boxes.</p>
+                    </div>
+                    <img src="feature_integrity.jpg" class="card-visual" alt="Integrity">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="container">
+        <div class="cta-section">
+            <h2 data-i18n="cta-title">Ready to experience radical integrity?</h2>
+            <p style="margin-bottom: 30px; color: #ccc;" data-i18n="cta-desc">Onboarding for Growth & Enterprise plans available now.</p>
+            <a href="#" class="btn btn-primary" data-i18n="btn-proposal">Request Proposal</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4 data-i18n="nav-management">Management</h4>
+                    <ul>
+                        <li><a href="#" data-i18n="menu-res">Residential</a></li>
+                        <li><a href="#" data-i18n="menu-assoc">Association (WEG)</a></li>
+                        <li><a href="#" data-i18n="menu-smart">Smart Leasing</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 data-i18n="nav-experience">Experience</h4>
+                    <ul>
+                        <li><a href="#" data-i18n="menu-portal">Owner Portal</a></li>
+                        <li><a href="#" data-i18n="menu-maint">Maintenance Network</a></li>
+                        <li><a href="#" data-i18n="menu-transparency">Transparency Standards</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 data-i18n="nav-clients">Clients</h4>
+                    <ul>
+                        <li><a href="#" data-i18n="menu-private">Private Owners</a></li>
+                        <li><a href="#" data-i18n="menu-inst">Institutional Investors</a></li>
+                        <li><a href="#" data-i18n="menu-dev">Developers</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 data-i18n="footer-company">Company</h4>
+                    <ul>
+                        <li><a href="#" data-i18n="footer-about">About Us</a></li>
+                        <li><a href="#" data-i18n="footer-careers">Careers</a></li>
+                        <li><a href="#" data-i18n="footer-contact">Contact</a></li>
+                        <li><a href="pricing.html" style="color: #fff;" data-i18n="nav-pricing">Pricing</a></li>
+                    </ul>
+                </div>
+                 <div class="footer-col">
+                    <h4 data-i18n="footer-resources">Resources</h4>
+                    <ul>
+                        <li><a href="#" data-i18n="footer-help">Help Center</a></li>
+                        <li><a href="#" data-i18n="footer-privacy">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="footer-copy">
+                    &copy; 2025 RENTSTAG SE. All rights reserved.
+                </div>
+                <div class="footer-links" style="display: flex; gap: 20px; font-size: 13px;">
+                    <a href="#" data-i18n="footer-privacy">Privacy Policy</a>
+                    <a href="#" data-i18n="footer-terms">Terms of Service</a>
+                    <a href="#" data-i18n="footer-cookies">Cookie Settings</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 1. TIME-BASED VIDEO SWITCHER (Independent of Theme)
+        document.addEventListener('DOMContentLoaded', () => {
+            const videoElement = document.getElementById('heroVideo');
+            if (videoElement) {
+                const currentHour = new Date().getHours();
+                // Noc je od 18:00 do 6:00
+                const isNight = currentHour >= 18 || currentHour < 6;
+
+                if (isNight) {
+                    videoElement.src = 'Animace_city_night.mp4';
+                } else {
+                    videoElement.src = 'Animace_city_day.mp4';
+                }
+                videoElement.load();
+                videoElement.play();
+            }
+        });
+
+        // 2. DARK MODE TOGGLE (Default Light)
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleBtn = document.getElementById('theme-toggle');
+            const body = document.body;
+            
+            // Check saved preference
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                body.classList.add('dark-mode');
+            }
+
+            toggleBtn.addEventListener('click', () => {
+                body.classList.toggle('dark-mode');
+                
+                if (body.classList.contains('dark-mode')) {
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    localStorage.setItem('theme', 'light');
+                }
+            });
+        });
+
+        // 3. CLICK SOUND EFFECT
+        document.addEventListener('DOMContentLoaded', () => {
+            const clickSound = new Audio('Rentstag_mouse-click.mp3');
+            clickSound.volume = 0.4; 
+
+            const buttons = document.querySelectorAll('.btn, .nav-link, .menu-link, .theme-toggle');
+
+            buttons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    clickSound.currentTime = 0;
+                    const playPromise = clickSound.play();
+                    if (playPromise !== undefined) {
+                        playPromise.catch(error => {});
+                    }
+                });
+            });
+        });
+
+        // 4. LANGUAGE TRANSLATOR (AUTO CZECH)
+        document.addEventListener('DOMContentLoaded', () => {
+            // Zjistíme jazyk prohlížeče (např. 'cs', 'cs-CZ', 'en-US')
+            const userLang = navigator.language || navigator.userLanguage; 
+            
+            // Pokud je to čeština
+            if (userLang.startsWith('cs')) {
+                const translations = {
+                    // Navigace
+                    'nav-management': 'Správa',
+                    'nav-experience': 'Zkušenost',
+                    'nav-clients': 'Klienti',
+                    'nav-pricing': 'Ceník',
+                    'btn-login': 'Přihlásit',
+                    'btn-start': 'Začít zdarma',
+                    
+                    // Mega Menu
+                    'menu-core': 'Hlavní služby',
+                    'menu-res': 'Správa bytových domů',
+                    'menu-res-desc': 'Kompletní péče o nájemní domy.',
+                    'menu-assoc': 'Správa SVJ',
+                    'menu-assoc-desc': 'Moderní administrativa pro společenství.',
+                    'menu-leasing': 'Pronájem',
+                    'menu-smart': 'Chytrý pronájem',
+                    'menu-smart-desc': 'Prověření nájemníci a data.',
+                    'menu-integrity': 'Radikální Integrita',
+                    'menu-integrity-desc': 'Vidíte každou transakci. Žádné skryté poplatky.',
+                    'menu-learn': 'Více o našich standardech &rarr;',
+                    'menu-tech': 'Technologie',
+                    'menu-portal': 'Portál vlastníka',
+                    'menu-portal-desc': 'Přehled v reálném čase.',
+                    'menu-services': 'Služby',
+                    'menu-maint': 'Síť údržby',
+                    'menu-maint-desc': 'Prověření řemeslníci a kvalita.',
+                    'menu-trust': 'Důvěra',
+                    'menu-transparency': 'Standardy transparentnosti',
+                    'menu-transparency-desc': 'Žádné černé skříňky.',
+                    'menu-who': 'Komu sloužíme',
+                    'menu-private': 'Soukromí vlastníci',
+                    'menu-private-desc': 'Ochrana a růst majetku.',
+                    'menu-inst': 'Investiční fondy',
+                    'menu-inst-desc': 'P&L a sledování NAV.',
+                    'menu-dev': 'Developeři',
+                    'menu-dev-desc': 'Od výstavby po obsazenost.',
+
+                    // Hero Sekce
+                    'hero-eyebrow': 'SPRÁVA NEMOVITOSTÍ & SVJ',
+                    'hero-title': 'Pro majitele, kteří mají<br>dost průměrnosti.',
+                    'hero-desc': 'Vaši nemovitost spravují jiní – přesto maily zůstávají bez odpovědi a vyúčtování chodí pozdě. 90 % správců nespravuje. Pouze reagují.',
+                    'btn-proposal': 'Poptat nabídku',
+                    'btn-learn': 'Zjistit více',
+
+                    // Zbytek
+                    'trusted-by': 'Důvěřují nám lídři v oboru',
+                    'features-title': 'Správa, jak má být.',
+                    'features-desc': 'Zbavíme vás břemene správy nemovitosti. Bez nepříjemných překvapení.',
+                    
+                    // Karty
+                    'card-dedicated': 'Osobní správce',
+                    'card-dedicated-desc': 'Zapomeňte na call centra. Máte přímou linku na experta, který zná vaši nemovitost do posledního detailu.',
+                    'card-portal': 'Digitální portál',
+                    'card-portal-desc': 'Buďte v obraze s finančním přehledem v reálném čase. Každá platba nájmu i náklad je zaznamenána.',
+                    'card-leasing': 'Chytrý pronájem',
+                    'card-leasing-desc': 'Od inzerce po podpis. Důkladné prověření nájemníků a právně neprůstřelné nájemní smlouvy.',
+                    'card-maint': 'Špičková údržba',
+                    'card-maint-desc': 'Nehledáme řemeslníky na Googlu. Známe je. RentStag spolupracuje pouze s prověřenými partnery.',
+                    'card-integrity': 'Radikální integrita',
+                    'card-integrity-desc': 'Pohled do "skleněné skříňky" na každou transakci. Žádné skryté poplatky, žádné tajemství.',
+
+                    'cta-title': 'Připraveni na radikální integritu?',
+                    'cta-desc': 'Nábor pro nové klienty (Growth & Enterprise) je nyní otevřen.',
+
+                    // Footer
+                    'footer-company': 'Společnost',
+                    'footer-about': 'O nás',
+                    'footer-careers': 'Kariéra',
+                    'footer-contact': 'Kontakt',
+                    'footer-resources': 'Zdroje',
+                    'footer-help': 'Centrum nápovědy',
+                    'footer-privacy': 'Ochrana soukromí',
+                    'footer-terms': 'Podmínky služby',
+                    'footer-cookies': 'Nastavení cookies'
+                };
+
+                // Aplikace překladů
+                document.querySelectorAll('[data-i18n]').forEach(element => {
+                    const key = element.getAttribute('data-i18n');
+                    if (translations[key]) {
+                        element.innerHTML = translations[key];
+                    }
+                });
+            }
+        });
+    </script>
+
+</body>
+</html>

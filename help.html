@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help Center | Rentstag</title>
+    
+    <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@100,200,300,400,500,700,800,900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+
+    <style>
+        /* --- DESIGN SETTINGS (MATCHING MAIN PAGE) --- */
+        :root {
+            --primary-color: #C86B3D;
+            --copper-gradient: linear-gradient(135deg, #A0552D 0%, #E69B6A 50%, #A0552D 100%);
+            
+            /* LIGHT MODE */
+            --bg-body: #F7F7F5;
+            --bg-card: #FFFFFF;
+            --bg-header: rgba(255, 255, 255, 0.95);
+            --text-main: #121212;
+            --text-muted: #666666;
+            --border-color: rgba(0,0,0,0.06);
+            --shadow-color: rgba(0,0,0,0.08);
+            --logo-filter: grayscale(100%); 
+            
+            --radius-small: 6px;
+            --radius-large: 20px;
+            
+            --font-family: 'Cabinet Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            --container-width: 1240px;
+        }
+
+        /* --- DARK MODE OVERRIDES --- */
+        body.dark-mode {
+            --bg-body: #050505;
+            --bg-card: #111111;
+            --bg-header: rgba(5, 5, 5, 0.9);
+            --text-main: #FFFFFF;
+            --text-muted: #999999;
+            --border-color: rgba(255,255,255,0.1);
+            --shadow-color: rgba(0,0,0,0.5);
+            --logo-filter: grayscale(100%) invert(1) brightness(2);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            width: 100%;
+        }
+
+        a { text-decoration: none; color: inherit; transition: 0.2s; }
+        ul { list-style: none; }
+
+        .container {
+            max-width: var(--container-width);
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* --- BUTTONS --- */
+        .btn {
+            display: inline-block; padding: 14px 28px; border-radius: var(--radius-small);
+            font-weight: 700; cursor: pointer; transition: all 0.3s ease;
+            font-size: 15px; border: none; position: relative; overflow: hidden; text-align: center;
+        }
+        .btn-primary {
+            background: var(--copper-gradient); background-size: 200% auto;
+            color: #fff; box-shadow: 0 4px 15px rgba(160, 85, 45, 0.3);
+        }
+        .btn-primary:hover { 
+            background-position: right center; box-shadow: 0 6px 20px rgba(160, 85, 45, 0.4); transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background-color: transparent; border: 1px solid var(--text-muted); color: var(--text-main);
+        }
+        .btn-secondary:hover { border-color: #A0552D; color: #A0552D; }
+
+        /* THEME TOGGLE */
+        .theme-toggle {
+            background: transparent; border: 1px solid var(--border-color);
+            width: 40px; height: 40px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; color: var(--text-main); margin-right: 10px;
+            transition: all 0.3s ease;
+        }
+        .theme-toggle:hover { background: var(--bg-card); border-color: var(--primary-color); color: var(--primary-color); }
+        .theme-toggle svg { width: 20px; height: 20px; stroke: currentColor; fill: none; }
+
+        /* --- HEADER & NAVIGATION --- */
+        header {
+            height: 80px; position: sticky; top: 0;
+            background: var(--bg-header); backdrop-filter: blur(10px);
+            z-index: 1000; border-bottom: 1px solid var(--border-color);
+            transition: background 0.3s ease;
+        }
+        .nav-container {
+            max-width: var(--container-width); margin: 0 auto; padding: 0 24px; height: 100%;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        
+        .logo { display: flex; align-items: center; z-index: 1001; }
+        .logo img { height: 28px; width: auto; vertical-align: middle; object-fit: contain; }
+        body.dark-mode .logo img { filter: invert(1); }
+
+        .nav-links { display: flex; gap: 0; height: 100%; }
+        .nav-item {
+            height: 100%; display: flex; align-items: center; padding: 0 12px; cursor: pointer; position: static;
+        }
+        .nav-link {
+            font-weight: 600; font-size: 15px; color: var(--text-muted);
+            display: flex; align-items: center; gap: 6px; padding: 8px 12px;
+            border-radius: var(--radius-small); transition: all 0.2s;
+        }
+        .nav-link::after {
+            content: ''; border: solid var(--text-muted); border-width: 0 1.5px 1.5px 0;
+            display: inline-block; padding: 2.5px; transform: rotate(45deg) translateY(-2px); transition: transform 0.2s;
+        }
+        .nav-item:hover .nav-link { background: var(--bg-card); color: var(--text-main); }
+        .nav-item:hover .nav-link::after { transform: rotate(-135deg) translateY(-1px); border-color: var(--text-main); }
+        .nav-link.simple::after { display: none; }
+
+        /* Mega Menu */
+        .mega-menu {
+            position: absolute; top: 80px; left: 0; width: 100%;
+            background: var(--bg-card); border-top: 1px solid var(--border-color);
+            box-shadow: 0 20px 40px var(--shadow-color); padding: 40px 0;
+            opacity: 0; visibility: hidden; transform: translateY(10px);
+            transition: all 0.2s ease; cursor: default;
+        }
+        .nav-item:hover .mega-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+        .mega-content {
+            max-width: var(--container-width); margin: 0 auto; padding: 0 24px;
+            display: grid; gap: 60px;
+        }
+        .mega-column h4 {
+            font-size: 12px; text-transform: uppercase; color: var(--text-muted);
+            margin-bottom: 20px; letter-spacing: 1px; font-weight: 700;
+        }
+        .menu-item-group { display: flex; flex-direction: column; gap: 10px; }
+        .menu-link {
+            display: flex; align-items: flex-start; gap: 16px; padding: 12px;
+            border-radius: var(--radius-small); transition: background 0.2s;
+        }
+        .menu-link:hover { background: rgba(200, 107, 61, 0.05); }
+        .menu-icon {
+            width: 40px; height: 40px; background: var(--bg-body); border: 1px solid var(--border-color);
+            border-radius: 8px; display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; color: #A0552D;
+        }
+        .menu-text h5 { font-size: 16px; font-weight: 700; color: var(--text-main); margin-bottom: 4px; }
+        .menu-text p { font-size: 14px; color: var(--text-muted); line-height: 1.4; }
+        
+        .menu-featured {
+            background: #1a1a1a; border-radius: var(--radius-large); padding: 30px;
+            color: #fff; display: flex; flex-direction: column; justify-content: flex-end;
+            min-height: 300px; position: relative; overflow: hidden; text-align: left;
+            border: 1px solid var(--border-color);
+        }
+        .menu-featured h5 { font-size: 24px; margin-bottom: 10px; z-index: 2; position: relative; color: #fff; }
+        .menu-featured p { font-size: 14px; color: #ccc; margin-bottom: 20px; z-index: 2; position: relative; }
+        .menu-featured-link { font-size: 14px; font-weight: 600; color: #fff; text-decoration: underline; z-index: 2; position: relative; }
+        .menu-featured::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(160, 85, 45, 0.6) 100%); z-index: 1;
+        }
+        .menu-featured-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.6; }
+        .nav-buttons { display: flex; gap: 10px; align-items: center; }
+        @media (max-width: 900px) { .nav-links, .mega-menu { display: none; } }
+
+        /* --- HELP CENTER SPECIFIC STYLES --- */
+        .help-hero {
+            padding: 100px 0 80px;
+            text-align: center;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+        }
+        .help-hero h1 {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 24px;
+            color: var(--text-main);
+            letter-spacing: -1px;
+        }
+        .search-container {
+            max-width: 600px;
+            margin: 0 auto 30px;
+            position: relative;
+        }
+        .search-input {
+            width: 100%;
+            padding: 18px 24px 18px 50px;
+            border-radius: var(--radius-small);
+            border: 1px solid var(--border-color);
+            background: var(--bg-body);
+            color: var(--text-main);
+            font-size: 16px;
+            font-family: var(--font-family);
+            transition: all 0.3s;
+        }
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(200, 107, 61, 0.1);
+        }
+        .search-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        
+        /* INDUSTRIAL MONOSPACE TEXT */
+        .system-status {
+            font-family: monospace;
+            font-size: 13px;
+            color: var(--text-muted);
+            opacity: 0.8;
+            margin-top: 15px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #2ecc71;
+            border-radius: 50%;
+            display: inline-block;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(0.95); opacity: 0.7; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.7; }
+        }
+
+        .help-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 80px 24px;
+        }
+
+        /* GRID FOR TOPICS */
+        .topic-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 80px;
+        }
+        .topic-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 30px;
+            border-radius: var(--radius-large);
+            text-align: center;
+            transition: transform 0.3s, border-color 0.3s;
+            cursor: pointer;
+            text-decoration: none; /* For links */
+            display: block;
+        }
+        .topic-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary-color);
+        }
+        .topic-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 15px;
+            color: var(--primary-color);
+        }
+        .topic-card h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
+        .topic-card p {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        /* FAQ ACCORDION */
+        .faq-section { margin-bottom: 60px; }
+        .faq-category-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: var(--text-main);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+        .faq-item {
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 10px;
+        }
+        .faq-item details {
+            padding: 20px 0;
+            cursor: pointer;
+        }
+        .faq-item summary {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-main);
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .faq-item summary::-webkit-details-marker { display: none; }
+        .faq-item summary::after {
+            content: '+';
+            font-size: 24px;
+            font-weight: 300;
+            color: var(--text-muted);
+            transition: transform 0.3s;
+        }
+        .faq-item details[open] summary::after {
+            transform: rotate(45deg);
+            color: var(--primary-color);
+        }
+        .faq-answer {
+            padding-top: 15px;
+            font-size: 16px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            max-width: 90%;
+        }
+
+        /* KNOWLEDGE BASE GRID (BLOG) */
+        .kb-section {
+            margin-top: 80px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 60px;
+        }
+        .kb-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .kb-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-small);
+            overflow: hidden;
+        }
+        .kb-card details {
+            padding: 20px;
+            cursor: pointer;
+        }
+        .kb-card summary {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-main);
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .kb-card summary::-webkit-details-marker { display: none; }
+        .kb-card summary::after {
+            content: '→';
+            color: var(--text-muted);
+            transition: transform 0.2s;
+        }
+        .kb-card details[open] summary::after {
+            transform: rotate(90deg);
+            color: var(--primary-color);
+        }
+        .kb-content {
+            padding-top: 15px;
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            border-top: 1px dashed var(--border-color);
+            margin-top: 15px;
+        }
+        .kb-id {
+            font-family: monospace;
+            color: var(--primary-color);
+            font-size: 11px;
+            margin-right: 10px;
+            opacity: 0.7;
+        }
+
+        /* ORANGE CALLOUT (EMERGENCY) */
+        .callout-box {
+            background: rgba(200, 107, 61, 0.05);
+            border: 1px solid rgba(200, 107, 61, 0.2);
+            border-radius: var(--radius-small);
+            padding: 30px;
+            margin-bottom: 60px;
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+        .callout-icon {
+            flex-shrink: 0;
+            color: var(--primary-color);
+            margin-top: 5px;
+        }
+        .callout-content h3 {
+            color: var(--primary-color);
+            margin-bottom: 8px;
+            font-size: 18px;
+        }
+        .callout-content p {
+            font-size: 15px;
+            color: var(--text-muted);
+            margin-bottom: 0;
+        }
+        
+        /* NO RESULTS MESSAGE */
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+            display: none;
+            border: 1px dashed var(--border-color);
+            border-radius: var(--radius-small);
+            background: var(--bg-card);
+        }
+        .ai-fallback-btn {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            border-radius: var(--radius-small);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .ai-fallback-btn:hover {
+            background: var(--primary-color);
+            color: #fff;
+        }
+
+        /* --- FOOTER --- */
+        footer { background-color: #050505; color: #999; padding: 100px 0 40px; font-size: 14px; border-top: 1px solid #111; }
+        .footer-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 40px; margin-bottom: 80px; }
+        .footer-col h4 { color: #fff; margin-bottom: 25px; font-weight: 600; font-size: 16px; }
+        .footer-col ul { list-style: none; }
+        .footer-col li { margin-bottom: 14px; }
+        .footer-col a:hover { color: var(--primary-color); text-decoration: underline; }
+        .footer-bottom { border-top: 1px solid #222; padding-top: 40px; display: flex; justify-content: space-between; align-items: center; color: #555; }
+        
+        .footer-center { display: flex; align-items: center; gap: 20px; }
+        .footer-right { display: flex; gap: 20px; align-items: center; }
+        .social-icon svg { width: 18px; height: 18px; fill: #999; transition: fill 0.2s; }
+        .social-icon:hover svg { fill: var(--primary-color); }
+        .lang-switch { display: flex; gap: 10px; align-items: center; border-left: 1px solid #333; padding-left: 20px; }
+        .lang-btn { background: none; border: none; color: #666; font-size: 13px; font-weight: 600; cursor: pointer; padding: 0; transition: color 0.2s; }
+        .lang-btn:hover, .lang-btn.active { color: var(--primary-color); }
+
+        .footer-legal {
+            margin-top: 20px;
+            font-size: 11px;
+            line-height: 1.6;
+            color: #555;
+            opacity: 0.7;
+            max-width: 800px;
+        }
+        
+        @media (max-width: 768px) {
+            .topic-grid { grid-template-columns: 1fr; }
+            .kb-grid { grid-template-columns: 1fr; }
+            .help-hero h1 { font-size: 36px; }
+        }
+    </style>
+</head>
+<body class="">
+
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <img src="Rentstaglogo.png" alt="Rentstag">
+            </a>
+            
+            <ul class="nav-links">
+                <li class="nav-item">
+                    <div class="nav-link" data-i18n="nav-management">Management</div>
+                    <div class="mega-menu">
+                        <div class="mega-content" style="grid-template-columns: 1fr 1fr 300px;">
+                            <div class="mega-column">
+                                <h4 data-i18n="menu-core">Core Services</h4>
+                                <div class="menu-item-group">
+                                    <a href="residential.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l8-4 8 4v14M8 21v-4h8v4"></path></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-res">Residential Management</h5><p data-i18n="menu-res-desc">Full-service care for apartments.</p></div>
+                                    </a>
+                                    <a href="association.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-assoc">Association Management</h5><p data-i18n="menu-assoc-desc">Modern administration for HOAs.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="mega-column">
+                                <h4 data-i18n="menu-leasing">Leasing</h4>
+                                <div class="menu-item-group">
+                                    <a href="leasing.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="22" y1="12" x2="18" y2="12"></line><line x1="6" y1="12" x2="2" y2="12"></line><line x1="12" y1="6" x2="12" y2="2"></line><line x1="12" y1="22" x2="12" y2="18"></line></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-smart">Smart Leasing</h5><p data-i18n="menu-smart-desc">Data-driven tenant placement.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="menu-featured">
+                                <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop" class="menu-featured-bg" alt="Feature">
+                                <h5 data-i18n="menu-integrity">Radical Integrity</h5>
+                                <p data-i18n="menu-integrity-desc">We provide a "glass-box" view of every transaction. No hidden fees.</p>
+                                <a href="integrity.html" class="menu-featured-link" data-i18n="menu-learn">Learn about our standards &rarr;</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="nav-item">
+                    <div class="nav-link" data-i18n="nav-experience">Experience</div>
+                    <div class="mega-menu">
+                        <div class="mega-content" style="grid-template-columns: 1fr 1fr 1fr;">
+                            <div class="mega-column">
+                                <h4 data-i18n="menu-tech">Technology</h4>
+                                <div class="menu-item-group">
+                                    <a href="owner-portal.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-portal">Owner Portal</h5><p data-i18n="menu-portal-desc">Real-time visibility.</p></div>
+                                    </a>
+                                    <a href="tenant-portal.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-tenant-portal">Tenant Portal</h5><p data-i18n="menu-tenant-portal-desc">Payments & requests.</p></div>
+                                    </a>
+                                    <a href="asset-portal.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-asset-portal">Asset Manager / Property Manager Portal</h5><p data-i18n="menu-asset-portal-desc">Granular control.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="mega-column">
+                                <h4 data-i18n="menu-services">Services</h4>
+                                <div class="menu-item-group">
+                                    <a href="maintenance.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-maint">Maintenance Network</h5><p data-i18n="menu-maint-desc">Vetted high-quality contractors.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="mega-column">
+                                <h4 data-i18n="menu-trust">Trust</h4>
+                                <div class="menu-item-group">
+                                    <a href="transparency.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-transparency">Transparency Standards</h5><p data-i18n="menu-transparency-desc">Zero black boxes.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <div class="nav-link" data-i18n="nav-clients">Clients</div>
+                    <div class="mega-menu">
+                        <div class="mega-content" style="grid-template-columns: 1fr 1fr 1fr;">
+                            <div class="mega-column">
+                                <h4 data-i18n="menu-who">Who we serve</h4>
+                                <div class="menu-item-group">
+                                    <a href="private.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-private">Private Owners</h5><p data-i18n="menu-private-desc">Protecting wealth.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="mega-column">
+                                <h4>&nbsp;</h4>
+                                <div class="menu-item-group">
+                                    <a href="investors.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-inst">Institutional Investors</h5><p data-i18n="menu-inst-desc">P&L & NAV tracking.</p></div>
+                                    </a>
+                                    <a href="managers.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h18v18H3zM8 12h8"></path></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-pm">Property Managers</h5><p data-i18n="menu-pm-desc">Outsourced operations.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="mega-column">
+                                <h4>&nbsp;</h4>
+                                <div class="menu-item-group">
+                                    <a href="developers.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 22h20"></path><path d="M4 22V7l7-3 7 3v15"></path><path d="M14 14h-4v8"></path></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-dev">Developers</h5><p data-i18n="menu-dev-desc">From build to occupancy.</p></div>
+                                    </a>
+                                    <a href="brokers.html" class="menu-link">
+                                        <div class="menu-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg></div>
+                                        <div class="menu-text"><h5 data-i18n="menu-brokers">Rental Real Estate Brokers</h5><p data-i18n="menu-brokers-desc">Streamlined handovers.</p></div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+
+            <div class="nav-buttons">
+                <button class="theme-toggle" id="theme-toggle" aria-label="Switch Theme">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                </button>
+                <a href="owner-portal.html" class="btn btn-secondary" data-i18n="btn-login">Log in</a>
+                <a href="contact.html" class="btn btn-primary" data-i18n="btn-start">Start for free</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="help-hero">
+        <div class="container">
+            <h1 data-i18n="help-title">Operational Support & Knowledge Base</h1>
+            <div class="search-container">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="searchIconBtn"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <input type="text" class="search-input" id="helpSearchInput" placeholder="Search for answers..." data-i18n-placeholder="search-placeholder">
+            </div>
+            <div class="system-status">
+                <span class="status-dot"></span>
+                <span data-i18n="system-status">All Systems Operational</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="help-content">
+        <div class="callout-box">
+            <div class="callout-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+            </div>
+            <div class="callout-content">
+                <h3 data-i18n="emergency-title">Urgent / Emergency</h3>
+                <p data-i18n="emergency-text">For gas leaks, fire, or immediate structural danger, contact local emergency services (112) immediately. For urgent building maintenance (water burst, power outage), call the 24/7 hotline listed in your Tenant Portal.</p>
+            </div>
+        </div>
+
+        <div class="topic-grid" id="topicGrid">
+            <a href="mailto:support@rentstag.com?subject=Request:%20Access%20/%20Keys&body=Hello%20Support,%0A%0AI%20need%20assistance%20with:%0A[%20]%20Lost%20Fob%0A[%20]%20Replacement%20Key%0A[%20]%20Gate%20Code%20Issue%0A%0APlease%20delete%20the%20options%20that%20do%20not%20apply.%0A%0AAddress:%0AName:%0A%0AThank%20you." class="topic-card">
+                <div class="topic-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></div>
+                <h3 data-i18n="topic-1-title">Access & Keys</h3>
+                <p data-i18n="topic-1-desc">Lost fobs, replacement keys, or gate codes.</p>
+            </a>
+            <a href="mailto:support@rentstag.com?subject=Inquiry:%20Billing%20/%20Rent&body=Hello%20Support,%0A%0AI%20have%20a%20question%20regarding:%0A[%20]%20Monthly%20Statement%0A[%20]%20SEPA%20Payment%20Details%0A[%20]%20Deposit%20Refund%0A%0APlease%20delete%20the%20options%20that%20do%20not%20apply.%0A%0AAddress:%0AName:%0A%0AThank%20you." class="topic-card">
+                <div class="topic-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg></div>
+                <h3 data-i18n="topic-2-title">Billing & Rent</h3>
+                <p data-i18n="topic-2-desc">Statements, SEPA payments, and deposits.</p>
+            </a>
+            <a href="mailto:support@rentstag.com?subject=Report:%20Maintenance%20Issue&body=Hello%20Support,%0A%0AI%20would%20like%20to%20report:%0A[%20]%20Plumbing%20Issue%0A[%20]%20Electrical%20Issue%0A[%20]%20Appliance%20Failure%0A[%20]%20Other:%0A%0APlease%20delete%20the%20options%20that%20do%20not%20apply%20and%20describe%20the%20issue%20briefly.%0A%0AAddress:%0AName:%0A%0AThank%20you." class="topic-card">
+                <div class="topic-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg></div>
+                <h3 data-i18n="topic-3-title">Maintenance</h3>
+                <p data-i18n="topic-3-desc">Report issues or check repair status.</p>
+            </a>
+        </div>
+
+        <div id="noResults" class="no-results" data-i18n="no-results" style="display: none;">
+            No local results found.
+            <br><br>
+            <a href="#" id="aiSearchBtn" class="ai-fallback-btn">Ask External AI Assistant &rarr;</a>
+        </div>
+
+        <div id="faqContainer">
+            <div class="faq-section">
+                <h2 class="faq-category-title" data-i18n="faq-cat-1">For Tenants</h2>
+                
+                <div class="faq-item">
+                    <details>
+                        <summary data-i18n="faq-t-1-q">How do I access the Tenant Portal?</summary>
+                        <div class="faq-answer" data-i18n="faq-t-1-a">You can log in using the credentials provided in your Welcome Pack. If you haven't received them, please contact your building manager. The portal allows you to view leases, pay rent, and submit maintenance requests.</div>
+                    </details>
+                </div>
+                <div class="faq-item">
+                    <details>
+                        <summary data-i18n="faq-t-2-q">I have lost my key/fob. What is the procedure?</summary>
+                        <div class="faq-answer" data-i18n="faq-t-2-a">For security reasons, replacement keys must be ordered through the Tenant Portal. There is a standard administrative fee plus the cost of the hardware. Processing typically takes 24-48 hours.</div>
+                    </details>
+                </div>
+                <div class="faq-item">
+                    <details>
+                        <summary data-i18n="faq-t-3-q">How is heating/water consumption calculated?</summary>
+                        <div class="faq-answer" data-i18n="faq-t-3-a">Meters are read remotely on a monthly basis. You can view your detailed consumption charts in the Portal under the 'Utilities' tab. Final reconciliation happens annually.</div>
+                    </details>
+                </div>
+            </div>
+
+            <div class="faq-section">
+                <h2 class="faq-category-title" data-i18n="faq-cat-2">For Owners</h2>
+                
+                <div class="faq-item">
+                    <details>
+                        <summary data-i18n="faq-o-1-q">When are monthly statements generated?</summary>
+                        <div class="faq-answer" data-i18n="faq-o-1-a">Financial reports are automatically generated and uploaded to your Owner Portal by the 10th business day of the following month. You will receive an email notification when they are ready.</div>
+                    </details>
+                </div>
+                <div class="faq-item">
+                    <details>
+                        <summary data-i18n="faq-o-2-q">How do you handle tenant screening?</summary>
+                        <div class="faq-answer" data-i18n="faq-o-2-a">We use a rigorous 3-step verification process: 1) Credit solvency check (SOLUS/CERD), 2) Employment verification, and 3) Previous landlord references. Our strict criteria ensure a default rate below 0.5%.</div>
+                    </details>
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-section" style="margin-top: 60px; text-align: center;">
+            <h3 style="margin-bottom: 20px; font-weight:700;" data-i18n="still-stuck">Still need assistance?</h3>
+            <p style="color: var(--text-muted); margin-bottom: 20px; max-width: 600px; margin-left: auto; margin-right: auto;" data-i18n="support-desc">Our support team is available daily (including weekends) during these windows: 04:00–06:00, 09:00–11:00, 14:00–16:00, and 19:00–21:00 CET.</p>
+            <a href="mailto:support@rentstag.com" class="btn btn-secondary" style="color: var(--primary-color); border-color: var(--primary-color);">Email: support@rentstag.com</a>
+        </div>
+
+        <div class="kb-section">
+            <h2 class="faq-category-title" data-i18n="kb-title">Knowledge Base / Field Notes</h2>
+            <div class="kb-grid">
+                <div class="kb-card"><details><summary><span class="kb-id">KB-001</span><span data-i18n="kb-1-q">Smell of gas?</span></summary><div class="kb-content" data-i18n="kb-1-a">Do not use electrical switches. Open windows immediately. Evacuate. Call 112 or the gas emergency provider. Do not call from inside.</div></details></div>
+                <div class="kb-card"><details><summary><span class="kb-id">KB-002</span><span data-i18n="kb-2-q">No hot water</span></summary><div class="kb-content" data-i18n="kb-2-a">Check boiler pressure (should be 1.5 bar). If communal, check Portal for outages. If individual, check if pilot light is on or reset boiler.</div></details></div>
+                <div class="kb-card"><details><summary><span class="kb-id">KB-003</span><span data-i18n="kb-3-q">Power outage</span></summary><div class="kb-content" data-i18n="kb-3-a">Check fuse box (breakers). If one tripped, reset it. If total building outage, check street lights. If widespread, contact grid provider.</div></details></div>
+                <div class="kb-card"><details><summary><span class="kb-id">KB-004</span><span data-i18n="kb-4-q">Locked out</span></summary><div class="kb-content" data-i18n="kb-4-a">During office hours: Contact Property Manager. After hours: You must call a locksmith at your own expense unless lock failure is proven.</div></details></div>
+                <div class="kb-card"><details><summary><span class="kb-id">KB-005</span><span data-i18n="kb-5-q">Water leak</span></summary><div class="kb-content" data-i18n="kb-5-a">Turn off main stopcock immediately (usually under sink or in bathroom). Put bucket under leak. Report to Maintenance via Portal ASAP.</div></details></div>
+                <div class="kb-card"><details><summary><span class="kb-id">KB-006</span><span data-i18n="kb-6-q">Toilet blocked</span></summary><div class="kb-content" data-i18n="kb-6-a">Do not flush again. Use a plunger. If caused by misuse (wipes, hygiene products), cost of plumbing service will be charged to tenant.</div></details></div>
+                <div class="kb-card"><details><summary><span class="kb-id">KB-007</span><span data-i18n="kb-7-q">Mould / Damp</span></summary><div class="kb-content" data-i18n="kb-7-a">Ventilate daily. Do not dry clothes on radiators. Keep furniture away from walls. Use mould spray. Report structural damp immediately.</div></details></div>
+                <div class="kb-card"><details><summary><span class="kb-id">KB-008</span><span data-i18n="kb-8-q">Radiator bleeding</span></summary><div class="kb-content" data-i18n="kb-8-a">If top of radiator is cold: Turn off heating. Use radiator key to open valve slightly until water comes out. Close valve. Check pressure.</div></details></div>
+                <div class="kb-card"><details><summary><span class="kb-id">KB-009</span><span data-i18n="kb-9-q">Appliance failure</span></summary><div class="kb-content" data-i18n="kb-9-a">Check power connection and fuses first. Check manual for error codes. Report via Portal with brand, model number and error code.</div></details></div>
+                <div class="kb-card"><details><summary><span class="kb-id">KB-010</span><span data-i18n="kb-10-q">Internet down</span></summary><div class="kb-content" data-i18n="kb-10-a">Rentstag only manages building infrastructure. For unit connection, contact your specific ISP (Vodafone, O2, etc.) directly.</div></details></div>
+                <div class="kb-card"><details><summary><span class="kb-id">KB-011</span><span data-i18n="kb-11-q">Lost fob / key price</span></summary><div class="kb-content" data-i18n="kb-11-a">Standard security fob: €30 / 750 CZK. System Key: €100 / 2500 CZK (security re-keying may apply). Order via Portal.</div></details></div>
+                <div class="kb-card"><details><summary><span class="kb-id">KB-012</span><span data-i18n="kb-12-q">Adding a roommate</span></summary><div class="kb-content" data-i18n="kb-12-a">Requires landlord approval. New tenant must pass ID verification. Administration fee applies for lease addendum. Do not move in without approval.</div></details></div>
+                <div class="kb-card"><details><summary><span class="kb-id">KB-013</span><span data-i18n="kb-13-q">Pet policy</span></summary><div class="kb-content" data-i18n="kb-13-a">Depends on building rules. Generally allowed but requires registration. Tenant is liable for any damage (scratches, smells).</div></details></div>
+                <div class="kb-card"><details><summary><span class="kb-id">KB-014</span><span data-i18n="kb-14-q">Subletting / Airbnb</span></summary><div class="kb-content" data-i18n="kb-14-a">Strictly prohibited without written consent. Unauthorized short-term letting is grounds for immediate lease termination and penalties.</div></details></div>
+                <div class="kb-card"><details><summary><span class="kb-id">KB-015</span><span data-i18n="kb-15-q">Painting walls</span></summary><div class="kb-content" data-i18n="kb-15-a">Minor holes for pictures allowed (must be filled). Painting walls requires approval. Unit must be returned to original white state upon exit.</div></details></div>
+                <div class="kb-card"><details><summary><span class="kb-id">KB-016</span><span data-i18n="kb-16-q">Deposit return</span></summary><div class="kb-content" data-i18n="kb-16-a">Processed within 30 days of lease end, provided unit is inspected and no damages/arrears found. Provide IBAN in Portal.</div></details></div>
+                <div class="kb-card"><details><summary><span class="kb-id">KB-017</span><span data-i18n="kb-17-q">Late rent payment</span></summary><div class="kb-content" data-i18n="kb-17-a">Automatic reminders sent after 3 days. Late fees apply per contract terms. If facing difficulty, contact Billing immediately to discuss plan.</div></details></div>
+                <div class="kb-card"><details><summary><span class="kb-id">KB-018</span><span data-i18n="kb-18-q">Breaking lease</span></summary><div class="kb-content" data-i18n="kb-18-a">Standard notice is 3 months. Early termination requires agreement and typically a fee or finding a suitable replacement tenant.</div></details></div>
+                <div class="kb-card"><details><summary><span class="kb-id">KB-019</span><span data-i18n="kb-19-q">Noise complaints</span></summary><div class="kb-content" data-i18n="kb-19-a">Quiet hours: 22:00 - 06:00. First, try talking to neighbor. If persistent, log details (time/date) and report to Building Manager.</div></details></div>
+                <div class="kb-card"><details><summary><span class="kb-id">KB-020</span><span data-i18n="kb-20-q">Waste / Recycling</span></summary><div class="kb-content" data-i18n="kb-20-a">Strict separation required (Paper/Plastic/Glass/General). Do not leave bags in corridors. Check bin store location in your Welcome Pack.</div></details></div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4 data-i18n="nav-management">Management</h4>
+                    <ul>
+                        <li><a href="residential.html" data-i18n="menu-res">Residential</a></li>
+                        <li><a href="association.html" data-i18n="menu-assoc">Association</a></li>
+                        <li><a href="leasing.html" data-i18n="menu-smart">Smart Leasing</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 data-i18n="nav-experience">Experience</h4>
+                    <ul>
+                        <li><a href="owner-portal.html" data-i18n="menu-portal">Owner Portal</a></li>
+                        <li><a href="tenant-portal.html" data-i18n="menu-tenant-portal">Tenant Portal</a></li>
+                        <li><a href="asset-portal.html" data-i18n="menu-asset-portal">Asset Manager / Property Manager Portal</a></li>
+                        <li><a href="maintenance.html" data-i18n="menu-maint">Maintenance Network</a></li>
+                        <li><a href="transparency.html" data-i18n="menu-transparency">Transparency Standards</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 data-i18n="nav-clients">Clients</h4>
+                    <ul>
+                        <li><a href="private.html" data-i18n="menu-private">Private Owners</a></li>
+                        <li><a href="investors.html" data-i18n="menu-inst">Institutional Investors</a></li>
+                        <li><a href="managers.html" data-i18n="menu-pm">Property Managers</a></li>
+                        <li><a href="developers.html" data-i18n="menu-dev">Developers</a></li>
+                        <li><a href="brokers.html" data-i18n="menu-brokers">Rental Real Estate Brokers</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 data-i18n="footer-company">Company</h4>
+                    <ul>
+                        <li><a href="about.html" data-i18n="footer-about">About Us</a></li>
+                        <li><a href="careers.html" data-i18n="footer-careers">Careers</a></li>
+                        <li><a href="contact.html" data-i18n="footer-contact">Contact</a></li>
+                    </ul>
+                </div>
+                 <div class="footer-col">
+                    <h4 data-i18n="footer-resources">Resources</h4>
+                    <ul>
+                        <li><a href="help.html" data-i18n="footer-help">Help Center</a></li>
+                        <li><a href="privacy.html" data-i18n="footer-privacy">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="footer-copy">
+                    &copy; 2026 Rentstag AG & Co s.r.o. All rights reserved.<br>
+                    <span style="font-size: 12px; opacity: 0.8; margin-top: 4px; display: inline-block;" data-i18n="footer-swiss">Shaped in Geneva, Switzerland 🇨🇭 (2022) — engineered for Central & Eastern Europe</span>
+                    <div class="footer-legal" data-i18n="footer-legal">
+                        Rentstag is a proprietary operating entity acting suo nomine, leveraging proprietary computational architecture for internal asset optimization. For the avoidance of doubt, “Rentstag AG & Co s.r.o.” is an internal designation (“Algorithmic Governance”) and does not imply any specific legal form or regulated status; see Legal/Disclosures. The Entity is not a licensed broker-dealer, bank, or collective investment scheme. Utilization of any software infrastructure is provided on an “as-is” basis without warranty of computational infallibility. All materials herein are provided pro notitia and do not constitute financial advice, a solicitation, or a binding offer to contract (invitatio ad offerendum). Any potential transaction is strictly contingent upon satisfactory due diligence and definitive legal execution.
+                    </div>
+                </div>
+               
+                <div class="footer-center">
+                    <a href="https://www.linkedin.com/company/rentstag-official/" target="_blank" class="social-icon" aria-label="LinkedIn">
+                        <svg viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                    </a>
+                </div>
+
+                <div class="footer-right">
+                    <div class="footer-links" style="display: flex; gap: 20px; font-size: 13px;">
+                        <a href="privacy.html" data-i18n="footer-privacy">Privacy Policy</a>
+                        <a href="terms.html" data-i18n="footer-terms">Terms of Service</a>
+                    </div>
+                    <div class="lang-switch">
+                        <button class="lang-btn" onclick="setLanguage('en')">EN</button>
+                        <span style="color:#444">|</span>
+                        <button class="lang-btn" onclick="setLanguage('de')">DE</button>
+                        <span style="color:#444">|</span>
+                        <button class="lang-btn" onclick="setLanguage('cs')">CZ</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 1. DARK MODE TOGGLE
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleBtn = document.getElementById('theme-toggle');
+            const body = document.body;
+            if (localStorage.getItem('theme') === 'dark') { body.classList.add('dark-mode'); }
+            toggleBtn.addEventListener('click', () => {
+                body.classList.toggle('dark-mode');
+                localStorage.setItem('theme', body.classList.contains('dark-mode') ? 'dark' : 'light');
+            });
+        });
+
+        // 2. CLICK SOUND
+        document.addEventListener('DOMContentLoaded', () => {
+            const clickSound = new Audio('Rentstag_mouse-click.mp3');
+            clickSound.volume = 0.4; 
+            const buttons = document.querySelectorAll('.btn, .nav-link, .menu-link, .theme-toggle, .lang-btn, .social-icon, .topic-card, .faq-item summary, .ai-fallback-btn, .kb-card details');
+            buttons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    clickSound.currentTime = 0;
+                    const playPromise = clickSound.play();
+                    if (playPromise !== undefined) { playPromise.catch(error => {}); }
+                });
+            });
+        });
+
+        // 3. FUSE.JS SMART SEARCH IMPLEMENTATION (INCLUDING KB)
+        document.addEventListener('DOMContentLoaded', () => {
+            const input = document.getElementById('helpSearchInput');
+            const icon = document.getElementById('searchIconBtn');
+            const topicGrid = document.getElementById('topicGrid');
+            const faqContainer = document.getElementById('faqContainer');
+            const kbGrid = document.querySelector('.kb-grid'); // New KB container
+            const noResults = document.getElementById('noResults');
+            const aiBtn = document.getElementById('aiSearchBtn');
+
+            // --- DATA SOURCE FOR FUSE ---
+            const topics = Array.from(document.querySelectorAll('.topic-card')).map(card => ({
+                type: 'topic',
+                element: card,
+                title: card.querySelector('h3').innerText,
+                desc: card.querySelector('p').innerText
+            }));
+
+            const faqs = Array.from(document.querySelectorAll('.faq-item')).map(item => ({
+                type: 'faq',
+                element: item,
+                question: item.querySelector('summary').innerText,
+                answer: item.querySelector('.faq-answer').innerText
+            }));
+
+            // NEW: Add KB Articles to Search
+            const kbArticles = Array.from(document.querySelectorAll('.kb-card')).map(card => ({
+                type: 'kb',
+                element: card,
+                question: card.querySelector('summary').innerText, // Includes ID
+                answer: card.querySelector('.kb-content').innerText
+            }));
+
+            const searchData = [...topics, ...faqs, ...kbArticles];
+
+            // Initialize Fuse
+            const options = {
+                includeScore: true,
+                threshold: 0.4,
+                keys: ['title', 'desc', 'question', 'answer']
+            };
+            const fuse = new Fuse(searchData, options);
+
+            // --- AI FALLBACK FUNCTION ---
+            const performExternalSearch = (query) => {
+                if(!query) return;
+                const aiQuery = `site:rentstag.com OR "Rentstag" help ${query}`;
+                window.open(`https://www.google.com/search?q=${encodeURIComponent(aiQuery)}`, '_blank');
+            };
+
+            // --- MAIN SEARCH HANDLER ---
+            const handleSearch = () => {
+                const query = input.value.trim();
+                
+                if (query.length === 0) {
+                    // Reset View
+                    topics.forEach(t => t.element.style.display = "block");
+                    faqs.forEach(f => {
+                        f.element.style.display = "block";
+                        f.element.querySelector('details').open = false; 
+                    });
+                    kbArticles.forEach(k => {
+                        k.element.style.display = "block";
+                        k.element.querySelector('details').open = false; 
+                    });
+                    document.querySelectorAll('.faq-section').forEach(s => s.style.display = "block");
+                    noResults.style.display = "none";
+                    return;
+                }
+
+                const results = fuse.search(query);
+                const matches = new Set(results.map(r => r.item.element));
+
+                let hasVisibleTopics = false;
+                let hasVisibleFaqs = false;
+                let hasVisibleKb = false;
+
+                // Toggle visibility
+                topics.forEach(t => {
+                    if (matches.has(t.element)) {
+                        t.element.style.display = "block";
+                        hasVisibleTopics = true;
+                    } else {
+                        t.element.style.display = "none";
+                    }
+                });
+
+                faqs.forEach(f => {
+                    if (matches.has(f.element)) {
+                        f.element.style.display = "block";
+                        f.element.querySelector('details').open = true; 
+                        hasVisibleFaqs = true;
+                    } else {
+                        f.element.style.display = "none";
+                    }
+                });
+
+                kbArticles.forEach(k => {
+                    if (matches.has(k.element)) {
+                        k.element.style.display = "block";
+                        k.element.querySelector('details').open = true; 
+                        hasVisibleKb = true;
+                    } else {
+                        k.element.style.display = "none";
+                    }
+                });
+
+                // Hide empty sections
+                document.querySelectorAll('.faq-section').forEach(section => {
+                    const visibleItems = Array.from(section.querySelectorAll('.faq-item')).filter(i => i.style.display !== 'none');
+                    section.style.display = visibleItems.length > 0 ? "block" : "none";
+                });
+
+                // No Results Handling
+                if (!hasVisibleTopics && !hasVisibleFaqs && !hasVisibleKb) {
+                    noResults.style.display = "block";
+                } else {
+                    noResults.style.display = "none";
+                }
+            };
+
+            // Event Listeners
+            input.addEventListener('input', handleSearch);
+            
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    if (noResults.style.display === 'block' || input.value.length > 0) {
+                        performExternalSearch(input.value);
+                    }
+                }
+            });
+
+            icon.addEventListener('click', () => {
+                performExternalSearch(input.value);
+            });
+
+            if(aiBtn) {
+                aiBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    performExternalSearch(input.value);
+                });
+            }
+        });
+
+        // 4. TRANSLATIONS
+        const translations = {
+            'cs': {
+                'nav-management': 'Správa', 'nav-experience': 'Zkušenost', 'nav-clients': 'Klienti', 'nav-pricing': 'Ceník',
+                'btn-login': 'Přihlásit', 'btn-start': 'Začít zdarma', 'menu-core': 'Hlavní služby', 'menu-res': 'Správa bytových domů', 'menu-res-desc': 'Kompletní péče o nájemní domy.',
+                'menu-assoc': 'Správa SVJ', 'menu-assoc-desc': 'Moderní administrativa pro společenství.', 'menu-leasing': 'Pronájem', 'menu-smart': 'Chytrý pronájem',
+                'menu-smart-desc': 'Prověření nájemníci a data.', 'menu-integrity': 'Radikální Integrita', 'menu-integrity-desc': 'Vidíte každou transakci. Žádné skryté poplatky.',
+                'menu-learn': 'Více o našich standardech &rarr;', 'menu-tech': 'Technologie', 'menu-portal': 'Portál vlastníka', 'menu-portal-desc': 'Přehled v reálném čase.',
+                'menu-tenant-portal': 'Portál nájemníka', 'menu-tenant-portal-desc': 'Platby a požadavky.',
+                'menu-asset-portal': 'Portál pro asset manažery', 'menu-asset-portal-desc': 'Detailní kontrola.',
+                'menu-services': 'Služby', 'menu-maint': 'Síť údržby', 'menu-maint-desc': 'Prověření řemeslníci a kvalita.', 'menu-trust': 'Důvěra', 'menu-transparency': 'Standardy transparentnosti',
+                'menu-transparency-desc': 'Žádné černé skříňky.', 'menu-who': 'Komu sloužíme', 'menu-private': 'Soukromí vlastníci', 'menu-private-desc': 'Ochrana a růst majetku.',
+                'menu-inst': 'Investiční fondy', 'menu-inst-desc': 'P&L a sledování NAV.', 'menu-pm': 'Správci nemovitostí', 'menu-pm-desc': 'Outsourcing provozu.',
+                'menu-dev': 'Developeři', 'menu-dev-desc': 'Od výstavby po obsazenost.', 'menu-brokers': 'Realitní makléři', 'menu-brokers-desc': 'Hladké předání.',
+                'footer-company': 'Společnost',
+                'footer-about': 'O nás', 'footer-careers': 'Kariéra', 'footer-contact': 'Kontakt', 'footer-resources': 'Zdroje', 'footer-help': 'Centrum nápovědy', 'footer-privacy': 'Ochrana soukromí',
+                'footer-terms': 'Podmínky služby', 'footer-cookies': 'Nastavení cookies', 
+                'hero-origin': 'Původ: Ženeva, Švýcarsko 🇨🇭',
+                'footer-swiss': 'Formováno v Ženevě, Švýcarsku 🇨🇭 (2022) — vyvinuto pro střední a východní Evropu',
+                'footer-legal': 'Rentstag je proprietární provozní subjekt jednající suo nomine, využívající proprietární výpočetní architekturu pro optimalizaci interních aktiv. Pro vyloučení pochybností je „Rentstag AG & Co s.r.o.“ interním označením („Algorithmic Governance“) a neimplikuje žádnou konkrétní právní formu či regulovaný status; viz Právní/Zveřejnění. Subjekt není licencovaným obchodníkem s cennými papíry, bankou ani systémem kolektivního investování. Využití jakékoli softwarové infrastruktury je poskytováno na bázi „jak stojí a leží“ bez záruky výpočetní neomylnosti. Veškeré materiály zde uvedené jsou poskytovány pro notitia a nepředstavují finanční poradenství, výzvu ani závaznou nabídku k uzavření smlouvy (invitatio ad offerendum). Jakákoli potenciální transakce je přísně podmíněna uspokojivou due diligence a definitivním právním provedením.',
+                
+                // HELP CENTER SPECIFIC
+                'help-title': 'Provozní podpora & Znalostní báze',
+                'search-placeholder': 'Hledat odpovědi...',
+                'system-status': 'Všechny systémy funkční',
+                'emergency-title': 'Urgentní / Havarijní stavy',
+                'emergency-text': 'V případě úniku plynu, požáru nebo bezprostředního nebezpečí volejte ihned 112. Pro urgentní závady v budově (prasklá voda, výpadek proudu) volejte 24/7 linku uvedenou v Portálu nájemníka.',
+                
+                'topic-1-title': 'Přístup a Klíče', 'topic-1-desc': 'Ztracené čipy, náhradní klíče nebo kódy.',
+                'topic-2-title': 'Platby a Nájem', 'topic-2-desc': 'Vyúčtování, SEPA platby a kauce.',
+                'topic-3-title': 'Údržba', 'topic-3-desc': 'Nahlášení závad nebo stav oprav.',
+                
+                'faq-cat-1': 'Pro Nájemníky',
+                'faq-t-1-q': 'Jak se dostanu do Portálu nájemníka?',
+                'faq-t-1-a': 'Přihlásit se můžete pomocí údajů ve vašem uvítacím balíčku. Pokud je nemáte, kontaktujte správce budovy. Portál umožňuje zobrazit smlouvy, platit nájem a zadávat požadavky.',
+                'faq-t-2-q': 'Ztratil jsem klíč/čip. Jaký je postup?',
+                'faq-t-2-a': 'Z bezpečnostních důvodů se náhradní klíče objednávají přes Portál. Účtujeme administrativní poplatek plus cenu hardwaru. Vyřízení trvá obvykle 24-48 hodin.',
+                'faq-t-3-q': 'Jak se počítá spotřeba tepla/vody?',
+                'faq-t-3-a': 'Měřiče odečítáme dálkově každý měsíc. Detailní grafy spotřeby najdete v Portálu v záložce „Služby“. Vyúčtování probíhá ročně.',
+                
+                'faq-cat-2': 'Pro Vlastníky',
+                'faq-o-1-q': 'Kdy dostanu měsíční výkazy?',
+                'faq-o-1-a': 'Finanční reporty se generují automaticky a nahrávají do Portálu vlastníka do 10. pracovního dne následujícího měsíce. O nahrání dostanete e-mail.',
+                'faq-o-2-q': 'Jak prověřujete nájemníky?',
+                'faq-o-2-a': 'Používáme přísný 3krokový proces: 1) Kontrola solventnosti (SOLUS/CERD), 2) Ověření zaměstnání a 3) Reference od předchozích pronajímatelů. Naše kritéria zajišťují míru neplatičů pod 0,5 %.',
+                
+                'still-stuck': 'Stále potřebujete pomoc?',
+                'support-desc': 'Náš tým podpory je k dispozici denně (včetně víkendů) v těchto časech: 04:00–06:00, 09:00–11:00, 14:00–16:00 a 19:00–21:00 CET.',
+                'no-results': 'Žádné lokální výsledky. Stiskněte Enter pro AI asistenta.',
+
+                // KB ARTICLES (SHORTENED FOR BREVITY - JUST TITLES AS EXAMPLE OF STRUCTURE)
+                'kb-title': 'Znalostní báze / Poznámky z terénu',
+                'kb-1-q': 'Cítíte plyn?', 'kb-1-a': 'Nepoužívejte vypínače. Otevřete okna. Evakuujte se. Volejte 112 nebo pohotovost plynáren. Nevolejte zevnitř bytu.',
+                'kb-2-q': 'Netče teplá voda', 'kb-2-a': 'Zkontrolujte tlak v kotli (měl by být 1,5 baru). Pokud je kotelna společná, zkontrolujte Portál. Pokud máte vlastní, zkuste reset.',
+                'kb-3-q': 'Výpadek proudu', 'kb-3-a': 'Zkontrolujte jističe. Pokud vypadl jeden, nahoďte ho. Pokud nejde proud v celé budově, kontaktujte distributora.',
+                'kb-4-q': 'Zabouchl(a) jsem si', 'kb-4-a': 'Během pracovní doby: Správce. Mimo hodiny: Zámečník na vlastní náklady, pokud není chyba v zámku.',
+                'kb-5-q': 'Únik vody', 'kb-5-a': 'Ihned zavřete hlavní uzávěr (stoupačku). Dejte pod únik kbelík. Nahlaste urgentně přes Portál.',
+                'kb-6-q': 'Ucpaný záchod', 'kb-6-a': 'Nesplachujte znovu. Použijte zvon. Pokud je ucpání způsobeno nevhodným použitím, hradí nájemník.',
+                'kb-7-q': 'Plíseň / Vlhkost', 'kb-7-a': 'Větrejte denně. Nesušte prádlo na radiátorech. Použijte sprej proti plísni. Strukturální vlhkost nahlaste.',
+                'kb-8-q': 'Odvzdušnění radiátoru', 'kb-8-a': 'Pokud hřeje jen dole: Vypněte topení. Povolte ventil klíčkem, dokud neteče voda. Zavřete. Zkontrolujte tlak.',
+                'kb-9-q': 'Porucha spotřebiče', 'kb-9-a': 'Zkontrolujte zásuvku. Podívejte se do manuálu na chybový kód. Nahlaste přes Portál s kódem chyby.',
+                'kb-10-q': 'Nejde internet', 'kb-10-a': 'Rentstag spravuje jen budovu. Pro připojení v bytě kontaktujte přímo svého poskytovatele (Vodafone, O2 atd.).',
+                'kb-11-q': 'Cena čipu/klíče', 'kb-11-a': 'Čip: 750 Kč. Systémový klíč: 2500 Kč (může být nutná výměna vložky). Objednávka přes Portál.',
+                'kb-12-q': 'Přidání spolubydlícího', 'kb-12-a': 'Vyžaduje souhlas. Nový nájemník musí projít prověřením. Platí se poplatek za dodatek smlouvy.',
+                'kb-13-q': 'Zvířata v bytě', 'kb-13-a': 'Závisí na budově. Obvykle povoleno, ale vyžaduje registraci. Nájemník ručí za škody.',
+                'kb-14-q': 'Podnájem / Airbnb', 'kb-14-a': 'Přísně zakázáno bez písemného souhlasu. Porušení vede k okamžité výpovědi a pokutám.',
+                'kb-15-q': 'Malování stěn', 'kb-15-a': 'Drobné díry na obrazy povoleny (nutno zatmelit). Malování vyžaduje souhlas. Byt vrátit bílý.',
+                'kb-16-q': 'Vrácení kauce', 'kb-16-a': 'Do 30 dnů od konce nájmu, pokud je byt v pořádku a bez nedoplatků. Zadejte IBAN do Portálu.',
+                'kb-17-q': 'Pozdní platba', 'kb-17-a': 'Automatické upomínky po 3 dnech. Pokuty dle smlouvy. Při potížích ihned kontaktujte fakturaci.',
+                'kb-18-q': 'Ukončení smlouvy', 'kb-18-a': 'Standardní výpověď 3 měsíce. Dřívější ukončení vyžaduje dohodu a poplatek nebo náhradníka.',
+                'kb-19-q': 'Hluk sousedů', 'kb-19-a': 'Noční klid 22:00-06:00. Zkuste domluvu. Pokud trvá, zapisujte časy a nahlaste správci.',
+                'kb-20-q': 'Třídění odpadu', 'kb-20-a': 'Nutné třídit (Papier/Plast/Sklo/Směs). Nenechávejte pytle na chodbě. Umístění popelnic v uvítacím balíčku.'
+            },
+            'de': {
+                'nav-management': 'Verwaltung', 'nav-experience': 'Erfahrung', 'nav-clients': 'Kunden', 'nav-pricing': 'Preise',
+                'btn-login': 'Anmelden', 'btn-start': 'Kostenlos starten', 'menu-core': 'Kernleistungen', 'menu-res': 'Mietverwaltung', 'menu-res-desc': 'Rundum-Service für Mietshäuser.',
+                'menu-assoc': 'WEG-Verwaltung', 'menu-assoc-desc': 'Moderne Verwaltung für Eigentümer.', 'menu-leasing': 'Vermietung', 'menu-smart': 'Smart Leasing',
+                'menu-smart-desc': 'Datengetriebene Vermietung.', 'menu-integrity': 'Radikale Integrität', 'menu-integrity-desc': 'Transparenz bei jeder Transaktion.',
+                'menu-learn': 'Mehr über unsere Standards &rarr;', 'menu-tech': 'Technologie', 'menu-portal': 'Eigentümer-Portal', 'menu-portal-desc': 'Echtzeit-Überblick.',
+                'menu-tenant-portal': 'Mieterportal', 'menu-tenant-portal-desc': 'Zahlungen & Anfragen.',
+                'menu-asset-portal': 'Asset Manager Portal', 'menu-asset-portal-desc': 'Granulare Kontrolle.',
+                'menu-services': 'Dienstleistungen', 'menu-maint': 'Handwerker-Netzwerk', 'menu-maint-desc': 'Geprüfte Qualität.', 'menu-trust': 'Vertrauen', 'menu-transparency': 'Transparenz-Standards',
+                'menu-transparency-desc': 'Keine Blackboxen.', 'menu-who': 'Für wen wir arbeiten', 'menu-private': 'Privateigentümer', 'menu-private-desc': 'Vermögensschutz.',
+                'menu-inst': 'Institutionelle Investoren', 'menu-inst-desc': 'P&L und NAV Tracking.', 'menu-pm': 'Hausverwaltungen', 'menu-pm-desc': 'Ausgelagerter Betrieb.',
+                'menu-dev': 'Bauträger', 'menu-dev-desc': 'Vom Bau bis zur Vermietung.', 'menu-brokers': 'Immobilienmakler', 'menu-brokers-desc': 'Reibungslose Übergaben.',
+                'footer-company': 'Unternehmen',
+                'footer-about': 'Über uns', 'footer-careers': 'Karriere', 'footer-contact': 'Kontakt', 'footer-resources': 'Ressourcen', 'footer-help': 'Hilfe-Center', 'footer-privacy': 'Datenschutz',
+                'footer-terms': 'AGB', 'footer-cookies': 'Cookie-Einstellungen', 
+                'hero-origin': 'Ursprung: Genf, Schweiz 🇨🇭',
+                'footer-swiss': 'Geprägt in Genf, Schweiz 🇨🇭 (2022) — entwickelt für Mittel- und Osteuropa',
+                'footer-legal': 'Rentstag ist eine proprietäre operative Einheit, die suo nomine handelt und proprietäre Rechenarchitektur zur internen Vermögensoptimierung nutzt. Zur Vermeidung von Zweifeln ist „Rentstag AG & Co s.r.o.“ eine interne Bezeichnung („Algorithmic Governance“) und impliziert keine spezifische Rechtsform oder einen regulierten Status; siehe Rechtliches/Offenlegungen. Die Einheit ist kein lizenzierter Broker-Dealer, keine Bank und kein kollektives Anlagesystem. Die Nutzung jeglicher Softwareinfrastruktur erfolgt auf einer „Ist-Zustand“-Basis ohne Gewähr für rechnerische Unfehlbarkeit. Alle hierin enthaltenen Materialien werden pro notitia zur Verfügung gestellt und stellen keine Finanzberatung, Aufforderung oder ein verbindliches Vertragsangebot (invitatio ad offerendum) dar. Jede potenzielle Transaktion steht unter dem strengen Vorbehalt einer zufriedenstellenden Due Diligence und einer definitiven rechtlichen Ausführung.',
+                
+                // HELP CENTER SPECIFIC
+                'help-title': 'Operativer Support & Wissensdatenbank',
+                'search-placeholder': 'Suche nach Antworten...',
+                'system-status': 'Alle Systeme betriebsbereit',
+                'emergency-title': 'Dringend / Notfall',
+                'emergency-text': 'Bei Gaslecks, Feuer oder unmittelbarer Gefahr rufen Sie sofort 112 an. Für dringende Gebäudeschäden (Wasserrohrbruch, Stromausfall) rufen Sie die 24/7-Hotline im Mieterportal an.',
+                
+                'topic-1-title': 'Zugang & Schlüssel', 'topic-1-desc': 'Verlorene Chips, Ersatzschlüssel oder Codes.',
+                'topic-2-title': 'Abrechnung & Miete', 'topic-2-desc': 'Auszüge, SEPA-Zahlungen und Kautionen.',
+                'topic-3-title': 'Instandhaltung', 'topic-3-desc': 'Mängel melden oder Status prüfen.',
+                
+                'faq-cat-1': 'Für Mieter',
+                'faq-t-1-q': 'Wie greife ich auf das Mieterportal zu?',
+                'faq-t-1-a': 'Sie können sich mit den Zugangsdaten aus Ihrem Willkommenspaket anmelden. Falls nicht erhalten, kontaktieren Sie den Hausverwalter. Das Portal ermöglicht Einsicht in Verträge, Mietzahlungen und Anfragen.',
+                'faq-t-2-q': 'Ich habe meinen Schlüssel verloren. Was nun?',
+                'faq-t-2-a': 'Aus Sicherheitsgründen müssen Ersatzschlüssel über das Portal bestellt werden. Es fällt eine Verwaltungsgebühr plus Hardwarekosten an. Bearbeitung dauert 24-48 Stunden.',
+                'faq-t-3-q': 'Wie wird Heizung/Wasser berechnet?',
+                'faq-t-3-a': 'Zähler werden monatlich fernausgelesen. Detaillierte Verbrauchsgrafiken finden Sie im Portal unter „Nebenkosten“. Die Abrechnung erfolgt jährlich.',
+                
+                'faq-cat-2': 'Für Eigentümer',
+                'faq-o-1-q': 'Wann werden monatliche Berichte erstellt?',
+                'faq-o-1-a': 'Finanzberichte werden automatisch generiert und bis zum 10. Werktag des Folgemonats in Ihr Eigentümer-Portal hochgeladen. Sie erhalten eine E-Mail-Benachrichtigung.',
+                'faq-o-2-q': 'Wie prüfen Sie Mieter?',
+                'faq-o-2-a': 'Wir nutzen einen strengen 3-Stufen-Prozess: 1) Bonitätsprüfung, 2) Beschäftigungsnachweis und 3) Referenzen. Unsere Kriterien sichern eine Ausfallquote unter 0,5 %.',
+                
+                'still-stuck': 'Benötigen Sie weitere Hilfe?',
+                'support-desc': 'Unser Support-Team ist täglich (auch am Wochenende) zu folgenden Zeiten erreichbar: 04:00–06:00, 09:00–11:00, 14:00–16:00 und 19:00–21:00 MEZ.',
+                'no-results': 'Keine Ergebnisse. Drücken Sie Enter für den KI-Assistenten.',
+
+                // KB ARTICLES DE
+                'kb-title': 'Wissensdatenbank / Feldnotizen',
+                'kb-1-q': 'Gasgeruch?', 'kb-1-a': 'Keine Schalter betätigen. Fenster öffnen. Evakuieren. 112 rufen. Nicht von drinnen anrufen.',
+                'kb-2-q': 'Kein Warmwasser', 'kb-2-a': 'Kesseldruck prüfen (sollte 1,5 bar sein). Bei Zentralheizung Portal prüfen. Bei eigener Therme Reset versuchen.',
+                'kb-3-q': 'Stromausfall', 'kb-3-a': 'Sicherungskasten prüfen. Wenn FI-Schalter raus, wieder rein. Wenn ganzes Haus dunkel, Netzbetreiber kontaktieren.',
+                'kb-4-q': 'Ausgesperrt', 'kb-4-a': 'Bürozeiten: Verwalter rufen. Danach: Schlüsseldienst auf eigene Kosten (außer bei Schlossdefekt).',
+                'kb-5-q': 'Wasserrohrbruch', 'kb-5-a': 'Sofort Haupthahn schließen (meist Bad/Küche). Eimer drunter. Sofort über Portal melden.',
+                'kb-6-q': 'Toilette verstopft', 'kb-6-a': 'Nicht nochmal spülen. Pömpel nutzen. Wenn durch Feuchttücher verursacht, zahlt Mieter.',
+                'kb-7-q': 'Schimmel / Feuchte', 'kb-7-a': 'Täglich lüften. Wäsche nicht auf Heizung. Möbel von Wand weg. Schimmelspray nutzen.',
+                'kb-8-q': 'Heizung entlüften', 'kb-8-a': 'Wenn oben kalt: Heizung aus. Ventil leicht öffnen bis Wasser kommt. Schließen. Druck prüfen.',
+                'kb-9-q': 'Gerät defekt', 'kb-9-a': 'Strom/Sicherung prüfen. Fehlercode im Handbuch suchen. Melden mit Marke/Modell.',
+                'kb-10-q': 'Internet weg', 'kb-10-a': 'Wir verwalten nur Gebäude-Infrastruktur. Bei Router-Problemen Provider (O2, Vodafone) anrufen.',
+                'kb-11-q': 'Chip/Schlüssel weg', 'kb-11-a': 'Chip: 30 €. Systemschlüssel: 100 € (evtl. Zylindertausch nötig). Bestellung im Portal.',
+                'kb-12-q': 'Mitbewohner', 'kb-12-a': 'Braucht Genehmigung. Person muss geprüft werden. Gebühr für Vertragsänderung.',
+                'kb-13-q': 'Haustiere', 'kb-13-a': 'Je nach Hausordnung. Meist erlaubt, aber Registrierung nötig. Mieter haftet für Schäden.',
+                'kb-14-q': 'Untervermietung', 'kb-14-a': 'Streng verboten ohne schriftliche Erlaubnis. Airbnb führt zu fristloser Kündigung.',
+                'kb-15-q': 'Wände streichen', 'kb-15-a': 'Kleine Löcher ok (füllen). Streichen braucht Erlaubnis. Beim Auszug weiß übergeben.',
+                'kb-16-q': 'Kaution', 'kb-16-a': 'Rückzahlung binnen 30 Tagen nach Auszug, wenn keine Schäden. IBAN im Portal angeben.',
+                'kb-17-q': 'Miete zu spät', 'kb-17-a': 'Mahnung nach 3 Tagen. Gebühren laut Vertrag. Bei Problemen sofort Buchhaltung kontaktieren.',
+                'kb-18-q': 'Vertrag kündigen', 'kb-18-a': '3 Monate Frist. Früher nur mit Nachmieter oder Aufhebungsvertrag (Gebühr).',
+                'kb-19-q': 'Lärmbelästigung', 'kb-19-a': 'Ruhezeit 22-6 Uhr. Erst Nachbarn ansprechen. Wenn erfolglos, Protokoll führen und melden.',
+                'kb-20-q': 'Mülltrennung', 'kb-20-a': 'Pflicht (Papier/Plastik/Glas/Rest). Keine Säcke im Flur. Standort siehe Willkommenspaket.'
+            },
+            'en': {
+                'nav-management': 'Management', 'nav-experience': 'Experience', 'nav-clients': 'Clients', 'nav-pricing': 'Pricing',
+                'btn-login': 'Log in', 'btn-start': 'Start for free', 'menu-core': 'Core Services', 'menu-res': 'Residential Management', 'menu-res-desc': 'Full-service care for apartments.',
+                'menu-assoc': 'Association Management', 'menu-assoc-desc': 'Modern administration for HOAs.', 'menu-leasing': 'Leasing', 'menu-smart': 'Smart Leasing',
+                'menu-smart-desc': 'Data-driven tenant placement.', 'menu-integrity': 'Radical Integrity', 'menu-integrity-desc': 'We provide a "glass-box" view of every transaction. No hidden fees.',
+                'menu-learn': 'Learn about our standards &rarr;', 'menu-tech': 'Technology', 'menu-portal': 'Owner Portal', 'menu-portal-desc': 'Real-time visibility.',
+                'menu-tenant-portal': 'Tenant Portal', 'menu-tenant-portal-desc': 'Payments & requests.',
+                'menu-asset-portal': 'Asset Manager Portal', 'menu-asset-portal-desc': 'Granular control.',
+                'menu-services': 'Services', 'menu-maint': 'Maintenance Network', 'menu-maint-desc': 'Vetted high-quality contractors.', 'menu-trust': 'Trust', 'menu-transparency': 'Transparency Standards',
+                'menu-transparency-desc': 'Zero black boxes.', 'menu-who': 'Who we serve', 'menu-private': 'Private Owners', 'menu-private-desc': 'Protecting wealth.',
+                'menu-inst': 'Institutional Investors', 'menu-inst-desc': 'P&L & NAV tracking.', 'menu-pm': 'Property Managers', 'menu-pm-desc': 'Outsourced operations.',
+                'menu-dev': 'Developers', 'menu-dev-desc': 'From build to occupancy.', 'menu-brokers': 'Rental Real Estate Brokers', 'menu-brokers-desc': 'Streamlined handovers.',
+                'footer-company': 'Company',
+                'footer-about': 'About Us', 'footer-careers': 'Careers', 'footer-contact': 'Contact', 'footer-resources': 'Resources', 'footer-help': 'Help Center', 'footer-privacy': 'Privacy Policy',
+                'footer-terms': 'Terms of Service', 'footer-cookies': 'Cookie Settings', 
+                'hero-origin': 'Origin: Geneva, Switzerland 🇨🇭',
+                'footer-swiss': 'Shaped in Geneva, Switzerland 🇨🇭 (2022) — engineered for Central & Eastern Europe',
+                'footer-legal': 'Rentstag is a proprietary operating entity acting suo nomine, leveraging proprietary computational architecture for internal asset optimization. For the avoidance of doubt, “Rentstag AG & Co s.r.o.” is an internal designation (“Algorithmic Governance”) and does not imply any specific legal form or regulated status; see Legal/Disclosures. The Entity is not a licensed broker-dealer, bank, or collective investment scheme. Utilization of any software infrastructure is provided on an “as-is” basis without warranty of computational infallibility. All materials herein are provided pro notitia and do not constitute financial advice, a solicitation, or a binding offer to contract (invitatio ad offerendum). Any potential transaction is strictly contingent upon satisfactory due diligence and definitive legal execution.',
+                
+                // HELP CENTER SPECIFIC
+                'help-title': 'Operational Support & Knowledge Base',
+                'search-placeholder': 'Search for answers...',
+                'system-status': 'All Systems Operational',
+                'emergency-title': 'Urgent / Emergency',
+                'emergency-text': 'For gas leaks, fire, or immediate structural danger, contact local emergency services (112) immediately. For urgent building maintenance (water burst, power outage), call the 24/7 hotline listed in your Tenant Portal.',
+                
+                'topic-1-title': 'Access & Keys', 'topic-1-desc': 'Lost fobs, replacement keys, or gate codes.',
+                'topic-2-title': 'Billing & Rent', 'topic-2-desc': 'Statements, SEPA payments, and deposits.',
+                'topic-3-title': 'Maintenance', 'topic-3-desc': 'Report issues or check repair status.',
+                
+                'faq-cat-1': 'For Tenants',
+                'faq-t-1-q': 'How do I access the Tenant Portal?',
+                'faq-t-1-a': 'You can log in using the credentials provided in your Welcome Pack. If you haven\'t received them, please contact your building manager. The portal allows you to view leases, pay rent, and submit maintenance requests.',
+                'faq-t-2-q': 'I have lost my key/fob. What is the procedure?',
+                'faq-t-2-a': 'For security reasons, replacement keys must be ordered through the Tenant Portal. There is a standard administrative fee plus the cost of the hardware. Processing typically takes 24-48 hours.',
+                'faq-t-3-q': 'How is heating/water consumption calculated?',
+                'faq-t-3-a': 'Meters are read remotely on a monthly basis. You can view your detailed consumption charts in the Portal under the \'Utilities\' tab. Final reconciliation happens annually.',
+                
+                'faq-cat-2': 'For Owners',
+                'faq-o-1-q': 'When are monthly statements generated?',
+                'faq-o-1-a': 'Financial reports are automatically generated and uploaded to your Owner Portal by the 10th business day of the following month. You will receive an email notification when they are ready.',
+                'faq-o-2-q': 'How do you handle tenant screening?',
+                'faq-o-2-a': 'We use a rigorous 3-step verification process: 1) Credit solvency check (SOLUS/CERD), 2) Employment verification, and 3) Previous landlord references. Our strict criteria ensure a default rate below 0.5%.',
+                
+                'still-stuck': 'Still need assistance?',
+                'support-desc': 'Our support team is available daily (including weekends) during these windows: 04:00–06:00, 09:00–11:00, 14:00–16:00, and 19:00–21:00 CET.',
+                'no-results': 'No local results found. Press Enter to ask AI Assistant.',
+
+                // KB ARTICLES EN
+                'kb-title': 'Knowledge Base / Field Notes',
+                'kb-1-q': 'Smell of gas?', 'kb-1-a': 'Do not use electrical switches. Open windows immediately. Evacuate. Call 112 or the gas emergency provider. Do not call from inside.',
+                'kb-2-q': 'No hot water', 'kb-2-a': 'Check boiler pressure (should be 1.5 bar). If communal, check Portal for outages. If individual, check if pilot light is on or reset boiler.',
+                'kb-3-q': 'Power outage', 'kb-3-a': 'Check fuse box (breakers). If one tripped, reset it. If total building outage, check street lights. If widespread, contact grid provider.',
+                'kb-4-q': 'Locked out', 'kb-4-a': 'During office hours: Contact Property Manager. After hours: You must call a locksmith at your own expense unless lock failure is proven.',
+                'kb-5-q': 'Water leak', 'kb-5-a': 'Turn off main stopcock immediately (usually under sink or in bathroom). Put bucket under leak. Report to Maintenance via Portal ASAP.',
+                'kb-6-q': 'Toilet blocked', 'kb-6-a': 'Do not flush again. Use a plunger. If caused by misuse (wipes, hygiene products), cost of plumbing service will be charged to tenant.',
+                'kb-7-q': 'Mould / Damp', 'kb-7-a': 'Ventilate daily. Do not dry clothes on radiators. Keep furniture away from walls. Use mould spray. Report structural damp immediately.',
+                'kb-8-q': 'Radiator bleeding', 'kb-8-a': 'If top of radiator is cold: Turn off heating. Use radiator key to open valve slightly until water comes out. Close valve. Check pressure.',
+                'kb-9-q': 'Appliance failure', 'kb-9-a': 'Check power connection and fuses first. Check manual for error codes. Report via Portal with brand, model number and error code.',
+                'kb-10-q': 'Internet down', 'kb-10-a': 'Rentstag only manages building infrastructure. For unit connection, contact your specific ISP (Vodafone, O2, etc.) directly.',
+                'kb-11-q': 'Lost fob / key price', 'kb-11-a': 'Standard security fob: €30 / 750 CZK. System Key: €100 / 2500 CZK (security re-keying may apply). Order via Portal.',
+                'kb-12-q': 'Adding a roommate', 'kb-12-a': 'Requires landlord approval. New tenant must pass ID verification. Administration fee applies for lease addendum. Do not move in without approval.',
+                'kb-13-q': 'Pet policy', 'kb-13-a': 'Depends on building rules. Generally allowed but requires registration. Tenant is liable for any damage (scratches, smells).',
+                'kb-14-q': 'Subletting / Airbnb', 'kb-14-a': 'Strictly prohibited without written consent. Unauthorized short-term letting is grounds for immediate lease termination and penalties.',
+                'kb-15-q': 'Painting walls', 'kb-15-a': 'Minor holes for pictures allowed (must be filled). Painting walls requires approval. Unit must be returned to original white state upon exit.',
+                'kb-16-q': 'Deposit return', 'kb-16-a': 'Processed within 30 days of lease end, provided unit is inspected and no damages/arrears found. Provide IBAN in Portal.',
+                'kb-17-q': 'Late rent payment', 'kb-17-a': 'Automatic reminders sent after 3 days. Late fees apply per contract terms. If facing difficulty, contact Billing immediately to discuss plan.',
+                'kb-18-q': 'Breaking lease', 'kb-18-a': 'Standard notice is 3 months. Early termination requires agreement and typically a fee or finding a suitable replacement tenant.',
+                'kb-19-q': 'Noise complaints', 'kb-19-a': 'Quiet hours: 22:00 - 06:00. First, try talking to neighbor. If persistent, log details (time/date) and report to Building Manager.',
+                'kb-20-q': 'Waste / Recycling', 'kb-20-a': 'Strict separation required (Paper/Plastic/Glass/General). Do not leave bags in corridors. Check bin store location in your Welcome Pack.'
+            }
+        };
+
+        function setLanguage(lang) {
+            const elements = document.querySelectorAll('[data-i18n]');
+            
+            // Set active class on buttons
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            const btns = document.querySelectorAll('.lang-btn');
+            if(lang === 'en') btns[0].classList.add('active');
+            if(lang === 'de') btns[1].classList.add('active');
+            if(lang === 'cs') btns[2].classList.add('active');
+
+            if(translations[lang]) {
+                elements.forEach(element => {
+                    const key = element.getAttribute('data-i18n');
+                    if (translations[lang][key]) {
+                        element.innerHTML = translations[lang][key];
+                    }
+                });
+                localStorage.setItem('lang', lang);
+            }
+        }
+
+        // Auto-detect or load saved
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedLang = localStorage.getItem('lang');
+            const userLang = navigator.language || navigator.userLanguage; 
+            
+            if (savedLang) {
+                setLanguage(savedLang);
+            } else if (userLang.startsWith('cs')) {
+                setLanguage('cs');
+            } else if (userLang.startsWith('de')) {
+                setLanguage('de');
+            }
+            // Default is EN (HTML is already EN)
+        });
+    </script>
+
+</body>
+</html>

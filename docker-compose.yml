@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  # 1. AI Model (Ollama)
+  ollama:
+    image: ollama/ollama:latest
+    volumes:
+      - ollama_data:/root/.ollama
+    ports:
+      - "11434:11434"
+    # Pokud máš NVIDIA grafiku, odkomentuj toto pro zrychlení:
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+
+  # 2. Vyhledávač (SearXNG)
+  searxng:
+    image: searxng/searxng:latest
+    ports:
+      - "8080:8080"
+    environment:
+      - SEARXNG_BASE_URL=http://localhost:8080/
+      # Zakáže omezení, aby API fungovalo bez problémů
+      - SEARXNG_LIMITER=false 
+      - SEARXNG_DEFAULT_LOCALE=cs
+
+  # 3. Náš Node.js Backend
+  backend:
+    build: ./server
+    ports:
+      - "5000:5000"
+    environment:
+      - SEARXNG_URL=http://searxng:8080
+      - OLLAMA_URL=http://ollama:11434
+    depends_on:
+      - ollama
+      - searxng
+
+volumes:
+  ollama_data:
